@@ -1,155 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIEF Card</title>
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #0c0c0c;
-    font-family: 'Poppins', sans-serif;
-  }
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
+        font-family: 'Poppins', sans-serif;
+    }
 
-  .card-wrapper {
-    padding: 4px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #a63cff, #ff4fa0);
-    box-shadow:
-      0 0 15px rgba(166, 60, 255, 0.5),
-      0 0 25px rgba(255, 79, 160, 0.3);
-    display: inline-block;
-  }
+    .card {
+        width: 350px;
+        background: rgba(20, 20, 20, 0.6);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 40px rgba(162, 0, 255, 0.6);
+        padding: 20px;
+        text-align: center;
+        border: 2px solid rgba(255, 255, 255, 0.08);
+    }
 
-  .card {
-    width: 420px;
-    background: #111;
-    border-radius: 16px;
-    padding: 20px;
-    box-sizing: border-box;
-  }
+    .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        background: linear-gradient(135deg, #a200ff, #ff00b3);
+        padding: 3px;
+        margin-bottom: 15px;
+    }
 
-  .profile-pic {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(255, 255, 255, 0.05);
-  }
+    .avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: block;
+    }
 
-  .name-row {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    gap: 8px;
-  }
+    h1 {
+        color: white;
+        margin: 5px 0;
+        font-size: 1.5em;
+    }
 
-  .name {
-    font-size: 26px;
-    font-weight: 600;
-    color: #fff;
-  }
+    p {
+        color: #aaa;
+        font-size: 0.9em;
+        margin: 0 0 15px 0;
+    }
 
-  .prod-gradient {
-    background: linear-gradient(135deg, #a63cff, #ff4fa0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+    .badges {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
 
-  .badge-container {
-    display: flex;
-    align-items: center;
-    padding: 3px 6px;
-    border-radius: 14px;
-    background: #111;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
+    .badge {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 5px 10px;
+        font-size: 0.75em;
+        color: white;
+    }
 
-  .badge-container img {
-    width: 14px;
-    height: 14px;
-    margin-right: 4px;
-  }
+    .player {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
 
-  .description {
-    font-size: 13px;
-    color: #aaa;
-    margin-top: 3px;
-  }
+    .song-title {
+        color: white;
+        font-size: 0.95em;
+        margin-bottom: 5px;
+    }
 
-  .presence-card {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin-top: 16px;
-  }
+    .song-artist {
+        color: #aaa;
+        font-size: 0.8em;
+        margin-bottom: 10px;
+    }
 
-  .avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
+    .progress {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+    }
 
-  .username {
-    font-size: 14px;
-    font-weight: 500;
-    color: #fff;
-  }
+    .progress-bar {
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, #a200ff, #ff00b3);
+    }
 
-  .badge.quest {
-    background-image: url('assets/quest.png');
-  }
-  .badge.bravery {
-    background-image: url('assets/bravery.png');
-  }
-  .badge {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    background-size: cover;
-    margin-left: 3px;
-  }
+    .socials {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
 
-  .music-player {
-    margin-top: 10px;
-    background: rgba(30, 30, 30, 0.7);
-    border-radius: 10px;
-    padding: 10px;
-  }
+    .socials a {
+        color: white;
+        font-size: 1.2em;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
 
-  .track-info {
-    font-size: 13px;
-    color: #fff;
-  }
-
-  .artist-name {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  #seekBar {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
-    margin-top: 8px;
-  }
-
-  #seekBar::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 0;
-    height: 0;
-  }
-
-  .social-logos {
-    margin-top: 14px;
-    opacity: 0.3;
-  }
-
-  .social-logos img {
-    width: 28px;
-    height: 28px;
-  }
+    .socials a:hover {
+        color: #ff00b3;
+    }
 </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="avatar">
+        <img src="https://cdn.discordapp.com/avatars/1057838349542498354/f9696810e560ebe8af8e3255ea1bf996.png?size=1024" alt="Avatar">
+    </div>
+    <h1>crd</h1>
+    <p>Producer</p>
+
+    <div class="badges">
+        <div class="badge">Verified</div>
+        <div class="badge">Top Artist</div>
+        <div class="badge">2025</div>
+    </div>
+
+    <div class="player">
+        <div class="song-title">Dear Mama</div>
+        <div class="song-artist">Nino Paid</div>
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="socials">
+        <a href="#">🎵</a>
+        <a href="#">🐦</a>
+        <a href="#">📷</a>
+    </div>
+</div>
+
+</body>
+</html>
