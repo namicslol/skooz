@@ -1,154 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GRIEF Card</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>haunt.gg</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
     body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
-        font-family: 'Poppins', sans-serif;
+      background: radial-gradient(ellipse at center, #1a001f 0%, #0a000f 100%);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-
-    .card {
-        width: 350px;
-        background: rgba(20, 20, 20, 0.6);
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 0 40px rgba(162, 0, 255, 0.6);
-        padding: 20px;
-        text-align: center;
-        border: 2px solid rgba(255, 255, 255, 0.08);
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: #1a001f;
+      border-bottom: 1px solid #3c003c;
     }
-
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 3px solid transparent;
-        background: linear-gradient(135deg, #a200ff, #ff00b3);
-        padding: 3px;
-        margin-bottom: 15px;
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #f783ff;
     }
-
-    .avatar img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        display: block;
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
     }
-
-    h1 {
-        color: white;
-        margin: 5px 0;
-        font-size: 1.5em;
+    nav a:hover {
+      color: #f783ff;
     }
-
-    p {
-        color: #aaa;
-        font-size: 0.9em;
-        margin: 0 0 15px 0;
+    .btn {
+      background: #f783ff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
     }
-
-    .badges {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-bottom: 20px;
+    .btn:hover {
+      background: #d86edb;
     }
-
-    .badge {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        padding: 5px 10px;
-        font-size: 0.75em;
-        color: white;
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 80px 40px;
     }
-
-    .player {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        padding: 10px;
-        margin-bottom: 20px;
+    .hero-text {
+      max-width: 600px;
     }
-
-    .song-title {
-        color: white;
-        font-size: 0.95em;
-        margin-bottom: 5px;
+    .hero-text h1 {
+      font-size: 50px;
+      line-height: 1.2;
     }
-
-    .song-artist {
-        color: #aaa;
-        font-size: 0.8em;
-        margin-bottom: 10px;
+    .hero-text h1 span {
+      color: #f783ff;
     }
-
-    .progress {
-        height: 5px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 5px;
-        overflow: hidden;
+    .hero-text p {
+      margin: 20px 0;
+      color: #ccc;
     }
-
-    .progress-bar {
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(90deg, #a200ff, #ff00b3);
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
     }
-
-    .socials {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
+    .profile-card {
+      background: linear-gradient(to bottom, #3d003d, #1a001f);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 300px;
     }
-
-    .socials a {
-        color: white;
-        font-size: 1.2em;
-        text-decoration: none;
-        transition: color 0.2s;
+    .profile-card img {
+      width: 80px;
+      border-radius: 50%;
+      margin-bottom: 15px;
     }
-
-    .socials a:hover {
-        color: #ff00b3;
+    .profile-card h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
     }
-</style>
+    .badges, .socials {
+      margin: 15px 0;
+    }
+    .badges span, .socials a {
+      margin: 0 5px;
+      font-size: 20px;
+    }
+    .now-playing {
+      background: #2d002f;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="logo">haunt.gg</div>
+    <nav>
+      <a href="#">Discord</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Help Center</a>
+      <a href="#">Pricing</a>
+      <a href="#">Team</a>
+    </nav>
+    <button class="btn">Sign Up</button>
+  </header>
 
-<div class="card">
-    <div class="avatar">
-        <img src="https://cdn.discordapp.com/avatars/1057838349542498354/f9696810e560ebe8af8e3255ea1bf996.png?size=1024" alt="Avatar">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Your Digital <span>Identity</span>,<br>On Your Terms</h1>
+      <p>Create a stunning biolink page that represents your personal brand. Share all your content in one beautiful, customizable location.</p>
+      <div class="hero-buttons">
+        <button class="btn">Claim Username</button>
+        <button class="btn" style="background:#2d002f">Explore Features</button>
+      </div>
+      <p style="margin-top: 10px; color: #5f5f5f">● 100% Free To Get Started &nbsp;&nbsp;•&nbsp;&nbsp; No Credit Card Required</p>
     </div>
-    <h1>crd</h1>
-    <p>Producer</p>
-
-    <div class="badges">
-        <div class="badge">Verified</div>
-        <div class="badge">Top Artist</div>
-        <div class="badge">2025</div>
+    <div class="profile-card">
+      <img src="assets/pfp.png" alt="pfp" />
+      <h2>haunt</h2>
+      <div class="badges">
+        <span>🔧</span><span>🌟</span><span>💎</span><span>💰</span><span>🎗️</span><span>🔥</span>
+      </div>
+      <p>Web developer & designer based in Austria.</p>
+      <p style="font-size: 12px; color: #888;">📍 Vienna, Austria</p>
+      <div class="now-playing">
+        <strong>haunt.gg#1344</strong> • Playing Valorant<br>
+        Competitive • Haven
+      </div>
+      <div class="socials">
+        <a href="#">🐱‍💻</a>
+        <a href="#">🎮</a>
+        <a href="#">❌</a>
+        <a href="#">📸</a>
+      </div>
     </div>
+  </section>
 
-    <div class="player">
-        <div class="song-title">Dear Mama</div>
-        <div class="song-artist">Nino Paid</div>
-        <div class="progress">
-            <div class="progress-bar"></div>
-        </div>
-    </div>
-
-    <div class="socials">
-        <a href="#">🎵</a>
-        <a href="#">🐦</a>
-        <a href="#">📷</a>
-    </div>
-</div>
-
+  <footer>
+    Scroll Down ↓
+  </footer>
 </body>
 </html>
