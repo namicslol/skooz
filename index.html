@@ -15,99 +15,224 @@
       --radius: 18px;
       --progress-gradient: linear-gradient(90deg, #f2b792, #2b4968);
     }
-
-    html, body {
-      height: 100%;
-      margin: 0;
+    html,body{
+      height:100%;
+      margin:0;
       font-family: "Poppins", sans-serif;
+      background: url('assets/background.png') center/cover no-repeat,
+                  linear-gradient(180deg, #f2b792 0%, #2b4968 60%);
+      background-blend-mode:overlay;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+    }
+    /* Overlay */
+    .enter-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      background-color: #2b4968; /* fallback if asset fails */
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 9999;
+      user-select: none;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
     }
-
-    /* ---- Layer 1: the PNG (blurred) ---- */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      /* ensure correct relative path; change ./assets/... if your file structure differs */
-      background-image: url("./assets/background.png");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-attachment: fixed;
-      -webkit-filter: blur(8px);
-      filter: blur(8px);           /* only the PNG is blurred */
-      transform: scale(1.03);      /* prevent transparent edges after blur */
-      will-change: filter, transform;
-      z-index: -2;
-      pointer-events: none;
+    .enter-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
     }
-
-    /* ---- Layer 2: the gradient overlay (sharp) ---- */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(180deg, #f2b792 0%, #2b4968 60%);
-      mix-blend-mode: overlay;
-      z-index: -1;
-      pointer-events: none;
+    /* Top Left Controls */
+    .top-controls{
+      position:fixed;
+      top:15px;
+      left:15px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background: var(--glass-bg);
+      border:1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding:8px 12px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(120%);
+      z-index:100;
     }
-
-    /* rest of your styles (unchanged) */
-    .enter-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:bold; cursor:pointer; z-index:9999; user-select:none; transition: opacity .6s, visibility .6s;}
-    .enter-overlay.fade-out{ opacity:0; visibility:hidden; }
-
-    .top-controls{ position:fixed; top:15px; left:15px; display:flex; align-items:center; gap:8px; background: var(--glass-bg); border:1px solid var(--glass-border); border-radius: var(--radius); padding:8px 12px; box-shadow: var(--shadow); backdrop-filter: blur(8px) saturate(120%); z-index:100; }
-    .volume-icon{ width:18px; height:18px; fill:var(--accent); }
-    .volume-slider{ -webkit-appearance:none; height:4px; background: var(--muted); border-radius:5px; outline:none; width:100px; }
-    .volume-slider::-webkit-slider-thumb{ -webkit-appearance:none; width:14px; height:14px; background: var(--accent); border-radius:50%; cursor:pointer; }
-
-    .card{ width:760px; background: var(--glass-bg); border-radius: var(--radius); border: 1px solid var(--glass-border); box-shadow: var(--shadow); backdrop-filter: blur(8px) saturate(120%); padding: 32px; display:flex; gap:26px; z-index:1; }
-    .pfp{ width:68px; height:68px; border-radius:50%; overflow:hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.4); border: 3px solid rgba(255,255,255,0.02); flex-shrink:0; }
+    .volume-icon{
+      width:18px;
+      height:18px;
+      fill:var(--accent);
+    }
+    .volume-slider{
+      -webkit-appearance:none;
+      height:4px;
+      background: var(--muted);
+      border-radius:5px;
+      outline:none;
+      width:100px;
+    }
+    .volume-slider::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      width:14px;
+      height:14px;
+      background: var(--accent);
+      border-radius:50%;
+      cursor:pointer;
+    }
+    /* Profile Card */
+    .card{
+      width:760px;
+      background: var(--glass-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(120%);
+      padding: 32px;
+      display:flex;
+      gap:26px;
+    }
+    .pfp{
+      width:68px;
+      height:68px;
+      border-radius:50%;
+      overflow:hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      border: 3px solid rgba(255,255,255,0.02);
+      flex-shrink:0;
+    }
     .pfp img{ width:100%; height:100%; object-fit:cover; }
     .main{ flex:1; display:flex; flex-direction:column; }
-    .user-row{ display:flex; flex-direction:column; gap:4px; }
-    .user-info{ display:flex; align-items:center; gap:6px; }
+    .user-row{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .user-info {
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
     .username{ font-weight:700; font-size:18px; color:var(--accent); }
     .joined{ font-size:13px; color:var(--muted); }
-
-    .badges{ display:flex; gap:4px; padding:0; background:none; border:none; }
-    .badge{ width:24px; height:24px; display:grid; place-items:center; position:relative; }
-    .badge img{ width:100%; height:100%; object-fit:contain; }
-
-    .badge[data-tooltip]::after{ content: attr(data-tooltip); position:absolute; bottom: calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(4px); white-space:nowrap; background:transparent; color:var(--accent); font-size:12px; padding:6px 8px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); opacity:0; visibility:hidden; transition:opacity .25s, transform .25s; pointer-events:none; }
-    .badge[data-tooltip]:hover::after{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
-
+    /* Badges next to username */
+    .badges{
+      display:flex;
+      gap:4px;
+      padding:0;
+      background:none;
+      border:none;
+    }
+    .badge{
+      width:20px;
+      height:20px;
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+    .badge img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+    /* Tooltip fade + slide */
+    .badge[data-tooltip]::after{
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      white-space:nowrap;
+      background: rgba(6,8,13,0.9);
+      color:#fff;
+      font-size:12px;
+      padding:6px 8px;
+      border-radius:8px;
+      box-shadow: 0 8px 24px rgba(2,4,10,0.6);
+      opacity:0;
+      visibility:hidden;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events:none;
+    }
+    .badge[data-tooltip]:hover::after{
+      opacity:1;
+      visibility:visible;
+      transform: translateX(-50%) translateY(0);
+    }
     .divider{ margin-top:14px; border-top:1px solid rgba(255,255,255,0.03); }
-
-    .music-player{ margin-top:20px; width:760px; background: var(--glass-bg); border:1px solid var(--glass-border); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(8px) saturate(120%); display:flex; align-items:center; padding:16px; gap:18px; }
-    .song-cover{ width:60px; height:60px; border-radius:10px; overflow:hidden; flex-shrink:0; }
+    /* Music Player */
+    .music-player{
+      margin-top:20px;
+      width:760px;
+      background: var(--glass-bg);
+      border:1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(120%);
+      display:flex;
+      align-items:center;
+      padding:16px;
+      gap:18px;
+    }
+    .song-cover{
+      width:60px; height:60px;
+      border-radius:10px;
+      overflow:hidden;
+      flex-shrink:0;
+    }
     .song-cover img{ width:100%; height:100%; object-fit:cover; }
     .song-info{ flex:1; display:flex; flex-direction:column; color:var(--accent); }
     .song-title{ font-weight:600; font-size:15px; }
     .song-artist{ font-size:12px; color:var(--muted); }
-    .song-progress{ width:100%; margin-top:6px; position:relative; height:4px; background:var(--muted); border-radius:5px; overflow:hidden; cursor:pointer; }
-    .progress-fill{ position:absolute; top:0; left:0; height:100%; width:0%; background:var(--progress-gradient); transition:width .1s linear; }
+    .song-progress{
+      width:100%;
+      margin-top:6px;
+      position:relative;
+      height:4px;
+      background:var(--muted);
+      border-radius:5px;
+      overflow:hidden;
+      cursor: pointer;
+    }
+    .progress-fill{
+      position:absolute;
+      top:0;
+      left:0;
+      height:100%;
+      width:0%;
+      background:var(--progress-gradient);
+      transition:width 0.1s linear;
+    }
     .time-display{ display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; }
     .song-controls{ display:flex; align-items:center; gap:10px; }
-    .song-controls button{ background:none; border:none; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; }
+    .song-controls button{
+      background:none; border:none; cursor:pointer;
+      padding:6px; display:flex; align-items:center; justify-content:center;
+    }
     .song-controls button svg{ width:24px; height:24px; fill:var(--accent); }
   </style>
 </head>
 <body>
+
   <div class="enter-overlay" id="enterOverlay">CLICK</div>
 
+  <!-- Top Left Controls -->
   <div class="top-controls">
-    <svg class="volume-icon" viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/></svg>
+    <svg class="volume-icon" viewBox="0 0 24 24">
+      <path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/>
+    </svg>
     <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.8">
   </div>
 
+  <!-- Profile Card -->
   <div class="card">
     <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
     <div class="main">
@@ -115,9 +240,9 @@
         <div class="user-info">
           <div class="username">skoozuh</div>
           <div class="badges">
-            <div class="badge" data-tooltip="Christmas 2024"><img src="assets/christmas2024.png" alt=""></div>
-            <div class="badge" data-tooltip="Premium"><img src="assets/premium.png" alt=""></div>
-            <div class="badge" data-tooltip="Easter 2025"><img src="assets/easter2025.png" alt=""></div>
+            <div class="badge" data-tooltip="Christmas 2024"><img src="assets/christmas2024.png" alt="Christmas 2024"></div>
+            <div class="badge" data-tooltip="Premium"><img src="assets/premium.png" alt="Premium"></div>
+            <div class="badge" data-tooltip="Easter 2025"><img src="assets/easter2025.png" alt="Easter 2025"></div>
           </div>
         </div>
         <div class="joined">prod. @skoozuh</div>
@@ -126,23 +251,30 @@
     </div>
   </div>
 
+  <!-- Music Player -->
   <div class="music-player">
     <div class="song-cover"><img src="assets/songcover.png" alt="Song Cover"></div>
     <div class="song-info">
       <div class="song-title">My Track</div>
       <div class="song-artist">skoozuh</div>
-      <div class="song-progress" id="songProgress"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="time-display"><span id="currentTime">0:00</span><span id="totalTime">0:00</span></div>
+      <div class="song-progress" id="songProgress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="time-display">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
     </div>
     <div class="song-controls">
-      <button id="playPauseBtn"><svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg></button>
+      <button id="playPauseBtn">
+        <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+      </button>
     </div>
   </div>
 
   <audio id="audioPlayer" src="assets/song.mp3"></audio>
 
   <script>
-    /* same JS as before (play/pause, progress, volume) */
     const audio = document.getElementById('audioPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const playIcon = document.getElementById('playIcon');
@@ -153,21 +285,72 @@
     const songProgress = document.getElementById('songProgress');
     const enterOverlay = document.getElementById('enterOverlay');
 
-    function formatTime(seconds){ const mins=Math.floor(seconds/60); const secs=Math.floor(seconds%60); return `${mins}:${secs<10?'0'+secs:secs}`; }
-    function togglePlay(){ if(audio.paused){ audio.play(); playIcon.innerHTML='<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } else { audio.pause(); playIcon.innerHTML='<path d="M8 5v14l11-7z"/>'; } }
+    function formatTime(seconds){
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+    }
+
+    function togglePlay(){
+      if(audio.paused){
+        audio.play();
+        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+      } else {
+        audio.pause();
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      }
+    }
+
     playPauseBtn.addEventListener('click', togglePlay);
-    audio.addEventListener('loadedmetadata', ()=>{ totalTimeEl.textContent = formatTime(audio.duration); });
-    audio.addEventListener('timeupdate', ()=>{ const progressPercent = (audio.currentTime / audio.duration) * 100; progressFill.style.width = progressPercent + '%'; currentTimeEl.textContent = formatTime(audio.currentTime); });
-    volumeControl.addEventListener('input', ()=>{ audio.volume = volumeControl.value; });
 
-    function seek(e){ const rect = songProgress.getBoundingClientRect(); const offsetX = e.clientX - rect.left; const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1); audio.currentTime = percentage * audio.duration; }
+    audio.addEventListener('loadedmetadata', ()=>{
+      totalTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', ()=>{
+      const progressPercent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = progressPercent + '%';
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    volumeControl.addEventListener('input', ()=>{
+      audio.volume = volumeControl.value;
+    });
+
+    // Click & drag seek
+    function seek(e) {
+      const rect = songProgress.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
+      audio.currentTime = percentage * audio.duration;
+    }
+
     let isDragging = false;
-    songProgress.addEventListener('mousedown', e => { isDragging = true; seek(e); });
-    document.addEventListener('mousemove', e => { if (isDragging) seek(e); });
-    document.addEventListener('mouseup', () => { isDragging = false; });
-    songProgress.addEventListener('click', e => { seek(e); });
 
-    enterOverlay.addEventListener('click', () => { enterOverlay.classList.add('fade-out'); setTimeout(()=>{ enterOverlay.style.display = 'none'; },600); });
+    songProgress.addEventListener('mousedown', e => {
+      isDragging = true;
+      seek(e);
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (isDragging) seek(e);
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    songProgress.addEventListener('click', e => {
+      seek(e);
+    });
+
+    // Click to enter fade-out
+    enterOverlay.addEventListener('click', () => {
+      enterOverlay.classList.add('fade-out');
+      setTimeout(() => {
+        enterOverlay.style.display = 'none';
+      }, 600);
+    });
   </script>
 </body>
 </html>
