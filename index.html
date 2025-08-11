@@ -99,6 +99,11 @@
       border-radius:50%;
       cursor:pointer;
     }
+    .card-wrapper {
+      display: flex;
+      align-items: stretch; /* Socials match card height */
+      gap: 10px; /* space between card and socials */
+    }
     .card{
       width:760px;
       background: var(--glass-bg);
@@ -234,7 +239,6 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      margin-left: 10px;
       justify-content: center;
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
@@ -242,6 +246,7 @@
       padding: 8px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
+      height: 100%; /* match card height */
     }
     .socials a {
       display: block;
@@ -270,24 +275,26 @@
     <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.8">
   </div>
 
-  <div class="card">
-    <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
-    <div class="main">
-      <div class="user-row">
-        <div class="user-info">
-          <div class="username">skoozuh</div>
-          <div class="badges">
-            <div class="badge" data-tooltip="Creator"><img src="assets/Owner.png" alt="Creator"></div>
-            <div class="badge" data-tooltip="Artist"><img src="assets/artist.png" alt="Artist"></div>
-            <div class="badge" data-tooltip="Icon"><img src="assets/icon.png" alt="Icon"></div>
+  <div class="card-wrapper">
+    <div class="card">
+      <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
+      <div class="main">
+        <div class="user-row">
+          <div class="user-info">
+            <div class="username">skoozuh</div>
+            <div class="badges">
+              <div class="badge" data-tooltip="Creator"><img src="assets/Owner.png" alt="Creator"></div>
+              <div class="badge" data-tooltip="Artist"><img src="assets/artist.png" alt="Artist"></div>
+              <div class="badge" data-tooltip="Icon"><img src="assets/icon.png" alt="Icon"></div>
+            </div>
           </div>
+          <div class="joined">Producer & Photographer | 17 | Seattle, WA</div>
         </div>
-        <div class="joined">Producer & Photographer | 17 | Seattle, WA</div>
+        <div class="divider"></div>
       </div>
-      <div class="divider"></div>
     </div>
 
-    <!-- Vertical socials section -->
+    <!-- Socials outside card but close -->
     <div class="socials">
       <a href="https://www.instagram.com/okok00101010110/" target="_blank" rel="noopener">
         <img src="assets/instagram.png" alt="Instagram">
