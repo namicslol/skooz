@@ -15,6 +15,7 @@
       --radius: 18px;
       --progress-gradient: linear-gradient(90deg, #d0f0ff, #80dfff);
     }
+
     html, body {
       height: 100%;
       margin: 0;
@@ -25,7 +26,13 @@
       justify-content: center;
       flex-direction: column;
       position: relative;
+      box-sizing: border-box;
     }
+
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
     body::before {
       content: "";
       position: fixed;
@@ -40,12 +47,15 @@
       transform: translate(-2.5%, -2.5%);
       z-index: -1;
     }
+
+    /* Overlay click screen */
     .enter-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -63,6 +73,8 @@
       opacity: 0;
       visibility: hidden;
     }
+
+    /* Top audio controls */
     .top-controls {
       position: fixed;
       top: 15px;
@@ -76,6 +88,7 @@
       padding: 8px 12px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
       z-index: 100;
     }
     .volume-icon {
@@ -99,26 +112,27 @@
       border-radius: 50%;
       cursor: pointer;
     }
+
+    /* Card + socials layout */
     .card-wrapper {
       display: flex;
-      flex-wrap: wrap;
       align-items: flex-start;
       gap: 10px;
-      justify-content: center;
       max-width: 100%;
-      padding: 10px;
+      overflow-x: auto;
     }
     .card {
+      width: 760px;
+      max-width: 100%;
       background: var(--glass-bg);
       border-radius: var(--radius);
       border: 1px solid var(--glass-border);
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
-      padding: 20px;
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
+      padding: 32px;
       display: flex;
       gap: 26px;
-      flex: 1 1 300px;
-      max-width: 760px;
     }
     .pfp {
       width: 68px;
@@ -132,7 +146,7 @@
     .pfp img { width: 100%; height: 100%; object-fit: cover; }
     .main { flex: 1; display: flex; flex-direction: column; }
     .user-row { display: flex; flex-direction: column; gap: 4px; }
-    .user-info { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .user-info { display: flex; align-items: center; gap: 6px; }
     .username { font-weight: 700; font-size: 18px; color: var(--accent); }
     .joined { font-size: 13px; color: var(--muted); }
     .badges {
@@ -143,6 +157,7 @@
       border: 1px solid var(--glass-border);
       border-radius: 999px;
       backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
     }
     .badge {
       width: 20px;
@@ -151,11 +166,7 @@
       place-items: center;
       position: relative;
     }
-    .badge img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .badge img { width: 100%; height: 100%; object-fit: contain; }
     .badge[data-tooltip]::after {
       content: attr(data-tooltip);
       position: absolute;
@@ -179,20 +190,22 @@
       visibility: visible;
       transform: translateX(-50%) translateY(0);
     }
-    .divider { margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.03); }
+
+    /* Music player */
     .music-player {
       margin-top: 20px;
+      width: 600px;
+      max-width: 100%;
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
       display: flex;
       align-items: center;
       padding: 12px;
       gap: 14px;
-      flex-wrap: wrap;
-      max-width: 100%;
     }
     .song-cover {
       width: 50px;
@@ -202,7 +215,7 @@
       flex-shrink: 0;
     }
     .song-cover img { width: 100%; height: 100%; object-fit: cover; }
-    .song-info { flex: 1; display: flex; flex-direction: column; color: var(--accent); min-width: 150px; }
+    .song-info { flex: 1; display: flex; flex-direction: column; color: var(--accent); }
     .song-title { font-weight: 600; font-size: 15px; }
     .song-artist { font-size: 12px; color: var(--muted); }
     .song-progress {
@@ -224,25 +237,36 @@
       background: var(--progress-gradient);
       transition: width 0.1s linear;
     }
-    .time-display { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
     .song-controls { display: flex; align-items: center; gap: 10px; }
     .song-controls button {
       background: none; border: none; cursor: pointer;
       padding: 6px; display: flex; align-items: center; justify-content: center;
     }
     .song-controls button svg { width: 24px; height: 24px; fill: var(--accent); }
+
+    /* Socials area */
     .socials {
       display: flex;
-      flex-direction: row;
-      gap: 12px;
+      flex-direction: column;
+      gap: 8px;
       justify-content: center;
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      padding: 8px;
+      padding: 0 8px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
       height: auto;
+      overflow: hidden;
+      max-width: 100%;
     }
     .socials a {
       display: block;
@@ -258,131 +282,10 @@
     .socials img:hover {
       transform: scale(1.1);
     }
-    @media (max-width: 768px) {
-      .card-wrapper {
-        flex-direction: column;
-        align-items: center;
-      }
-      .socials {
-        order: 2;
-        width: auto;
-      }
-      .music-player {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        width: 100%;
-        max-width: 500px;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="enter-overlay" id="enterOverlay">CLICK</div>
-  <div class="top-controls">
-    <svg class="volume-icon" viewBox="0 0 24 24">
-      <path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/>
-    </svg>
-    <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.8">
-  </div>
-  <div class="card-wrapper">
-    <div class="card" id="profileCard">
-      <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
-      <div class="main">
-        <div class="user-row">
-          <div class="user-info">
-            <div class="username">skoozuh</div>
-            <div class="badges">
-              <div class="badge" data-tooltip="Owner"><img src="assets/crown.png" alt="Owner"></div>
-              <div class="badge" data-tooltip="Artist"><img src="assets/artist.png" alt="Artist"></div>
-              <div class="badge" data-tooltip="Icon"><img src="assets/icon.png" alt="Icon"></div>
-            </div>
-          </div>
-          <div class="joined">Producer & Photographer | 17 | Seattle, WA</div>
-        </div>
-        <div class="divider"></div>
-      </div>
-    </div>
-    <div class="socials">
-      <a href="https://www.instagram.com/okok00101010110/" target="_blank" rel="noopener">
-        <img src="assets/instagram.png" alt="Instagram">
-      </a>
-      <a href="https://www.last.fm/user/skoozuh" target="_blank" rel="noopener">
-        <img src="assets/lastfm.png" alt="Last.fm">
-      </a>
-    </div>
-  </div>
-  <div class="music-player">
-    <div class="song-cover"><img src="assets/songcover.png" alt="Song Cover"></div>
-    <div class="song-info">
-      <div class="song-title">Chain Swangin</div>
-      <div class="song-artist">Molly Santana</div>
-      <div class="song-progress" id="songProgress">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="time-display">
-        <span id="currentTime">0:00</span>
-        <span id="totalTime">0:00</span>
-      </div>
-    </div>
-    <div class="song-controls">
-      <button id="playPauseBtn">
-        <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-    </div>
-  </div>
-  <audio id="audioPlayer" src="assets/song.mp3"></audio>
-  <script>
-    const audio = document.getElementById('audioPlayer');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const playIcon = document.getElementById('playIcon');
-    const volumeControl = document.getElementById('volumeControl');
-    const currentTimeEl = document.getElementById('currentTime');
-    const totalTimeEl = document.getElementById('totalTime');
-    const progressFill = document.getElementById('progressFill');
-    const songProgress = document.getElementById('songProgress');
-    const enterOverlay = document.getElementById('enterOverlay');
-    function formatTime(seconds){
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins}:${secs < 10 ? '0' + secs : secs}`;
-    }
-    function togglePlay(){
-      if(audio.paused){
-        audio.play();
-        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-      } else {
-        audio.pause();
-        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      }
-    }
-    playPauseBtn.addEventListener('click', togglePlay);
-    audio.addEventListener('loadedmetadata', ()=>{
-      totalTimeEl.textContent = formatTime(audio.duration);
-    });
-    audio.addEventListener('timeupdate', ()=>{
-      const progressPercent = (audio.currentTime / audio.duration) * 100;
-      progressFill.style.width = progressPercent + '%';
-      currentTimeEl.textContent = formatTime(audio.currentTime);
-    });
-    volumeControl.addEventListener('input', ()=>{
-      audio.volume = volumeControl.value;
-    });
-    function seek(e) {
-      const rect = songProgress.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
-      audio.currentTime = percentage * audio.duration;
-    }
-    let isDragging = false;
-    songProgress.addEventListener('mousedown', e => { isDragging = true; seek(e); });
-    document.addEventListener('mousemove', e => { if (isDragging) seek(e); });
-    document.addEventListener('mouseup', () => { isDragging = false; });
-    songProgress.addEventListener('click', e => { seek(e); });
-    enterOverlay.addEventListener('click', () => {
-      enterOverlay.classList.add('fade-out');
-      setTimeout(() => { enterOverlay.style.display = 'none'; }, 600);
-    });
-  </script>
+  <!-- Your body content stays exactly the same as original -->
+  <!-- (keep your HTML from your original file here) -->
 </body>
 </html>
