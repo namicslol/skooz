@@ -19,25 +19,26 @@
       height:100%;
       margin:0;
       font-family: "Poppins", sans-serif;
-      background:none; /* remove original background */
+      background:none;
       display:flex;
       align-items:center;
       justify-content:center;
       flex-direction:column;
       position: relative;
     }
-    /* Blurred background */
+    /* Blurred background fix */
     body::before {
       content: "";
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 105%;
+      height: 105%;
       background: url('assets/background.png') center/cover no-repeat,
                   linear-gradient(180deg, #f2b792 0%, #2b4968 60%);
       background-blend-mode: overlay;
       filter: blur(6px);
+      transform: translate(-2.5%, -2.5%);
       z-index: -1;
     }
     /* Overlay */
@@ -136,13 +137,15 @@
     }
     .username{ font-weight:700; font-size:18px; color:var(--accent); }
     .joined{ font-size:13px; color:var(--muted); }
-    /* Badges next to username */
-    .badges{
-      display:flex;
-      gap:4px;
-      padding:0;
-      background:none;
-      border:none;
+    /* Combined badges pill */
+    .badges {
+      display: flex;
+      gap: 4px;
+      padding: 4px 8px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      backdrop-filter: blur(8px) saturate(120%);
     }
     .badge{
       width:20px;
@@ -156,7 +159,7 @@
       height:100%;
       object-fit:contain;
     }
-    /* Tooltip fade + slide */
+    /* Glass-style tooltip */
     .badge[data-tooltip]::after{
       content: attr(data-tooltip);
       position: absolute;
@@ -164,12 +167,12 @@
       left: 50%;
       transform: translateX(-50%) translateY(4px);
       white-space:nowrap;
-      background: rgba(6,8,13,0.9);
-      color:#fff;
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--accent);
       font-size:12px;
       padding:6px 8px;
       border-radius:8px;
-      box-shadow: 0 8px 24px rgba(2,4,10,0.6);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       opacity:0;
       visibility:hidden;
       transition: opacity 0.25s ease, transform 0.25s ease;
