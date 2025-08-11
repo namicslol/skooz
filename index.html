@@ -1,165 +1,368 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>haunt.gg</title>
-  <link rel="icon" type="image/png" href="assets/favicon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>sk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
+    :root{
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.06);
+      --accent: rgba(255,255,255,0.9);
+      --muted: rgba(255,255,255,0.55);
+      --shadow: 0 10px 30px rgba(7,9,15,0.7);
+      --radius: 18px;
+      --progress-gradient: linear-gradient(90deg, #f2b792, #2b4968);
+    }
+    html, body {
+      height: 100%;
       margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-    body {
-      background: radial-gradient(ellipse at center, #1a001f 0%, #0a000f 100%);
-      color: white;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    header {
+      font-family: "Poppins", sans-serif;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 20px 40px;
-      background: #1a001f;
-      border-bottom: 1px solid #3c003c;
+      justify-content: center;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
-    .logo {
-      font-size: 24px;
-      font-weight: 800;
-      color: #f783ff;
+    /* Blurred image background */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('assets/background.png') center/cover no-repeat;
+      filter: blur(8px); /* only the image gets blurred */
+      z-index: -2;
     }
-    nav a {
+    /* Sharp gradient overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, #f2b792 0%, #2b4968 60%);
+      background-blend-mode: overlay;
+      z-index: -1;
+    }
+    /* Overlay */
+    .enter-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    nav a:hover {
-      color: #f783ff;
-    }
-    .btn {
-      background: #f783ff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      font-size: 28px;
       font-weight: bold;
       cursor: pointer;
+      z-index: 9999;
+      user-select: none;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
     }
-    .btn:hover {
-      background: #d86edb;
+    .enter-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
     }
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 80px 40px;
+    /* Top Left Controls */
+    .top-controls{
+      position:fixed;
+      top:15px;
+      left:15px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background: var(--glass-bg);
+      border:1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding:8px 12px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(120%);
+      z-index:100;
     }
-    .hero-text {
-      max-width: 600px;
+    .volume-icon{
+      width:18px;
+      height:18px;
+      fill:var(--accent);
     }
-    .hero-text h1 {
-      font-size: 50px;
-      line-height: 1.2;
+    .volume-slider{
+      -webkit-appearance:none;
+      height:4px;
+      background: var(--muted);
+      border-radius:5px;
+      outline:none;
+      width:100px;
     }
-    .hero-text h1 span {
-      color: #f783ff;
+    .volume-slider::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      width:14px;
+      height:14px;
+      background: var(--accent);
+      border-radius:50%;
+      cursor:pointer;
     }
-    .hero-text p {
-      margin: 20px 0;
-      color: #ccc;
+    /* Profile Card */
+    .card{
+      width:760px;
+      background: var(--glass-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(120%);
+      padding: 32px;
+      display:flex;
+      gap:26px;
     }
-    .hero-buttons {
-      display: flex;
-      gap: 15px;
+    .pfp{
+      width:68px;
+      height:68px;
+      border-radius:50%;
+      overflow:hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      border: 3px solid rgba(255,255,255,0.02);
+      flex-shrink:0;
     }
-    .profile-card {
-      background: linear-gradient(to bottom, #3d003d, #1a001f);
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      max-width: 300px;
+    .pfp img{ width:100%; height:100%; object-fit:cover; }
+    .main{ flex:1; display:flex; flex-direction:column; }
+    .user-row{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
     }
-    .profile-card img {
-      width: 80px;
-      border-radius: 50%;
-      margin-bottom: 15px;
+    .user-info {
+      display:flex;
+      align-items:center;
+      gap:6px;
     }
-    .profile-card h2 {
-      font-size: 22px;
-      margin-bottom: 10px;
+    .username{ font-weight:700; font-size:18px; color:var(--accent); }
+    .joined{ font-size:13px; color:var(--muted); }
+    /* Badges next to username */
+    .badges{
+      display:flex;
+      gap:4px;
+      padding:0;
+      background:none;
+      border:none;
     }
-    .badges, .socials {
-      margin: 15px 0;
+    .badge{
+      width:24px;
+      height:24px;
+      display:grid;
+      place-items:center;
+      position:relative;
     }
-    .badges span, .socials a {
-      margin: 0 5px;
-      font-size: 20px;
+    .badge img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
     }
-    .now-playing {
-      background: #2d002f;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 14px;
-      margin-top: 10px;
+    /* Transparent tooltip with outline */
+    .badge[data-tooltip]::after{
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      white-space:nowrap;
+      background: transparent;
+      color: var(--accent);
+      font-size:12px;
+      padding:6px 8px;
+      border-radius:8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: none;
+      opacity:0;
+      visibility:hidden;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events:none;
     }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #888;
+    .badge[data-tooltip]:hover::after{
+      opacity:1;
+      visibility:visible;
+      transform: translateX(-50%) translateY(0);
     }
+    .divider{ margin-top:14px; border-top:1px solid rgba(255,255,255,0.03); }
+    /* Music Player */
+    .music-player{
+      margin-top:20px;
+      width:760px;
+      background: var(--glass-bg);
+      border:1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px) saturate(120%);
+      display:flex;
+      align-items:center;
+      padding:16px;
+      gap:18px;
+    }
+    .song-cover{
+      width:60px; height:60px;
+      border-radius:10px;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+    .song-cover img{ width:100%; height:100%; object-fit:cover; }
+    .song-info{ flex:1; display:flex; flex-direction:column; color:var(--accent); }
+    .song-title{ font-weight:600; font-size:15px; }
+    .song-artist{ font-size:12px; color:var(--muted); }
+    .song-progress{
+      width:100%;
+      margin-top:6px;
+      position:relative;
+      height:4px;
+      background:var(--muted);
+      border-radius:5px;
+      overflow:hidden;
+      cursor: pointer;
+    }
+    .progress-fill{
+      position:absolute;
+      top:0;
+      left:0;
+      height:100%;
+      width:0%;
+      background:var(--progress-gradient);
+      transition:width 0.1s linear;
+    }
+    .time-display{ display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; }
+    .song-controls{ display:flex; align-items:center; gap:10px; }
+    .song-controls button{
+      background:none; border:none; cursor:pointer;
+      padding:6px; display:flex; align-items:center; justify-content:center;
+    }
+    .song-controls button svg{ width:24px; height:24px; fill:var(--accent); }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">haunt.gg</div>
-    <nav>
-      <a href="#">Discord</a>
-      <a href="#">Leaderboard</a>
-      <a href="#">Help Center</a>
-      <a href="#">Pricing</a>
-      <a href="#">Team</a>
-    </nav>
-    <button class="btn">Sign Up</button>
-  </header>
 
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Your Digital <span>Identity</span>,<br>On Your Terms</h1>
-      <p>Create a stunning biolink page that represents your personal brand. Share all your content in one beautiful, customizable location.</p>
-      <div class="hero-buttons">
-        <button class="btn">Claim Username</button>
-        <button class="btn" style="background:#2d002f">Explore Features</button>
-      </div>
-      <p style="margin-top: 10px; color: #5f5f5f">● 100% Free To Get Started &nbsp;&nbsp;•&nbsp;&nbsp; No Credit Card Required</p>
-    </div>
-    <div class="profile-card">
-      <img src="assets/pfp.png" alt="pfp" />
-      <h2>haunt</h2>
-      <div class="badges">
-        <span>🔧</span><span>🌟</span><span>💎</span><span>💰</span><span>🎗️</span><span>🔥</span>
-      </div>
-      <p>Web developer & designer based in Austria.</p>
-      <p style="font-size: 12px; color: #888;">📍 Vienna, Austria</p>
-      <div class="now-playing">
-        <strong>haunt.gg#1344</strong> • Playing Valorant<br>
-        Competitive • Haven
-      </div>
-      <div class="socials">
-        <a href="#">🐱‍💻</a>
-        <a href="#">🎮</a>
-        <a href="#">❌</a>
-        <a href="#">📸</a>
-      </div>
-    </div>
-  </section>
+  <div class="enter-overlay" id="enterOverlay">CLICK</div>
 
-  <footer>
-    Scroll Down ↓
-  </footer>
+  <!-- Top Left Controls -->
+  <div class="top-controls">
+    <svg class="volume-icon" viewBox="0 0 24 24">
+      <path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/>
+    </svg>
+    <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.8">
+  </div>
+
+  <!-- Profile Card -->
+  <div class="card">
+    <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
+    <div class="main">
+      <div class="user-row">
+        <div class="user-info">
+          <div class="username">skoozuh</div>
+          <div class="badges">
+            <div class="badge" data-tooltip="Christmas 2024"><img src="assets/christmas2024.png" alt="Christmas 2024"></div>
+            <div class="badge" data-tooltip="Premium"><img src="assets/premium.png" alt="Premium"></div>
+            <div class="badge" data-tooltip="Easter 2025"><img src="assets/easter2025.png" alt="Easter 2025"></div>
+          </div>
+        </div>
+        <div class="joined">prod. @skoozuh</div>
+      </div>
+      <div class="divider"></div>
+    </div>
+  </div>
+
+  <!-- Music Player -->
+  <div class="music-player">
+    <div class="song-cover"><img src="assets/songcover.png" alt="Song Cover"></div>
+    <div class="song-info">
+      <div class="song-title">My Track</div>
+      <div class="song-artist">skoozuh</div>
+      <div class="song-progress" id="songProgress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="time-display">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
+    </div>
+    <div class="song-controls">
+      <button id="playPauseBtn">
+        <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <audio id="audioPlayer" src="assets/song.mp3"></audio>
+
+  <script>
+    const audio = document.getElementById('audioPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const volumeControl = document.getElementById('volumeControl');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalTimeEl = document.getElementById('totalTime');
+    const progressFill = document.getElementById('progressFill');
+    const songProgress = document.getElementById('songProgress');
+    const enterOverlay = document.getElementById('enterOverlay');
+
+    function formatTime(seconds){
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+    }
+
+    function togglePlay(){
+      if(audio.paused){
+        audio.play();
+        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+      } else {
+        audio.pause();
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      }
+    }
+
+    playPauseBtn.addEventListener('click', togglePlay);
+
+    audio.addEventListener('loadedmetadata', ()=>{
+      totalTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', ()=>{
+      const progressPercent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = progressPercent + '%';
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    volumeControl.addEventListener('input', ()=>{
+      audio.volume = volumeControl.value;
+    });
+
+    function seek(e) {
+      const rect = songProgress.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
+      audio.currentTime = percentage * audio.duration;
+    }
+
+    let isDragging = false;
+    songProgress.addEventListener('mousedown', e => {
+      isDragging = true;
+      seek(e);
+    });
+    document.addEventListener('mousemove', e => {
+      if (isDragging) seek(e);
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+    songProgress.addEventListener('click', e => {
+      seek(e);
+    });
+
+    enterOverlay.addEventListener('click', () => {
+      enterOverlay.classList.add('fade-out');
+      setTimeout(() => {
+        enterOverlay.style.display = 'none';
+      }, 600);
+    });
+  </script>
 </body>
 </html>
