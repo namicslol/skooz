@@ -101,8 +101,8 @@
     }
     .card-wrapper {
       display: flex;
-      align-items: flex-start; /* prevent unwanted stretching */
-      gap: 10px; /* space between card and socials */
+      align-items: flex-start;
+      gap: 10px;
     }
     .card{
       width:760px;
@@ -243,10 +243,11 @@
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      padding: 8px;
+      padding: 0 8px; /* no vertical padding */
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
-      height: auto; /* JS will set exact height */
+      height: auto; /* JS will set */
+      overflow: hidden; /* ensures no overspill */
     }
     .socials a {
       display: block;
@@ -403,7 +404,7 @@
       }, 600);
     });
 
-    // Make socials match card height
+    // Make socials match card height exactly
     function matchSocialHeight(){
       const card = document.getElementById('profileCard');
       const socials = document.querySelector('.socials');
