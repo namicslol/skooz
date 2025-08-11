@@ -180,30 +180,23 @@
     }
     .divider{ margin-top:14px; border-top:1px solid rgba(255,255,255,0.03); }
 
-    /* Socials floating on right */
-    .socials-floating {
-      position: absolute;
-      top: 50%;
-      right: 40px;
-      transform: translateY(-50%);
+    /* Socials inside card on right */
+    .socials-inline {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 12px;
-      backdrop-filter: blur(8px) saturate(120%);
-      box-shadow: var(--shadow);
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
     }
-    .socials-floating img {
-      width: 28px;
-      height: 28px;
+    .socials-inline img {
+      width: 20px;
+      height: 20px;
       object-fit: contain;
       cursor: pointer;
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
-    .socials-floating img:hover {
+    .socials-inline img:hover {
       transform: scale(1.1);
       opacity: 0.85;
     }
@@ -271,16 +264,6 @@
     <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="0.8">
   </div>
 
-  <!-- Floating Socials -->
-  <div class="socials-floating">
-    <a href="https://www.instagram.com/okok00101010110/" target="_blank">
-      <img src="assets/instagram.png" alt="Instagram">
-    </a>
-    <a href="https://www.last.fm/user/skoozuh" target="_blank">
-      <img src="assets/lastfm.png" alt="Last.fm">
-    </a>
-  </div>
-
   <!-- Profile Card -->
   <div class="card">
     <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
@@ -297,6 +280,15 @@
         <div class="joined">Producer & Photographer | 17 | Seattle, WA</div>
       </div>
       <div class="divider"></div>
+    </div>
+    <!-- Socials Inline -->
+    <div class="socials-inline">
+      <a href="https://www.instagram.com/okok00101010110/" target="_blank">
+        <img src="assets/instagram.png" alt="Instagram">
+      </a>
+      <a href="https://www.last.fm/user/skoozuh" target="_blank">
+        <img src="assets/lastfm.png" alt="Last.fm">
+      </a>
     </div>
   </div>
 
