@@ -101,7 +101,7 @@
     }
     .card-wrapper {
       display: flex;
-      align-items: stretch; /* Socials match card height */
+      align-items: flex-start; /* prevent unwanted stretching */
       gap: 10px; /* space between card and socials */
     }
     .card{
@@ -246,7 +246,7 @@
       padding: 8px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px) saturate(120%);
-      height: 100%; /* match card height */
+      height: auto; /* JS will set exact height */
     }
     .socials a {
       display: block;
@@ -276,7 +276,7 @@
   </div>
 
   <div class="card-wrapper">
-    <div class="card">
+    <div class="card" id="profileCard">
       <div class="pfp"><img src="assets/pfp.png" alt="profile picture"></div>
       <div class="main">
         <div class="user-row">
@@ -294,7 +294,7 @@
       </div>
     </div>
 
-    <!-- Socials outside card but close -->
+    <!-- Socials outside card but same height -->
     <div class="socials">
       <a href="https://www.instagram.com/okok00101010110/" target="_blank" rel="noopener">
         <img src="assets/instagram.png" alt="Instagram">
@@ -402,6 +402,15 @@
         enterOverlay.style.display = 'none';
       }, 600);
     });
+
+    // Make socials match card height
+    function matchSocialHeight(){
+      const card = document.getElementById('profileCard');
+      const socials = document.querySelector('.socials');
+      socials.style.height = card.offsetHeight + 'px';
+    }
+    window.addEventListener('load', matchSocialHeight);
+    window.addEventListener('resize', matchSocialHeight);
   </script>
 </body>
 </html>
