@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>@skoozuh</title>
+  <title>sk</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -25,7 +25,6 @@
       justify-content:center;
       flex-direction:column;
       position: relative;
-      cursor: url('assets/cursor.png'), auto; /* custom cursor */
     }
     /* Blurred background fix */
     body::before {
@@ -185,10 +184,10 @@
       transform: translateX(-50%) translateY(0);
     }
     .divider{ margin-top:14px; border-top:1px solid rgba(255,255,255,0.03); }
-    /* Music Player */
+    /* Music Player (smaller) */
     .music-player{
       margin-top:20px;
-      width:760px;
+      width:600px; /* reduced from 760px */
       background: var(--glass-bg);
       border:1px solid var(--glass-border);
       border-radius: var(--radius);
@@ -196,12 +195,13 @@
       backdrop-filter: blur(8px) saturate(120%);
       display:flex;
       align-items:center;
-      padding:16px;
-      gap:18px;
+      padding:12px; /* was 16px */
+      gap:14px; /* was 18px */
     }
     .song-cover{
-      width:60px; height:60px;
-      border-radius:10px;
+      width:50px; /* was 60px */
+      height:50px; /* was 60px */
+      border-radius:8px; /* was 10px */
       overflow:hidden;
       flex-shrink:0;
     }
@@ -257,12 +257,12 @@
         <div class="user-info">
           <div class="username">skoozuh</div>
           <div class="badges">
-            <div class="badge" data-tooltip="Christmas 2024"><img src="assets/christmas2024.png" alt="Christmas 2024"></div>
-            <div class="badge" data-tooltip="Artist"><img src="assets/artist.png" alt="Artist"></div>
-            <div class="badge" data-tooltip="Easter 2025"><img src="assets/easter2025.png" alt="Easter 2025"></div>
+            <div class="badge" data-tooltip="Holiday"><img src="assets/christmas2024.png" alt="Holiday"></div>
+            <div class="badge" data-tooltip="Premium"><img src="assets/premium.png" alt="Premium"></div>
+            <div class="badge" data-tooltip="Easter"><img src="assets/easter2025.png" alt="Easter"></div>
           </div>
         </div>
-        <div class="joined">producer & photographer</div>
+        <div class="joined">prod. @skoozuh</div>
       </div>
       <div class="divider"></div>
     </div>
@@ -272,8 +272,8 @@
   <div class="music-player">
     <div class="song-cover"><img src="assets/songcover.png" alt="Song Cover"></div>
     <div class="song-info">
-      <div class="song-title">Chain Swangin</div>
-      <div class="song-artist">Molly Santana</div>
+      <div class="song-title">My Track</div>
+      <div class="song-artist">skoozuh</div>
       <div class="song-progress" id="songProgress">
         <div class="progress-fill" id="progressFill"></div>
       </div>
