@@ -3,242 +3,451 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Biolink — Sleek Dark</title>
+<title>Clean Biolink — Minimal Dark</title>
+<!--
+  This file is intentionally verbose (~400+ lines) to match the user's request.
+  Assets referenced (must exist in assets/):
+    - assets/pfp.png
+    - assets/artist.png
+    - assets/crown.png
+    - assets/icon.png
+    - assets/premium.png
+    - assets/song.mp3
+    - assets/songcover.png
+    - assets/instagram.png
+    - assets/lastfm.png
+-->
 <style>
-  :root {
-    --bg: #050505;
-    --card-bg: rgba(20, 20, 20, 0.8);
-    --border: rgba(255, 255, 255, 0.05);
-    --text: #fff;
-    --muted: #888;
-    --accent: linear-gradient(90deg, #8b5cf6, #ec4899);
-    --pill-bg: rgba(255,255,255,0.06);
+  /* ===========================
+     Base / Reset
+     =========================== */
+  :root{
+    --bg-0: #050507;
+    --bg-1: #0b0b0d;
+    --panel: rgba(255,255,255,0.03);
+    --muted: #9aa0a6;
+    --text: #e8eef6;
+    --accentA: #7c4dff;
+    --accentB: #ff5ca8;
+    --glass: rgba(255,255,255,0.02);
+    --shadow-1: 0 6px 30px rgba(2,6,23,0.6);
+    --pill: rgba(255,255,255,0.02);
+    --success: #34d399;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+                 Roboto, 'Helvetica Neue', Arial;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    background: radial-gradient(circle at top, #0b0b0b, #000);
-    color: var(--text);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  html,body{
+    height:100%;
+    margin:0;
+    padding:0;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(124,77,255,0.06), transparent 8%),
+      radial-gradient(900px 450px at 90% 85%, rgba(255,92,168,0.05), transparent 6%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1));
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
+
+  /* ===========================
+     Container layout
+     =========================== */
+  .wrap {
+    width:100%;
+    max-width:920px;
+    padding:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
   .card {
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 420px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    width:100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    padding:36px;
+    box-shadow: var(--shadow-1);
+    border: 1px solid rgba(255,255,255,0.04);
+    display:grid;
+    grid-template-columns: 128px 1fr 220px;
+    gap:28px;
+    align-items:start;
+    min-height:260px;
+    backdrop-filter: blur(8px) saturate(120%);
+  }
+
+  /* small screens: collapse to single column */
+  @media (max-width:880px){
+    .card {
+      grid-template-columns: 1fr;
+      padding:26px;
+      gap:18px;
+    }
+  }
+
+  /* ===========================
+     Left column: profile image
+     =========================== */
+  .left {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
   }
   .pfp {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto 14px;
-    border: 2px solid var(--border);
+    width:120px;
+    height:120px;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.03));
+    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
-  .pfp img { width: 100%; height: 100%; object-fit: cover; }
+  .pfp img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  .pfp-sub {
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+
+  /* ===========================
+     Main column: name, badges, bio, controls
+     =========================== */
+  .main {
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    padding-top:6px;
+  }
+
   .name-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    justify-content:flex-start;
+    flex-wrap:wrap;
   }
-  h1 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
+  .name {
+    font-size:20px;
+    font-weight:700;
+    letter-spacing: -0.01em;
+    margin:0;
   }
+  .handle {
+    font-size:12px;
+    color:var(--muted);
+    margin-left:4px;
+  }
+
+  /* badges pill */
   .badges-pill {
-    display: flex;
-    align-items: center;
-    background: var(--pill-bg);
-    border-radius: 999px;
-    padding: 4px 10px;
-    gap: 8px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+    border-radius:999px;
+    padding:6px 10px;
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 6px 16px rgba(2,6,23,0.3);
+    margin-left:6px;
   }
-  .badge {
-    position: relative;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .badges-pill .badge {
+    width:36px;
+    height:36px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;
+    position:relative;
   }
-  .badge img {
-    width: 18px;
-    height: 18px;
+  .badges-pill .badge img{
+    width:18px;
+    height:18px;
+    display:block;
   }
-  .tooltip {
-    position: absolute;
-    bottom: 130%;
-    background: #000;
-    color: #fff;
-    font-size: 12px;
-    padding: 4px 6px;
-    border-radius: 6px;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.15s ease, transform 0.15s ease;
-    white-space: nowrap;
+  .badge:hover::after{
+    content: attr(data-label);
+    position:absolute;
+    bottom:calc(100% + 10px);
+    left:50%;
+    transform:translateX(-50%);
+    background:#06070a;
+    color:var(--text);
+    font-size:12px;
+    padding:6px 8px;
+    border-radius:8px;
+    white-space:nowrap;
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow:0 8px 30px rgba(2,6,23,0.6);
+    z-index:20;
+    opacity:0;
+    pointer-events:none;
+    animation:fadeUp .14s ease forwards;
   }
-  .badge:hover .tooltip {
-    opacity: 1;
-    transform: translateY(0);
+  @keyframes fadeUp{
+    from { transform:translateX(-50%) translateY(6px); opacity:0; }
+    to   { transform:translateX(-50%) translateY(0); opacity:1; }
   }
+
+  /* make badges look "connected" visually by overlapping small negative margins */
+  .badges-pill .badge {
+    margin-left:-8px;
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+  .badges-pill .badge:first-child { margin-left:0; }
+
+  /* subtle ring on hover */
+  .badges-pill .badge:hover{
+    box-shadow: 0 4px 18px rgba(124,77,255,0.12), 0 1px 0 rgba(255,255,255,0.02) inset;
+    transform: translateY(-2px);
+  }
+
+  /* ===========================
+     Bio / description
+     =========================== */
   .bio {
-    font-size: 14px;
-    color: var(--muted);
-    margin-top: 8px;
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.5;
+    max-width:640px;
+    margin-top:2px;
   }
-  .song {
-    margin-top: 18px;
-    background: var(--pill-bg);
-    border-radius: 12px;
-    padding: 10px;
-    text-align: left;
+
+  /* ===========================
+     Actions / buttons (optional)
+     =========================== */
+  .actions {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-top:6px;
   }
-  .song-top {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+  .btn {
+    padding:10px 14px;
+    border-radius:12px;
+    background:linear-gradient(90deg, rgba(124,77,255,0.12), rgba(255,92,168,0.06));
+    color:var(--text);
+    border:1px solid rgba(255,255,255,0.03);
+    font-weight:600;
+    font-size:13px;
+    cursor:pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
   }
-  .song-cover {
-    width: 52px;
-    height: 52px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
+  .btn.secondary{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.04);
+    color:var(--muted);
+    font-weight:500;
   }
-  .song-cover img { width: 100%; height: 100%; object-fit: cover; }
-  .song-meta {
-    flex: 1;
+  .btn:hover{ transform: translateY(-3px); box-shadow:0 8px 30px rgba(2,6,23,0.45); }
+
+  /* ===========================
+     Right column: song player + socials
+     =========================== */
+  .right {
+    display:flex;
+    flex-direction:column;
+    gap:16px;
   }
-  .song-title {
-    font-size: 14px;
-    font-weight: 600;
+  .player {
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.03));
+    padding:12px;
+    border-radius:12px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    border:1px solid rgba(255,255,255,0.03);
+    }
+  .cover {
+    width:64px;
+    height:64px;
+    border-radius:10px;
+    overflow:hidden;
+    flex-shrink:0;
+    border:1px solid rgba(255,255,255,0.03);
   }
-  .song-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
+  .cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .meta {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    width:100%;
+  }
+  .meta .title {
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:-0.01em;
+  }
+  .meta .sub {
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* slim progress + controls */
+  .controls {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:4px;
+  }
+  .play {
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    display:inline-grid;
+    place-items:center;
+    cursor:pointer;
+    font-weight:700;
+    background:linear-gradient(180deg, rgba(124,77,255,0.08), rgba(255,92,168,0.04));
+    border:1px solid rgba(255,255,255,0.03);
+    transition: transform .12s ease;
+  }
+  .play:hover{ transform: translateY(-3px); }
+
+  .time {
+    font-size:12px;
+    color:var(--muted);
+    min-width:56px;
+    text-align:right;
+  }
+
+  .prog-wrap {
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:8px;
   }
   .progress {
-    flex: 1;
-    height: 4px;
-    background: #333;
-    border-radius: 4px;
-    cursor: pointer;
+    height:6px;
+    background: rgba(255,255,255,0.03);
+    border-radius:6px;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
   }
-  .progress .bar {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 4px;
-    width: 0%;
+  .progress .fill {
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:0%;
+    background: linear-gradient(90deg, var(--accentA), var(--accentB));
   }
-  input[type="range"] {
-    width: 80px;
+
+  /* volume control - slim */
+  .vol {
+    width:88px;
+    display:flex;
+    gap:8px;
+    align-items:center;
   }
+  .vol input[type="range"]{
+    width:100%;
+    -webkit-appearance:none;
+    appearance:none;
+    height:6px;
+    background:transparent;
+  }
+  .vol input[type="range"]::-webkit-slider-runnable-track{
+    height:6px;
+    background: rgba(255,255,255,0.04);
+    border-radius:6px;
+  }
+  .vol input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--text); margin-top:-3px;
+  }
+
+  /* social icons - spaced out */
   .socials {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    align-items:center;
+    padding:6px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.02);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
   }
-  .socials a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background: var(--pill-bg);
-    border-radius: 8px;
-    transition: background 0.2s ease;
+  .social {
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: transform .12s ease, box-shadow .12s ease;
+    cursor:pointer;
+    border:1px solid rgba(255,255,255,0.02);
+    background: rgba(255,255,255,0.01);
   }
-  .socials a:hover {
-    background: rgba(255,255,255,0.1);
+  .social img{ width:20px; height:20px; display:block; }
+  .social:hover{ transform:translateY(-4px); box-shadow: 0 10px 30px rgba(2,6,23,0.45); }
+
+  /* ===========================
+     Footer small info
+     =========================== */
+  .meta-foot {
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:6px;
   }
-  .socials img {
-    width: 20px;
-    height: 20px;
+
+  /* ===========================
+     Misc / utility
+     =========================== */
+  .muted { color:var(--muted); font-size:13px; }
+  .row { display:flex; gap:12px; align-items:center; }
+  .spacer { flex:1; }
+
+  /* accessibility focus */
+  .badge:focus, .play:focus, .social:focus, .btn:focus { outline: 3px solid rgba(124,77,255,0.18); outline-offset:3px; }
+
+  /* tiny entrance animation for overall page */
+  .card { transform: translateY(6px) scale(0.998); opacity:0; animation: cardIn .42s ease forwards; }
+  @keyframes cardIn {
+    to { transform:none; opacity:1; }
   }
+
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="pfp"><img src="assets/pfp.png" alt="Profile"></div>
-  <div class="name-row">
-    <h1>Your Name</h1>
-    <div class="badges-pill">
-      <div class="badge"><img src="assets/artist.png"><div class="tooltip">Producer</div></div>
-      <div class="badge"><img src="assets/crown.png"><div class="tooltip">Owner</div></div>
-      <div class="badge"><img src="assets/icon.png"><div class="tooltip">Public Icon</div></div>
-      <div class="badge"><img src="assets/premium.png"><div class="tooltip">Premium</div></div>
+<div class="wrap">
+  <div class="card" role="region" aria-label="Profile card">
+    <!-- LEFT: profile image -->
+    <div class="left">
+      <div class="pfp" aria-hidden="false">
+        <img src="assets/pfp.png" alt="Profile picture">
+      </div>
+      <div class="pfp-sub">Producer • Owner</div>
     </div>
-  </div>
-  <div class="bio">This is your bio text here.</div>
 
-  <div class="song">
-    <div class="song-top">
-      <div class="song-cover"><img src="assets/songcover.png" alt="Song Cover"></div>
-      <div class="song-meta">
-        <div class="song-title">Song Title — Artist</div>
-        <div class="song-controls">
-          <button id="playBtn">▶</button>
-          <div class="progress" id="progress"><div class="bar" id="bar"></div></div>
-          <span id="currentTime">0:00</span>/<span id="duration">0:00</span>
-          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+    <!-- MAIN: name, badges, bio -->
+    <div class="main">
+      <div class="name-row" style="margin-top:2px;">
+        <h2 class="name">Your Name <span class="handle muted">@yourhandle</span></h2>
+
+        <!-- badges pill -->
+        <div class="badges-pill" aria-hidden="false" role="group" aria-label="Badges">
+          <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
+          <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
+          <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public"></div>
+          <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="socials">
-    <a href="https://instagram.com/" target="_blank"><img src="assets/instagram.png"></a>
-    <a href="https://last.fm/" target="_blank"><img src="assets/lastfm.png"></a>
-  </div>
-</div>
-
-<audio id="audio" src="assets/song.mp3"></audio>
-<script>
-  const audio = document.getElementById('audio');
-  const playBtn = document.getElementById('playBtn');
-  const progress = document.getElementById('progress');
-  const bar = document.getElementById('bar');
-  const currentTimeEl = document.getElementById('currentTime');
-  const durationEl = document.getElementById('duration');
-  const volume = document.getElementById('volume');
-
-  audio.volume = volume.value;
-  playBtn.onclick = () => audio.paused ? audio.play() : audio.pause();
-  audio.onplay = () => playBtn.textContent = '⏸';
-  audio.onpause = () => playBtn.textContent = '▶';
-  audio.ontimeupdate = () => {
-    const pct = (audio.currentTime / audio.duration) * 100;
-    bar.style.width = pct + '%';
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-  };
-  audio.onloadedmetadata = () => durationEl.textContent = formatTime(audio.duration);
-  progress.onclick = e => {
-    const rect = progress.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    audio.currentTime = pct * audio.duration;
-  };
-  volume.oninput = () => audio.volume = volume.value;
-  function formatTime(sec) {
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60).toString().padStart(2, '0');
-    return m + ':' + s;
-  }
-</script>
-</body>
-</html>
+  
