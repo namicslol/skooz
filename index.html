@@ -3,55 +3,53 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Biolink — Dark Theme</title>
+<title>Biolink — Sleek Dark</title>
 <style>
   :root {
-    --bg: #0a0a0a;
-    --card: #111;
+    --bg: #050505;
+    --card-bg: rgba(20, 20, 20, 0.8);
+    --border: rgba(255, 255, 255, 0.05);
+    --text: #fff;
     --muted: #888;
-    --accent: #8b5cf6;
-    --pill-bg: #1a1a1a;
+    --accent: linear-gradient(90deg, #8b5cf6, #ec4899);
+    --pill-bg: rgba(255,255,255,0.06);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
-    color: #fff;
     font-family: Inter, sans-serif;
+    background: radial-gradient(circle at top, #0b0b0b, #000);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
   }
   .card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 20px;
-    display: flex;
-    gap: 16px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 420px;
     width: 100%;
-    max-width: 800px;
-    border: 1px solid #222;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   }
   .pfp {
     width: 110px;
     height: 110px;
-    border-radius: 16px;
+    border-radius: 50%;
     overflow: hidden;
-    flex-shrink: 0;
+    margin: 0 auto 14px;
+    border: 2px solid var(--border);
   }
-  .pfp img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .main {
-    flex: 1;
-  }
-  .header {
+  .pfp img { width: 100%; height: 100%; object-fit: cover; }
+  .name-row {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
   }
   h1 {
@@ -64,18 +62,16 @@
     align-items: center;
     background: var(--pill-bg);
     border-radius: 999px;
-    padding: 4px 8px;
-    gap: 6px;
+    padding: 4px 10px;
+    gap: 8px;
   }
   .badge {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    position: relative;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    cursor: default;
   }
   .badge img {
     width: 18px;
@@ -83,72 +79,70 @@
   }
   .tooltip {
     position: absolute;
-    bottom: 140%;
+    bottom: 130%;
     background: #000;
     color: #fff;
     font-size: 12px;
     padding: 4px 6px;
     border-radius: 6px;
     opacity: 0;
-    pointer-events: none;
-    white-space: nowrap;
     transform: translateY(4px);
     transition: opacity 0.15s ease, transform 0.15s ease;
+    white-space: nowrap;
   }
   .badge:hover .tooltip {
     opacity: 1;
     transform: translateY(0);
   }
   .bio {
-    margin-top: 6px;
     font-size: 14px;
     color: var(--muted);
+    margin-top: 8px;
   }
   .song {
-    display: flex;
-    align-items: center;
+    margin-top: 18px;
     background: var(--pill-bg);
     border-radius: 12px;
     padding: 10px;
-    margin-top: 14px;
-    gap: 12px;
+    text-align: left;
+  }
+  .song-top {
+    display: flex;
+    gap: 10px;
+    align-items: center;
   }
   .song-cover {
-    width: 64px;
-    height: 64px;
+    width: 52px;
+    height: 52px;
     border-radius: 8px;
     overflow: hidden;
+    flex-shrink: 0;
   }
-  .song-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .song-cover img { width: 100%; height: 100%; object-fit: cover; }
   .song-meta {
     flex: 1;
   }
   .song-title {
-    font-weight: 600;
     font-size: 14px;
+    font-weight: 600;
   }
   .song-controls {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 8px;
   }
   .progress {
     flex: 1;
-    height: 6px;
+    height: 4px;
     background: #333;
-    border-radius: 6px;
-    position: relative;
+    border-radius: 4px;
     cursor: pointer;
   }
   .progress .bar {
     height: 100%;
     background: var(--accent);
-    border-radius: 6px;
+    border-radius: 4px;
     width: 0%;
   }
   input[type="range"] {
@@ -156,17 +150,22 @@
   }
   .socials {
     display: flex;
-    gap: 8px;
-    margin-top: 14px;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
   }
   .socials a {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--pill-bg);
-    border-radius: 8px;
     width: 40px;
     height: 40px;
+    background: var(--pill-bg);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+  .socials a:hover {
+    background: rgba(255,255,255,0.1);
   }
   .socials img {
     width: 20px;
@@ -176,22 +175,20 @@
 </head>
 <body>
 <div class="card">
-  <div class="pfp">
-    <img src="assets/pfp.png" alt="Profile">
-  </div>
-  <div class="main">
-    <div class="header">
-      <h1>Your Name</h1>
-      <div class="badges-pill">
-        <div class="badge"><img src="assets/artist.png"><div class="tooltip">Producer</div></div>
-        <div class="badge"><img src="assets/crown.png"><div class="tooltip">Owner</div></div>
-        <div class="badge"><img src="assets/icon.png"><div class="tooltip">Public Icon</div></div>
-        <div class="badge"><img src="assets/premium.png"><div class="tooltip">Premium</div></div>
-      </div>
+  <div class="pfp"><img src="assets/pfp.png" alt="Profile"></div>
+  <div class="name-row">
+    <h1>Your Name</h1>
+    <div class="badges-pill">
+      <div class="badge"><img src="assets/artist.png"><div class="tooltip">Producer</div></div>
+      <div class="badge"><img src="assets/crown.png"><div class="tooltip">Owner</div></div>
+      <div class="badge"><img src="assets/icon.png"><div class="tooltip">Public Icon</div></div>
+      <div class="badge"><img src="assets/premium.png"><div class="tooltip">Premium</div></div>
     </div>
-    <div class="bio">This is your bio text here.</div>
+  </div>
+  <div class="bio">This is your bio text here.</div>
 
-    <div class="song">
+  <div class="song">
+    <div class="song-top">
       <div class="song-cover"><img src="assets/songcover.png" alt="Song Cover"></div>
       <div class="song-meta">
         <div class="song-title">Song Title — Artist</div>
@@ -203,11 +200,11 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="socials">
-      <a href="https://instagram.com/" target="_blank"><img src="assets/instagram.png"></a>
-      <a href="https://last.fm/" target="_blank"><img src="assets/lastfm.png"></a>
-    </div>
+  <div class="socials">
+    <a href="https://instagram.com/" target="_blank"><img src="assets/instagram.png"></a>
+    <a href="https://last.fm/" target="_blank"><img src="assets/lastfm.png"></a>
   </div>
 </div>
 
@@ -222,28 +219,21 @@
   const volume = document.getElementById('volume');
 
   audio.volume = volume.value;
-
   playBtn.onclick = () => audio.paused ? audio.play() : audio.pause();
   audio.onplay = () => playBtn.textContent = '⏸';
   audio.onpause = () => playBtn.textContent = '▶';
-
   audio.ontimeupdate = () => {
     const pct = (audio.currentTime / audio.duration) * 100;
     bar.style.width = pct + '%';
     currentTimeEl.textContent = formatTime(audio.currentTime);
   };
-  audio.onloadedmetadata = () => {
-    durationEl.textContent = formatTime(audio.duration);
-  };
-
+  audio.onloadedmetadata = () => durationEl.textContent = formatTime(audio.duration);
   progress.onclick = e => {
     const rect = progress.getBoundingClientRect();
     const pct = (e.clientX - rect.left) / rect.width;
     audio.currentTime = pct * audio.duration;
   };
-
   volume.oninput = () => audio.volume = volume.value;
-
   function formatTime(sec) {
     const m = Math.floor(sec / 60);
     const s = Math.floor(sec % 60).toString().padStart(2, '0');
