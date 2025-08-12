@@ -51,7 +51,7 @@
     grid-template-columns: 180px 1fr 300px;
     gap:22px;
     align-items:start;
-    min-height: 420px; /* slightly taller card */
+    min-height: 420px;
     backdrop-filter: blur(10px) saturate(120%);
   }
 
@@ -103,12 +103,19 @@
 
   /* RIGHT: PLAYER + SOCIALS */
   .right { display:flex; flex-direction:column; gap:12px; align-items:stretch; }
-  .player {
-        margin-top: 12px;
-    }
+  .player-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .player-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   .song-cover { width:92px; height:92px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); }
   .song-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .track-info{ display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
   .track-title{ font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .track-sub{ font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
@@ -116,9 +123,7 @@
   .play-btn{ width:48px; height:48px; border-radius:12px; display:inline-grid; place-items:center; cursor:pointer;
             background: linear-gradient(180deg, rgba(110,123,255,0.08), rgba(139,92,246,0.04)); border:1px solid rgba(255,255,255,0.03); font-weight:700; }
   .play-btn:hover{ transform:translateY(-3px); box-shadow:0 12px 40px rgba(110,123,255,0.12); }
-
   .time { font-size:13px; color:var(--muted); min-width:48px; text-align:right; }
-
   .progress { height:8px; background: rgba(255,255,255,0.03); border-radius:8px; position:relative; flex:1; cursor:pointer; overflow:hidden; }
   .progress .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg,var(--accentA),var(--accentB)); }
 
@@ -131,136 +136,90 @@
   .visualizer .bar { position:absolute; bottom:0; width:6px; background: linear-gradient(180deg,var(--accentC),var(--accentA)); border-radius:4px; opacity:0.9; }
 
   .socials {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 12px;
-        flex-wrap: wrap;
-    }
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
   .social { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease; cursor:pointer; }
   .social img{ width:22px; height:22px; display:block; }
   .social:hover{ transform:translateY(-6px); box-shadow:0 16px 50px rgba(2,6,23,0.45); }
 
-  /* small footer note */
   .footer-note { color:var(--muted); font-size:13px; text-align:right; margin-top:6px; }
-
-  /* accessibility */
-  button{ font-family:inherit; }
-  [tabindex]:focus { outline:3px solid rgba(110,123,255,0.12); outline-offset:3px; }
-
-.player-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
-        .player-inner img {
-        width: 80px;
-        height: 80px;
-        border-radius: 8px;
-        object-fit: cover;
-    }
-.player-inner audio {
-            flex-grow: 1;
-            margin-right: 10px;
-        }
 </style>
 </head>
 <body>
 
-  <div class="card" role="region" aria-label="Profile card">
+<div class="card" role="region" aria-label="Profile card">
 
-    <!-- LEFT: Profile -->
-    <div class="left">
-      <div class="pfp-wrap" title="Profile picture">
-        <img src="assets/pfp.png" alt="Profile picture" class="pfp">
+  <div class="left">
+    <div class="pfp-wrap" title="Profile picture">
+      <img src="assets/pfp.png" alt="Profile picture" class="pfp">
+    </div>
+    <div class="role">Producer • Owner</div>
+  </div>
+
+  <div class="main">
+    <div class="name-row">
+      <div class="name-left">
+        <div class="name-block">
+          <div class="display-name" id="displayName">Your Name</div>
+          <div class="display-handle" id="displayHandle">@yourhandle</div>
+        </div>
+        <div class="badges-pill" role="group" aria-label="Badges">
+          <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
+          <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
+          <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public"></div>
+          <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
+        </div>
       </div>
-      <div class="role">Producer • Owner</div>
+      <div style="width:80px"></div>
     </div>
 
-    <!-- MAIN: name, badges, bio -->
-    <div class="main">
-      <div class="name-row">
-        <div class="name-left">
-          <div class="name-block">
-            <div class="display-name" id="displayName">Your Name</div>
-            <div class="display-handle" id="displayHandle">@yourhandle</div>
-          </div>
+    <p class="bio" id="bio">Short bio here — tell people what you do in one concise sentence. Keep it punchy.</p>
 
-          <!-- badges pill -->
-          <div class="badges-pill" role="group" aria-label="Badges">
-            <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
-            <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
-            <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public"></div>
-            <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
-          </div>
-        </div>
-
-        <!-- empty placeholder to keep spacing consistent on wide screens -->
-        <div style="width:80px"></div>
-      </div>
-
-      <p class="bio" id="bio">Short bio here — tell people what you do in one concise sentence. Keep it punchy.</p>
-<div class="player" role="region" aria-label="Music player">
+    <div class="player" role="region" aria-label="Music player">
+      <div class="player-content">
         <div class="song-cover" title="Song cover">
           <img src="assets/songcover.png" alt="song cover">
         </div>
-
-        <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <div class="player-details">
           <div class="track-meta">
             <div class="track-title" id="trackTitle">Song Title — Artist</div>
             <div class="track-sub" id="trackSub">Single • 2025</div>
           </div>
-<div class="socials" role="navigation" aria-label="Social links">
-        <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
-        <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
-      </div>
-
-      <!-- small spacer -->
-      <div style="height:8px"></div>
-
-      <!-- removed extra buttons/sections as requested -->
-
-    </div>
-
-    <!-- RIGHT: Player and socials -->
-    <div class="right">
-      
-
           <div class="controls">
             <button class="play-btn" id="playBtn" aria-label="Play">▶</button>
-
             <div class="time" id="currentTime">0:00</div>
-
             <div class="progress" id="progress" role="slider" aria-valuemin="0" aria-valuemax="100" tabindex="0" aria-valuenow="0">
               <div class="fill" id="fill"></div>
             </div>
-
             <div class="time" id="duration">0:00</div>
-
             <div class="volume" title="Volume">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor" opacity="0.9"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor" opacity="0.9"/>
+              </svg>
               <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
             </div>
           </div>
-
           <div class="visualizer" id="visualizer" aria-hidden="false"></div>
         </div>
       </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="color:var(--muted);font-size:13px">Connect</div>
-      </div>
-
-      
-
-      <div class="footer-note" id="footerNote">Tap play to start — drag the bar to seek.</div>
     </div>
 
+    <div class="socials" role="navigation" aria-label="Social links">
+      <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
+      <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
+    </div>
+
+    <div style="color:var(--muted);font-size:13px;margin-top:8px;">Connect</div>
+    <div class="footer-note" id="footerNote">Tap play to start — drag the bar to seek.</div>
   </div>
 
-<!-- audio element -->
-<audio id="audio" src="assets/song.mp3" preload="metadata"></audio></div>
+</div>
+
+<audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
 
 <script>
 /* Player wiring */
@@ -276,7 +235,7 @@ const visualizer = document.getElementById('visualizer');
 audio.volume = parseFloat(volume.value || 0.8);
 
 playBtn.addEventListener('click', () => {
-  if (audio.paused) audio.play().catch(()=>{/* autoplay prevented */});
+  if (audio.paused) audio.play().catch(()=>{});
   else audio.pause();
 });
 audio.addEventListener('play', () => playBtn.textContent = '⏸');
@@ -295,7 +254,6 @@ audio.addEventListener('loadedmetadata', () => {
   initVisualizer();
 });
 
-/* Seek via click */
 progress.addEventListener('click', (e) => {
   if (!audio.duration || isNaN(audio.duration)) return;
   const rect = progress.getBoundingClientRect();
@@ -303,7 +261,6 @@ progress.addEventListener('click', (e) => {
   audio.currentTime = pct * audio.duration;
 });
 
-/* Drag seek */
 let dragging = false;
 progress.addEventListener('pointerdown', (e) => {
   dragging = true;
@@ -321,10 +278,8 @@ function seekFromEvent(e){
   audio.currentTime = pct * audio.duration;
 }
 
-/* Volume */
 volume.addEventListener('input', () => { audio.volume = parseFloat(volume.value); });
 
-/* formatTime */
 function formatTime(s){
   if (!s || isNaN(s)) return '0:00';
   const m = Math.floor(s/60);
@@ -332,7 +287,6 @@ function formatTime(s){
   return m + ':' + sec;
 }
 
-/* Visualizer: WebAudio */
 let audioCtx, analyser, sourceNode, dataArray, bufferLength, bars = [];
 
 function initVisualizer(){
@@ -389,7 +343,6 @@ window.addEventListener('resize', () => {
   if (visualizer && visualizer.clientWidth) buildVisualizerBars();
 });
 
-/* accessibility: keyboard */
 progress.addEventListener('keydown', (e) => {
   if (!audio.duration || isNaN(audio.duration)) return;
   const step = Math.max(1, Math.floor(audio.duration / 20));
@@ -399,21 +352,17 @@ progress.addEventListener('keydown', (e) => {
   if (e.key === 'End') audio.currentTime = audio.duration;
 });
 
-/* small UX: attempt to resume audio context on first click */
 document.addEventListener('click', function unlock(){
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
   document.removeEventListener('click', unlock);
 });
 
-/* keyboard: play/pause when play button focused and space pressed */
 document.addEventListener('keydown', (e) => {
   if ((e.code === 'Space' || e.key === ' ') && document.activeElement === playBtn) {
     e.preventDefault();
     playBtn.click();
   }
 });
-
-/* End script */
 </script>
 
 </body>
