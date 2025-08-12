@@ -38,7 +38,6 @@
     -moz-osx-font-smoothing:grayscale;
   }
 
-  /* CARD */
   .card {
     width:100%;
     max-width:var(--card-width);
@@ -53,6 +52,7 @@
     align-items:start;
     min-height: 420px;
     backdrop-filter: blur(10px) saturate(120%);
+    position: relative; /* for socials absolute positioning */
   }
 
   @media (max-width:980px){
@@ -63,7 +63,6 @@
     .card{ grid-template-columns: 1fr; padding:20px; gap:14px; min-height: auto; }
   }
 
-  /* LEFT: PROFILE */
   .left { display:flex; flex-direction:column; align-items:center; gap:12px; }
   .pfp-wrap{
     width:172px; height:172px; border-radius:18px; overflow:hidden;
@@ -76,7 +75,6 @@
   .pfp{ width:100%; height:100%; object-fit:cover; display:block; }
   .role { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
 
-  /* MAIN: NAME + BADGES + BIO */
   .main { display:flex; flex-direction:column; gap:12px; }
   .name-row { display:flex; align-items:center; gap:12px; justify-content:space-between; width:100%; }
   .name-left { display:flex; align-items:flex-start; gap:12px; }
@@ -84,7 +82,6 @@
   .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
   .display-handle { font-size:13px; color:var(--muted); margin-top:2px; }
 
-  /* badges: one connected pill beside name */
   .badges-pill { display:inline-flex; align-items:center; gap:0; padding:6px 12px; border-radius:999px;
                  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
                  border:1px solid rgba(255,255,255,0.02); box-shadow: 0 6px 18px rgba(2,6,23,0.18); }
@@ -101,8 +98,6 @@
 
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
 
-  /* RIGHT: PLAYER + SOCIALS */
-  .right { display:flex; flex-direction:column; gap:12px; align-items:stretch; }
   .player-content {
     display: flex;
     align-items: flex-start;
@@ -120,9 +115,24 @@
   .track-sub{ font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .controls { display:flex; align-items:center; gap:10px; margin-top:6px; width:100%; }
-  .play-btn{ width:48px; height:48px; border-radius:12px; display:inline-grid; place-items:center; cursor:pointer;
-            background: linear-gradient(180deg, rgba(110,123,255,0.08), rgba(139,92,246,0.04)); border:1px solid rgba(255,255,255,0.03); font-weight:700; }
-  .play-btn:hover{ transform:translateY(-3px); box-shadow:0 12px 40px rgba(110,123,255,0.12); }
+  .play-btn {
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:inline-grid;
+    place-items:center;
+    cursor:pointer;
+    font-weight:700;
+    background: linear-gradient(135deg, var(--accentA), var(--accentB));
+    border:none;
+    color:white;
+    box-shadow: 0 4px 14px rgba(110,123,255,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .play-btn:hover {
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 12px 40px rgba(110,123,255,0.6);
+  }
   .time { font-size:13px; color:var(--muted); min-width:48px; text-align:right; }
   .progress { height:8px; background: rgba(255,255,255,0.03); border-radius:8px; position:relative; flex:1; cursor:pointer; overflow:hidden; }
   .progress .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg,var(--accentA),var(--accentB)); }
@@ -137,10 +147,11 @@
 
   .socials {
     display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 12px;
-    flex-wrap: wrap;
+    gap: 10px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    flex-wrap: nowrap;
   }
   .social { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease; cursor:pointer; }
   .social img{ width:22px; height:22px; display:block; }
@@ -208,13 +219,13 @@
       </div>
     </div>
 
-    <div class="socials" role="navigation" aria-label="Social links">
-      <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
-      <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
-    </div>
-
-    <div style="color:var(--muted);font-size:13px;margin-top:8px;">Connect</div>
     <div class="footer-note" id="footerNote">Tap play to start — drag the bar to seek.</div>
+  </div>
+
+  <!-- Socials moved to bottom-left corner -->
+  <div class="socials" role="navigation" aria-label="Social links">
+    <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
+    <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
   </div>
 
 </div>
