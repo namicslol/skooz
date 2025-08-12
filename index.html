@@ -148,6 +148,8 @@
   button{ font-family:inherit; }
   [tabindex]:focus { outline:3px solid rgba(110,123,255,0.12); outline-offset:3px; }
 
+.player-inner { display: flex; align-items: center; gap: 10px; }
+        .player-inner img { flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -244,7 +246,7 @@
   </div>
 
 <!-- audio element -->
-<audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
+<audio id="audio" src="assets/song.mp3" preload="metadata"></audio></div>
 
 <script>
 /* Player wiring */
