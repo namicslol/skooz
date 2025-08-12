@@ -73,22 +73,18 @@
   .display-handle { font-size:13px; color:var(--muted); }
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
 
-  /* Player Right Side */
+  /* Player Right Side (No cover image) */
   .right {
     display: flex;
     flex-direction: column;
     gap: 14px;
     align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding-top: 10px;
   }
-  .song-cover {
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.03);
-  }
-  .song-cover img { width: 100%; display: block; object-fit: cover; }
 
-  .track-title { font-weight: 700; font-size: 18px; text-align: center; }
+  .track-title { font-weight: 700; font-size: 20px; text-align: center; }
   .track-sub { font-size: 14px; color: var(--muted); text-align: center; }
 
   .controls {
@@ -175,7 +171,6 @@
   </div>
 
   <div class="right">
-    <div class="song-cover"><img src="assets/cover.png" alt="Song cover"></div>
     <div class="track-title" id="trackTitle">Chain Swangin</div>
     <div class="track-sub" id="trackSub">Molly Santana</div>
 
@@ -202,7 +197,7 @@
   </div>
 </div>
 
-<audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
+<audio id="audio" src="assets/song.mp3"></audio>
 
 <script>
 const audio = document.getElementById('audio');
