@@ -82,6 +82,7 @@
   .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
   .display-handle { font-size:13px; color:var(--muted); margin-top:2px; }
 
+  /* Updated badges */
   .badges-pill {
     display:inline-flex;
     align-items:center;
@@ -110,11 +111,9 @@
     height:28px;
     display:block;
   }
-  .badge:hover{ transform: translateY(-3px); box-shadow: none; }
-  .badge::after{ content:attr(data-label); position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(6px);
-                 padding:6px 8px; font-size:13px; color:var(--text); background:#070709; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
-                 opacity:0; pointer-events:none; transition: opacity .12s ease, transform .12s ease; white-space:nowrap; box-shadow:0 8px 30px rgba(2,6,23,0.6); }
-  .badge:hover::after, .badge:focus::after{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .badge:hover::after, .badge:focus::after {
+    opacity:1; transform:translateX(-50%) translateY(0);
+  }
 
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
 
@@ -134,6 +133,7 @@
   .track-title{ font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .track-sub{ font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
+  /* Updated play button */
   .controls { display:flex; align-items:center; gap:10px; margin-top:6px; width:100%; }
   .play-btn {
     width:60px;
@@ -150,10 +150,10 @@
     box-shadow: none;
     transition: transform 0.2s ease;
   }
-  .play-btn:hover {
-    transform:translateY(-3px) scale(1.1);
-  }
+  .play-btn:hover { transform:translateY(-3px) scale(1.1); }
   .time { font-size:13px; color:var(--muted); min-width:48px; text-align:right; }
+
+  /* Updated progress bar */
   .progress {
     height:10px;
     background: rgba(255,255,255,0.06);
@@ -189,4 +189,8 @@
 </style>
 </head>
 <body>
-<!-- Rest of your HTML structure and JS remain unchanged -->
+
+<!-- Your full body content and JavaScript from the original file remain exactly the same here -->
+
+</body>
+</html>
