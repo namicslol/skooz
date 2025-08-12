@@ -82,15 +82,23 @@
   .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
   .display-handle { font-size:13px; color:var(--muted); margin-top:2px; }
 
-  /* Remove badge backgrounds */
-  .badges-pill { background: transparent; border: none; box-shadow: none; }
-  .badge { background: transparent; border: none; }
+  /* Keep badges horizontal */
+  .badges-pill {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .badge { background: transparent; border: none; margin-left:-10px; }
+  .badge:first-child{ margin-left:0; }
   .badge img{ width:24px; height:24px; }
 
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
 
   /* Updated player layout */
-  .player-content { display: flex; align-items: center; gap: 16px; }
   .player-details { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
   .song-cover { width:92px; height:92px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); flex-shrink: 0; }
   .song-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -136,11 +144,35 @@
     border-radius:inherit;
   }
 
-  .volume { width:120px; display:flex; gap:8px; align-items:center; }
-  .volume svg { width:20px; height:20px; }
-  .volume input[type="range"]{ width:100%; -webkit-appearance:none; height:6px; background:transparent; }
-  .volume input[type="range"]::-webkit-slider-runnable-track{ height:6px; background: rgba(255,255,255,0.04); border-radius:6px; }
-  .volume input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--text); margin-top:-3px; }
+  .volume {
+    width:120px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .volume svg {
+    width:20px;
+    height:20px;
+  }
+  .volume input[type="range"] {
+    width:100%;
+    -webkit-appearance:none;
+    height:10px;
+    background:transparent;
+  }
+  .volume input[type="range"]::-webkit-slider-runnable-track {
+    height:10px;
+    background: rgba(255,255,255,0.05);
+    border-radius:8px;
+  }
+  .volume input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance:none;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:var(--text);
+    margin-top:-2px;
+  }
 
   .visualizer { height:42px; width:100%; border-radius:8px; overflow:hidden; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); display:block; position:relative; }
   .visualizer .bar { position:absolute; bottom:0; width:6px; background: linear-gradient(180deg,var(--accentC),var(--accentA)); border-radius:4px; opacity:0.9; }
@@ -183,7 +215,6 @@
     <p class="bio" id="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
 
     <div class="player" role="region" aria-label="Music player">
-      <div class="player-content"></div>
       <div class="player-details">
         <div class="track-meta">
           <div class="track-title" id="trackTitle">Chain Swangin</div>
@@ -205,6 +236,7 @@
         <div class="visualizer" id="visualizer"></div>
       </div>
     </div>
+
     <div class="footer-note" id="footerNote">hi.</div>
   </div>
 
