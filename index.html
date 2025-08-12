@@ -1,104 +1,396 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Custom Biolink - Modern Dark Theme</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Biolink — Your Modern Dark Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-/* Basic dark background */
-body {
-    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-    color: white;
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-}
-/* Card container */
-.card {
-    background: rgba(20, 20, 20, 0.75);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(128,0,255,0.5);
-    width: 400px;
-    text-align: center;
-}
-.pfp {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(128,0,255,0.7);
-}
-.name-badges {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-}
-.badges {
-    display: flex;
-    background: rgba(128,0,255,0.2);
-    padding: 5px 15px;
-    border-radius: 999px;
-    gap: 5px;
-}
-.badges img {
-    width: 24px;
-    height: 24px;
-}
-.bio {
-    font-size: 14px;
-    margin-top: 10px;
-    color: #ccc;
-}
-/* Song player placeholder */
-.song-player {
-    margin-top: 20px;
-}
-.socials {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-.socials img {
-    width: 32px;
-    height: 32px;
-    transition: transform 0.2s;
-}
-.socials img:hover {
-    transform: scale(1.1);
-}
+  :root{
+    --bg-0: #060607;
+    --bg-1: #0d0d11;
+    --card-bg: rgba(255,255,255,0.02);
+    --glass: rgba(255,255,255,0.03);
+    --muted: #9aa3ab;
+    --text: #e9f4ff;
+    --accentA: #6e7bff;
+    --accentB: #8b5cf6;
+    --accentC: #46e5c3;
+    --radius: 16px;
+    --shadow-strong: 0 18px 60px rgba(2,6,23,0.7);
+    --shadow-soft: 0 8px 30px rgba(2,6,23,0.45);
+    --card-width: 760px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;padding:0}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(800px 420px at 8% 12%, rgba(110,123,255,0.04), transparent 8%),
+      radial-gradient(700px 360px at 92% 88%, rgba(139,92,246,0.03), transparent 6%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* CARD */
+  .card {
+    width:100%;
+    max-width:var(--card-width);
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.03));
+    border-radius:calc(var(--radius) + 6px);
+    padding:28px;
+    box-shadow:var(--shadow-strong);
+    border:1px solid rgba(255,255,255,0.035);
+    display:grid;
+    grid-template-columns: 180px 1fr 300px;
+    gap:22px;
+    align-items:start;
+    min-height: 420px; /* slightly taller card */
+    backdrop-filter: blur(10px) saturate(120%);
+  }
+
+  @media (max-width:980px){
+    .card{ grid-template-columns: 160px 1fr; grid-template-rows: auto auto; gap:18px; max-width:640px; }
+    .right { grid-column: 1/-1; }
+  }
+  @media (max-width:620px){
+    .card{ grid-template-columns: 1fr; padding:20px; gap:14px; min-height: auto; }
+  }
+
+  /* LEFT: PROFILE */
+  .left { display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .pfp-wrap{
+    width:172px; height:172px; border-radius:18px; overflow:hidden;
+    border:1px solid rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+    box-shadow: var(--shadow-soft);
+    transition: transform .28s ease, box-shadow .28s ease;
+  }
+  .pfp-wrap:hover{ transform: translateY(-6px) scale(1.02); box-shadow:0 30px 80px rgba(2,6,23,0.7); }
+  .pfp{ width:100%; height:100%; object-fit:cover; display:block; }
+  .role { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+
+  /* MAIN: NAME + BADGES + BIO */
+  .main { display:flex; flex-direction:column; gap:12px; }
+  .name-row { display:flex; align-items:center; gap:12px; justify-content:space-between; width:100%; }
+  .name-left { display:flex; align-items:flex-start; gap:12px; }
+  .name-block { display:flex; flex-direction:column; gap:6px; }
+  .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
+  .display-handle { font-size:13px; color:var(--muted); margin-top:2px; }
+
+  /* badges: one connected pill beside name */
+  .badges-pill { display:inline-flex; align-items:center; gap:0; padding:6px 12px; border-radius:999px;
+                 background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+                 border:1px solid rgba(255,255,255,0.02); box-shadow: 0 6px 18px rgba(2,6,23,0.18); }
+  .badge { width:40px; height:40px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+           margin-left:-10px; border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease, box-shadow .12s ease;
+           background:transparent; position:relative; }
+  .badge:first-child{ margin-left:0; }
+  .badge img{ width:20px; height:20px; display:block; }
+  .badge:hover{ transform: translateY(-3px); box-shadow: 0 12px 36px rgba(110,123,255,0.12); }
+  .badge::after{ content:attr(data-label); position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(6px);
+                 padding:6px 8px; font-size:13px; color:var(--text); background:#070709; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
+                 opacity:0; pointer-events:none; transition: opacity .12s ease, transform .12s ease; white-space:nowrap; box-shadow:0 8px 30px rgba(2,6,23,0.6); }
+  .badge:hover::after, .badge:focus::after{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
+
+  /* RIGHT: PLAYER + SOCIALS */
+  .right { display:flex; flex-direction:column; gap:12px; align-items:stretch; }
+  .player { padding:12px; border-radius:12px; display:flex; gap:12px; align-items:center;
+           background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03)); border:1px solid rgba(255,255,255,0.02);
+           box-shadow: var(--shadow-soft); }
+  .song-cover { width:92px; height:92px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); }
+  .song-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .track-info{ display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
+  .track-title{ font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track-sub{ font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .controls { display:flex; align-items:center; gap:10px; margin-top:6px; width:100%; }
+  .play-btn{ width:48px; height:48px; border-radius:12px; display:inline-grid; place-items:center; cursor:pointer;
+            background: linear-gradient(180deg, rgba(110,123,255,0.08), rgba(139,92,246,0.04)); border:1px solid rgba(255,255,255,0.03); font-weight:700; }
+  .play-btn:hover{ transform:translateY(-3px); box-shadow:0 12px 40px rgba(110,123,255,0.12); }
+
+  .time { font-size:13px; color:var(--muted); min-width:48px; text-align:right; }
+
+  .progress { height:8px; background: rgba(255,255,255,0.03); border-radius:8px; position:relative; flex:1; cursor:pointer; overflow:hidden; }
+  .progress .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg,var(--accentA),var(--accentB)); }
+
+  .volume { width:120px; display:flex; gap:8px; align-items:center; }
+  .volume input[type="range"]{ width:100%; -webkit-appearance:none; height:6px; background:transparent; }
+  .volume input[type="range"]::-webkit-slider-runnable-track{ height:6px; background: rgba(255,255,255,0.04); border-radius:6px; }
+  .volume input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--text); margin-top:-3px; }
+
+  .visualizer { height:42px; width:100%; border-radius:8px; overflow:hidden; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); display:block; position:relative; }
+  .visualizer .bar { position:absolute; bottom:0; width:6px; background: linear-gradient(180deg,var(--accentC),var(--accentA)); border-radius:4px; opacity:0.9; }
+
+  .socials { display:flex; gap:12px; justify-content:flex-end; margin-top:6px; }
+  .social { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease; cursor:pointer; }
+  .social img{ width:22px; height:22px; display:block; }
+  .social:hover{ transform:translateY(-6px); box-shadow:0 16px 50px rgba(2,6,23,0.45); }
+
+  /* small footer note */
+  .footer-note { color:var(--muted); font-size:13px; text-align:right; margin-top:6px; }
+
+  /* accessibility */
+  button{ font-family:inherit; }
+  [tabindex]:focus { outline:3px solid rgba(110,123,255,0.12); outline-offset:3px; }
+
 </style>
 </head>
 <body>
-<div class="card">
-    <img src="assets/pfp.png" alt="Profile Picture" class="pfp">
-    <div class="name-badges">
-        <h2>Username</h2>
-        <div class="badges">
-            <img src="assets/artist.png" title="Producer">
-            <img src="assets/crown.png" title="Owner">
-            <img src="assets/icon.png" title="Public Icon">
-            <img src="assets/premium.png" title="Premium">
+
+  <div class="card" role="region" aria-label="Profile card">
+
+    <!-- LEFT: Profile -->
+    <div class="left">
+      <div class="pfp-wrap" title="Profile picture">
+        <img src="assets/pfp.png" alt="Profile picture" class="pfp">
+      </div>
+      <div class="role">Producer • Owner</div>
+    </div>
+
+    <!-- MAIN: name, badges, bio -->
+    <div class="main">
+      <div class="name-row">
+        <div class="name-left">
+          <div class="name-block">
+            <div class="display-name" id="displayName">Your Name</div>
+            <div class="display-handle" id="displayHandle">@yourhandle</div>
+          </div>
+
+          <!-- badges pill -->
+          <div class="badges-pill" role="group" aria-label="Badges">
+            <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
+            <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
+            <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public"></div>
+            <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
+          </div>
         </div>
+
+        <!-- empty placeholder to keep spacing consistent on wide screens -->
+        <div style="width:80px"></div>
+      </div>
+
+      <p class="bio" id="bio">Short bio here — tell people what you do in one concise sentence. Keep it punchy.</p>
+
+      <!-- small spacer -->
+      <div style="height:8px"></div>
+
+      <!-- removed extra buttons/sections as requested -->
+
     </div>
-    <div class="bio">This is my bio area. Sleek, modern, dark-themed aesthetic.</div>
-    <div class="song-player">
-        <img src="assets/songcover.png" alt="Song Cover" style="width:100px;border-radius:10px;"><br>
-        <audio controls>
-            <source src="assets/song.mp3" type="audio/mpeg">
-        </audio>
+
+    <!-- RIGHT: Player and socials -->
+    <div class="right">
+      <div class="player" role="region" aria-label="Music player">
+        <div class="song-cover" title="Song cover">
+          <img src="assets/songcover.png" alt="song cover">
+        </div>
+
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+          <div class="track-meta">
+            <div class="track-title" id="trackTitle">Song Title — Artist</div>
+            <div class="track-sub" id="trackSub">Single • 2025</div>
+          </div>
+
+          <div class="controls">
+            <button class="play-btn" id="playBtn" aria-label="Play">▶</button>
+
+            <div class="time" id="currentTime">0:00</div>
+
+            <div class="progress" id="progress" role="slider" aria-valuemin="0" aria-valuemax="100" tabindex="0" aria-valuenow="0">
+              <div class="fill" id="fill"></div>
+            </div>
+
+            <div class="time" id="duration">0:00</div>
+
+            <div class="volume" title="Volume">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor" opacity="0.9"/></svg>
+              <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+            </div>
+          </div>
+
+          <div class="visualizer" id="visualizer" aria-hidden="false"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Connect</div>
+      </div>
+
+      <div class="socials" role="navigation" aria-label="Social links">
+        <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
+        <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
+      </div>
+
+      <div class="footer-note" id="footerNote">Tap play to start — drag the bar to seek.</div>
     </div>
-    <div class="socials">
-        <a href="https://instagram.com" target="_blank"><img src="assets/instagram.png"></a>
-        <a href="https://last.fm" target="_blank"><img src="assets/lastfm.png"></a>
-    </div>
-</div>
+
+  </div>
+
+<!-- audio element -->
+<audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
+
+<script>
+/* Player wiring */
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const progress = document.getElementById('progress');
+const fill = document.getElementById('fill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const volume = document.getElementById('volume');
+const visualizer = document.getElementById('visualizer');
+
+audio.volume = parseFloat(volume.value || 0.8);
+
+playBtn.addEventListener('click', () => {
+  if (audio.paused) audio.play().catch(()=>{/* autoplay prevented */});
+  else audio.pause();
+});
+audio.addEventListener('play', () => playBtn.textContent = '⏸');
+audio.addEventListener('pause', () => playBtn.textContent = '▶');
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  fill.style.width = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+  progress.setAttribute('aria-valuenow', Math.round(pct));
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+  initVisualizer();
+});
+
+/* Seek via click */
+progress.addEventListener('click', (e) => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const rect = progress.getBoundingClientRect();
+  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+  audio.currentTime = pct * audio.duration;
+});
+
+/* Drag seek */
+let dragging = false;
+progress.addEventListener('pointerdown', (e) => {
+  dragging = true;
+  progress.setPointerCapture(e.pointerId);
+  seekFromEvent(e);
+});
+progress.addEventListener('pointermove', (e) => { if (dragging) seekFromEvent(e); });
+progress.addEventListener('pointerup', (e) => { dragging = false; try{ progress.releasePointerCapture(e.pointerId);}catch(_){} });
+
+function seekFromEvent(e){
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const rect = progress.getBoundingClientRect();
+  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+  fill.style.width = (pct*100) + '%';
+  audio.currentTime = pct * audio.duration;
+}
+
+/* Volume */
+volume.addEventListener('input', () => { audio.volume = parseFloat(volume.value); });
+
+/* formatTime */
+function formatTime(s){
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s/60);
+  const sec = Math.floor(s%60).toString().padStart(2,'0');
+  return m + ':' + sec;
+}
+
+/* Visualizer: WebAudio */
+let audioCtx, analyser, sourceNode, dataArray, bufferLength, bars = [];
+
+function initVisualizer(){
+  try {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    sourceNode = audioCtx.createMediaElementSource(audio);
+    sourceNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+
+    buildVisualizerBars();
+    renderVisualizer();
+  } catch (e) {
+    console.warn('Visualizer init error', e);
+  }
+}
+
+function buildVisualizerBars(){
+  visualizer.innerHTML = '';
+  bars = [];
+  const count = Math.min(64, Math.max(12, Math.floor(visualizer.clientWidth / 8)));
+  for (let i=0;i<count;i++){
+    const b = document.createElement('div');
+    b.className = 'bar';
+    const w = Math.max(4, (visualizer.clientWidth / count) - 4);
+    b.style.width = w + 'px';
+    b.style.left = (i * (100 / count)) + '%';
+    b.style.height = '6px';
+    visualizer.appendChild(b);
+    bars.push(b);
+  }
+}
+
+function renderVisualizer(){
+  if (!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+  const step = Math.floor(dataArray.length / bars.length);
+  for (let i=0;i<bars.length;i++){
+    const v = dataArray[i * step];
+    const h = Math.max(4, (v / 255) * visualizer.clientHeight);
+    bars[i].style.height = h + 'px';
+    bars[i].style.bottom = '0px';
+    bars[i].style.opacity = (0.3 + (v / 255) * 0.7);
+  }
+  requestAnimationFrame(renderVisualizer);
+}
+
+window.addEventListener('resize', () => {
+  if (visualizer && visualizer.clientWidth) buildVisualizerBars();
+});
+
+/* accessibility: keyboard */
+progress.addEventListener('keydown', (e) => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const step = Math.max(1, Math.floor(audio.duration / 20));
+  if (e.key === 'ArrowRight') audio.currentTime = Math.min(audio.duration, audio.currentTime + step);
+  if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - step);
+  if (e.key === 'Home') audio.currentTime = 0;
+  if (e.key === 'End') audio.currentTime = audio.duration;
+});
+
+/* small UX: attempt to resume audio context on first click */
+document.addEventListener('click', function unlock(){
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+  document.removeEventListener('click', unlock);
+});
+
+/* keyboard: play/pause when play button focused and space pressed */
+document.addEventListener('keydown', (e) => {
+  if ((e.code === 'Space' || e.key === ' ') && document.activeElement === playBtn) {
+    e.preventDefault();
+    playBtn.click();
+  }
+});
+
+/* End script */
+</script>
+
 </body>
 </html>
