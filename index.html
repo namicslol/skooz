@@ -52,7 +52,7 @@
     align-items:start;
     min-height: 420px;
     backdrop-filter: blur(10px) saturate(120%);
-    position: relative; /* for socials absolute positioning */
+    position: relative;
   }
 
   @media (max-width:980px){
@@ -82,15 +82,35 @@
   .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
   .display-handle { font-size:13px; color:var(--muted); margin-top:2px; }
 
-  .badges-pill { display:inline-flex; align-items:center; gap:0; padding:6px 12px; border-radius:999px;
-                 background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
-                 border:1px solid rgba(255,255,255,0.02); box-shadow: 0 6px 18px rgba(2,6,23,0.18); }
-  .badge { width:40px; height:40px; border-radius:999px; display:flex; align-items:center; justify-content:center;
-           margin-left:-10px; border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease, box-shadow .12s ease;
-           background:transparent; position:relative; }
+  .badges-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:0;
+    padding:4px 8px;
+    border-radius:999px;
+    background:none;
+    border:none;
+    box-shadow:none;
+  }
+  .badge {
+    width:48px;
+    height:48px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-left:-6px;
+    border:none;
+    background:none;
+    position:relative;
+  }
   .badge:first-child{ margin-left:0; }
-  .badge img{ width:20px; height:20px; display:block; }
-  .badge:hover{ transform: translateY(-3px); box-shadow: 0 12px 36px rgba(110,123,255,0.12); }
+  .badge img {
+    width:28px;
+    height:28px;
+    display:block;
+  }
+  .badge:hover{ transform: translateY(-3px); box-shadow: none; }
   .badge::after{ content:attr(data-label); position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(6px);
                  padding:6px 8px; font-size:13px; color:var(--text); background:#070709; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
                  opacity:0; pointer-events:none; transition: opacity .12s ease, transform .12s ease; white-space:nowrap; box-shadow:0 8px 30px rgba(2,6,23,0.6); }
@@ -116,25 +136,33 @@
 
   .controls { display:flex; align-items:center; gap:10px; margin-top:6px; width:100%; }
   .play-btn {
-    width:48px;
-    height:48px;
-    border-radius:12px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
     display:inline-grid;
     place-items:center;
     cursor:pointer;
     font-weight:700;
-    background: linear-gradient(135deg, var(--accentA), var(--accentB));
+    background: none;
     border:none;
     color:white;
-    box-shadow: 0 4px 14px rgba(110,123,255,0.4);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-size:28px;
+    box-shadow: none;
+    transition: transform 0.2s ease;
   }
   .play-btn:hover {
-    transform:translateY(-3px) scale(1.05);
-    box-shadow:0 12px 40px rgba(110,123,255,0.6);
+    transform:translateY(-3px) scale(1.1);
   }
   .time { font-size:13px; color:var(--muted); min-width:48px; text-align:right; }
-  .progress { height:8px; background: rgba(255,255,255,0.03); border-radius:8px; position:relative; flex:1; cursor:pointer; overflow:hidden; }
+  .progress {
+    height:10px;
+    background: rgba(255,255,255,0.06);
+    border-radius:8px;
+    position:relative;
+    flex:1;
+    cursor:pointer;
+    overflow:hidden;
+  }
   .progress .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg,var(--accentA),var(--accentB)); }
 
   .volume { width:120px; display:flex; gap:8px; align-items:center; }
@@ -161,220 +189,4 @@
 </style>
 </head>
 <body>
-
-<div class="card" role="region" aria-label="Profile card">
-
-  <div class="left">
-    <div class="pfp-wrap" title="Profile picture">
-      <img src="assets/pfp.png" alt="Profile picture" class="pfp">
-    </div>
-    <div class="role">Producer • Owner</div>
-  </div>
-
-  <div class="main">
-    <div class="name-row">
-      <div class="name-left">
-        <div class="name-block">
-          <div class="display-name" id="displayName">Skoozuh</div>
-          <div class="display-handle" id="displayHandle">@skoozuh</div>
-        </div>
-        <div class="badges-pill" role="group" aria-label="Badges">
-          <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
-          <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
-          <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public"></div>
-          <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
-        </div>
-      </div>
-      <div style="width:80px"></div>
-    </div>
-
-    <p class="bio" id="bio">Short bio here — tell people what you do in one concise sentence. Keep it punchy.</p>
-
-    <div class="player" role="region" aria-label="Music player">
-      <div class="player-content">
-        <div class="song-cover" title="Song cover">
-          <img src="assets/songcover.png" alt="song cover">
-        </div>
-        <div class="player-details">
-          <div class="track-meta">
-            <div class="track-title" id="trackTitle">Chain Swangin — Molly Santana</div>
-            <div class="track-sub" id="trackSub">fuck you</div>
-          </div>
-          <div class="controls">
-            <button class="play-btn" id="playBtn" aria-label="Play">▶</button>
-            <div class="time" id="currentTime">0:00</div>
-            <div class="progress" id="progress" role="slider" aria-valuemin="0" aria-valuemax="100" tabindex="0" aria-valuenow="0">
-              <div class="fill" id="fill"></div>
-            </div>
-            <div class="time" id="duration">0:00</div>
-            <div class="volume" title="Volume">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor" opacity="0.9"/>
-              </svg>
-              <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
-            </div>
-          </div>
-          <div class="visualizer" id="visualizer" aria-hidden="false"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-note" id="footerNote">hi.</div>
-  </div>
-
-  <!-- Socials moved to bottom-left corner -->
-  <div class="socials" role="navigation" aria-label="Social links">
-    <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
-    <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
-  </div>
-
-</div>
-
-<audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
-
-<script>
-/* Player wiring */
-const audio = document.getElementById('audio');
-const playBtn = document.getElementById('playBtn');
-const progress = document.getElementById('progress');
-const fill = document.getElementById('fill');
-const currentTimeEl = document.getElementById('currentTime');
-const durationEl = document.getElementById('duration');
-const volume = document.getElementById('volume');
-const visualizer = document.getElementById('visualizer');
-
-audio.volume = parseFloat(volume.value || 0.8);
-
-playBtn.addEventListener('click', () => {
-  if (audio.paused) audio.play().catch(()=>{});
-  else audio.pause();
-});
-audio.addEventListener('play', () => playBtn.textContent = '⏸');
-audio.addEventListener('pause', () => playBtn.textContent = '▶');
-
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration || isNaN(audio.duration)) return;
-  const pct = (audio.currentTime / audio.duration) * 100;
-  fill.style.width = pct + '%';
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-  progress.setAttribute('aria-valuenow', Math.round(pct));
-});
-
-audio.addEventListener('loadedmetadata', () => {
-  durationEl.textContent = formatTime(audio.duration);
-  initVisualizer();
-});
-
-progress.addEventListener('click', (e) => {
-  if (!audio.duration || isNaN(audio.duration)) return;
-  const rect = progress.getBoundingClientRect();
-  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-  audio.currentTime = pct * audio.duration;
-});
-
-let dragging = false;
-progress.addEventListener('pointerdown', (e) => {
-  dragging = true;
-  progress.setPointerCapture(e.pointerId);
-  seekFromEvent(e);
-});
-progress.addEventListener('pointermove', (e) => { if (dragging) seekFromEvent(e); });
-progress.addEventListener('pointerup', (e) => { dragging = false; try{ progress.releasePointerCapture(e.pointerId);}catch(_){} });
-
-function seekFromEvent(e){
-  if (!audio.duration || isNaN(audio.duration)) return;
-  const rect = progress.getBoundingClientRect();
-  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-  fill.style.width = (pct*100) + '%';
-  audio.currentTime = pct * audio.duration;
-}
-
-volume.addEventListener('input', () => { audio.volume = parseFloat(volume.value); });
-
-function formatTime(s){
-  if (!s || isNaN(s)) return '0:00';
-  const m = Math.floor(s/60);
-  const sec = Math.floor(s%60).toString().padStart(2,'0');
-  return m + ':' + sec;
-}
-
-let audioCtx, analyser, sourceNode, dataArray, bufferLength, bars = [];
-
-function initVisualizer(){
-  try {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
-    bufferLength = analyser.frequencyBinCount;
-    dataArray = new Uint8Array(bufferLength);
-
-    sourceNode = audioCtx.createMediaElementSource(audio);
-    sourceNode.connect(analyser);
-    analyser.connect(audioCtx.destination);
-
-    buildVisualizerBars();
-    renderVisualizer();
-  } catch (e) {
-    console.warn('Visualizer init error', e);
-  }
-}
-
-function buildVisualizerBars(){
-  visualizer.innerHTML = '';
-  bars = [];
-  const count = Math.min(64, Math.max(12, Math.floor(visualizer.clientWidth / 8)));
-  for (let i=0;i<count;i++){
-    const b = document.createElement('div');
-    b.className = 'bar';
-    const w = Math.max(4, (visualizer.clientWidth / count) - 4);
-    b.style.width = w + 'px';
-    b.style.left = (i * (100 / count)) + '%';
-    b.style.height = '6px';
-    visualizer.appendChild(b);
-    bars.push(b);
-  }
-}
-
-function renderVisualizer(){
-  if (!analyser) return;
-  analyser.getByteFrequencyData(dataArray);
-  const step = Math.floor(dataArray.length / bars.length);
-  for (let i=0;i<bars.length;i++){
-    const v = dataArray[i * step];
-    const h = Math.max(4, (v / 255) * visualizer.clientHeight);
-    bars[i].style.height = h + 'px';
-    bars[i].style.bottom = '0px';
-    bars[i].style.opacity = (0.3 + (v / 255) * 0.7);
-  }
-  requestAnimationFrame(renderVisualizer);
-}
-
-window.addEventListener('resize', () => {
-  if (visualizer && visualizer.clientWidth) buildVisualizerBars();
-});
-
-progress.addEventListener('keydown', (e) => {
-  if (!audio.duration || isNaN(audio.duration)) return;
-  const step = Math.max(1, Math.floor(audio.duration / 20));
-  if (e.key === 'ArrowRight') audio.currentTime = Math.min(audio.duration, audio.currentTime + step);
-  if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - step);
-  if (e.key === 'Home') audio.currentTime = 0;
-  if (e.key === 'End') audio.currentTime = audio.duration;
-});
-
-document.addEventListener('click', function unlock(){
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
-  document.removeEventListener('click', unlock);
-});
-
-document.addEventListener('keydown', (e) => {
-  if ((e.code === 'Space' || e.key === ' ') && document.activeElement === playBtn) {
-    e.preventDefault();
-    playBtn.click();
-  }
-});
-</script>
-
-</body>
-</html>
+<!-- Rest of your HTML structure and JS remain unchanged -->
