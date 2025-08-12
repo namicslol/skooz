@@ -3,44 +3,39 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Biolink — Dark Minimal Player</title>
+<title>Biolink — Fresh Minimal Dark</title>
 <!--
-  Single-file Biolink
-  - Place an `assets/` folder next to this HTML with:
-    - assets/pfp.png
-    - assets/artist.png
-    - assets/crown.png
-    - assets/icon.png
-    - assets/premium.png
-    - assets/song.mp3
-    - assets/songcover.png
-    - assets/instagram.png
-    - assets/lastfm.png
-  Design: compact, dark gradient background, glass card, custom player.
+  Fresh rebuild:
+  - Dark gradient background (deep gray -> almost black)
+  - Centered glass card with subtle neon accent
+  - Username + connected badges pill on one line
+  - Short bio under name
+  - Compact custom audio player (play/pause, draggable progress, volume)
+  - Social icons row at bottom
+  - Uses assets/ folder for images and assets/song.mp3 for audio
 -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-1: #050507;
-    --bg-2: #0b0b0d;
+    --bg-1: #070708;           /* page top */
+    --bg-2: #0b0b0d;           /* page bottom */
     --card: rgba(255,255,255,0.02);
-    --muted: #96a0a8;
-    --text: #eaf1fb;
-    --accentA: #7c4dff;
-    --accentB: #ff5ca8;
-    --pill: rgba(255,255,255,0.025);
+    --muted: #9aa3ab;
+    --text: #e9f1f8;
+    --accent: #6e7bff;         /* neon-ish blue */
+    --accent-2: #8b5cf6;       /* purple */
     --glass: rgba(255,255,255,0.03);
-    --shadow: 0 12px 40px rgba(2,6,23,0.6);
+    --shadow: 0 14px 50px rgba(2,6,23,0.6);
     --radius: 16px;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
 
-  * { box-sizing: border-box; }
-  html,body { height:100%; margin:0; padding:0; }
-
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;padding:0}
   body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     background:
-      radial-gradient(800px 400px at 8% 8%, rgba(124,77,255,0.06), transparent 8%),
-      radial-gradient(700px 350px at 92% 92%, rgba(255,92,168,0.04), transparent 6%),
+      radial-gradient(800px 420px at 8% 12%, rgba(110,123,255,0.05), transparent 8%),
+      radial-gradient(700px 360px at 92% 88%, rgba(139,92,246,0.03), transparent 6%),
       linear-gradient(180deg, var(--bg-1), var(--bg-2));
     color:var(--text);
     display:flex;
@@ -49,115 +44,113 @@
     padding:36px;
   }
 
-  /* card */
+  /* center card */
   .card {
     width:100%;
-    max-width:760px;
+    max-width:720px;
     background: linear-gradient(180deg, rgba(255,255,255,0.016), rgba(0,0,0,0.03));
     border-radius: var(--radius);
-    padding:28px;
-    display:grid;
-    grid-template-columns: 140px 1fr;
-    gap:24px;
+    padding:26px;
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
     box-shadow: var(--shadow);
-    border:1px solid rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.035);
     backdrop-filter: blur(8px) saturate(120%);
-    align-items:start;
   }
 
   @media (max-width:720px){
-    .card { grid-template-columns: 1fr; padding:20px; gap:18px; }
+    .card{ flex-direction:column; padding:18px; gap:14px; }
   }
 
-  /* left: avatar */
+  /* left column - avatar */
   .left {
+    width:128px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:12px;
+    gap:10px;
   }
-  .pfp {
+  .avatar {
     width:118px;
     height:118px;
     border-radius:14px;
     overflow:hidden;
     border:1px solid rgba(255,255,255,0.04);
-    box-shadow:0 8px 30px rgba(2,6,23,0.45);
-    background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.04));
+    background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.03));
   }
-  .pfp img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
   .role {
-    font-size:12px;
     color:var(--muted);
+    font-size:12px;
     letter-spacing:0.06em;
     text-transform:uppercase;
   }
 
-  /* main */
+  /* right column - main content */
   .main {
+    flex:1;
     display:flex;
     flex-direction:column;
-    gap:12px;
+    gap:14px;
   }
-  .top-row {
+
+  /* header: name + badges */
+  .header {
     display:flex;
     align-items:center;
+    justify-content:space-between;
     gap:12px;
-    flex-wrap:wrap;
   }
-  .title-block {
+
+  .title {
     display:flex;
     align-items:center;
     gap:10px;
   }
   .name {
     font-size:20px;
-    font-weight:700;
     margin:0;
+    font-weight:700;
     letter-spacing:-0.01em;
   }
-  .handle {
-    font-size:12px;
+  .bio {
+    margin:0;
     color:var(--muted);
-    margin-left:6px;
+    font-size:14px;
+    line-height:1.45;
+    max-width:100%;
   }
 
-  /* badges pill: compact and connected */
+  /* badges pill (connected) */
   .badges-pill {
     display:inline-flex;
     align-items:center;
     gap:6px;
     padding:6px 10px;
     border-radius:999px;
-    background:var(--pill);
+    background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));
     border:1px solid rgba(255,255,255,0.02);
-    box-shadow: 0 6px 18px rgba(2,6,23,0.2);
-    margin-left:6px;
-    transform:translateY(-2px);
   }
-
-  .badge {
+  .badges-pill .badge {
     width:34px;
     height:34px;
     display:flex;
     align-items:center;
     justify-content:center;
     border-radius:999px;
-    position:relative;
-    margin-left:-8px;
-    background:transparent;
+    margin-left:-8px; /* overlap to connect */
     border:1px solid rgba(255,255,255,0.02);
+    background:transparent;
     transition: transform .12s ease, box-shadow .12s ease;
   }
-  .badge:first-child { margin-left:0; }
-  .badge img { width:18px; height:18px; display:block; }
+  .badges-pill .badge:first-child { margin-left:0; }
+  .badges-pill .badge img { width:18px; height:18px; display:block; }
 
-  .badge:hover {
-    transform:translateY(-3px);
-    box-shadow: 0 8px 30px rgba(124,77,255,0.12);
+  .badge:hover, .badge:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(110,123,255,0.12);
   }
-
-  /* tooltip via ::after for hover and focus */
   .badge::after{
     content:attr(data-label);
     position:absolute;
@@ -166,245 +159,245 @@
     transform:translateX(-50%) translateY(6px);
     padding:6px 8px;
     font-size:12px;
-    background:#06070a;
     color:var(--text);
+    background:#070709;
     border-radius:8px;
     border:1px solid rgba(255,255,255,0.04);
     white-space:nowrap;
-    box-shadow:0 8px 30px rgba(2,6,23,0.6);
     opacity:0;
     pointer-events:none;
     transition: opacity .12s ease, transform .12s ease;
   }
   .badge:hover::after, .badge:focus::after { opacity:1; transform:translateX(-50%) translateY(0); }
 
-  .bio {
-    color:var(--muted);
-    font-size:14px;
-    line-height:1.5;
-    margin-top:2px;
-    max-width:100%;
-  }
-
-  /* custom player (compact) */
-  .player {
-    margin-top:8px;
+  /* compact action links row */
+  .links-row {
     display:flex;
-    gap:12px;
+    gap:10px;
     align-items:center;
-    padding:12px;
+  }
+  .link-btn {
+    padding:8px 12px;
+    border-radius:10px;
+    background:transparent;
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,0.03);
+    font-size:13px;
+    cursor:pointer;
+    transition: transform .12s ease, background .12s ease;
+  }
+  .link-btn:hover { transform:translateY(-3px); color:var(--text); background:rgba(255,255,255,0.02); }
+
+  /* player - custom minimal */
+  .player {
+    margin-top:6px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px;
     border-radius:12px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));
     border:1px solid rgba(255,255,255,0.02);
   }
-
   .song-cover {
-    width:72px;
-    height:72px;
-    border-radius:10px;
+    width:64px;
+    height:64px;
+    border-radius:8px;
     overflow:hidden;
-    flex-shrink:0;
     border:1px solid rgba(255,255,255,0.03);
-    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.04));
-  }
-  .song-cover img { width:100%; height:100%; object-fit:cover; display:block; }
-
-  .player-meta {
+    background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.03));
+    flex-shrink:0;
     display:flex;
-    flex-direction:column;
-    gap:6px;
-    flex:1;
+    align-items:center;
+    justify-content:center;
   }
-  .track-title { font-weight:700; font-size:14px; margin:0; }
-  .track-sub { font-size:12px; color:var(--muted); margin:0; }
+  .song-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .track-info { display:flex; flex-direction:column; gap:4px; flex:1; min-width:0; }
+  .track-title { font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track-sub { font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-  .controls-row {
+  .controls {
     display:flex;
     align-items:center;
     gap:10px;
-    margin-top:8px;
+    width:100%;
   }
-
-  .play-btn {
+  .play {
     width:44px;
     height:44px;
     border-radius:10px;
     display:inline-grid;
     place-items:center;
     cursor:pointer;
-    background:linear-gradient(180deg, rgba(124,77,255,0.08), rgba(255,92,168,0.04));
+    background: linear-gradient(180deg, rgba(110,123,255,0.08), rgba(139,92,246,0.04));
     border:1px solid rgba(255,255,255,0.03);
-    font-weight:700;
     transition: transform .12s ease;
+    font-weight:700;
   }
-  .play-btn:hover { transform:translateY(-3px); box-shadow: 0 10px 30px rgba(2,6,23,0.35); }
+  .play:hover{ transform:translateY(-3px); box-shadow: 0 8px 30px rgba(110,123,255,0.12); }
 
-  .time { font-size:12px; color:var(--muted); width:44px; text-align:right; }
+  .time { font-size:12px; color:var(--muted); min-width:48px; text-align:right; }
 
   .progress {
     height:6px;
-    background: rgba(255,255,255,0.03);
+    background:rgba(255,255,255,0.03);
     border-radius:6px;
     position:relative;
     flex:1;
     cursor:pointer;
     overflow:hidden;
   }
-  .progress .bar {
+  .progress .fill {
     position:absolute;
     left:0; top:0; bottom:0;
     width:0%;
-    background: linear-gradient(90deg, var(--accentA), var(--accentB));
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
   }
 
-  .vol {
+  .volume {
     width:110px;
     display:flex;
     gap:8px;
     align-items:center;
   }
-  .vol input[type="range"]{
+  .volume input[type="range"]{
     width:100%;
     -webkit-appearance:none;
     appearance:none;
     height:6px;
     background:transparent;
   }
-  .vol input[type="range"]::-webkit-slider-runnable-track{
+  .volume input[type="range"]::-webkit-slider-runnable-track{
     height:6px; background: rgba(255,255,255,0.04); border-radius:6px;
   }
-  .vol input[type="range"]::-webkit-slider-thumb{
+  .volume input[type="range"]::-webkit-slider-thumb{
     width:12px; height:12px; border-radius:50%; background:var(--text); margin-top:-3px;
     -webkit-appearance:none;
   }
 
-  /* socials row */
+  /* socials row bottom */
   .socials {
     display:flex;
     gap:12px;
-    margin-top:10px;
-    align-items:center;
+    margin-top:8px;
   }
   .social {
     width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center;
-    background:var(--pill); border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease;
+    background:transparent; border:1px solid rgba(255,255,255,0.02); cursor:pointer; transition: transform .12s ease;
   }
-  .social img { width:20px; height:20px; display:block; }
-  .social:hover { transform:translateY(-4px); box-shadow: 0 12px 30px rgba(2,6,23,0.45); }
+  .social img{ width:20px; height:20px; display:block; }
+  .social:hover{ transform:translateY(-4px); box-shadow: 0 10px 30px rgba(2,6,23,0.45); }
 
-  /* footer small */
-  .footer {
-    margin-top:6px;
-    font-size:12px;
-    color:var(--muted);
-  }
+  .footer-note { color:var(--muted); font-size:12px; margin-top:8px; }
 
-  /* accessibility focus */
-  .play-btn:focus, .badge:focus, .social:focus { outline:3px solid rgba(124,77,255,0.14); outline-offset:3px; }
+  /* focus rings for accessibility */
+  .play:focus, .badge:focus, .social:focus, .link-btn:focus { outline: 3px solid rgba(110,123,255,0.14); outline-offset:3px; }
 
-  /* slight appear animation */
-  .card { transform: translateY(6px); opacity:0; animation:in .36s ease forwards; }
-  @keyframes in { to { transform:none; opacity:1; } }
-
+  /* subtle appear */
+  .card { transform: translateY(6px); opacity:0; animation: appear .36s ease forwards; }
+  @keyframes appear{ to { transform:none; opacity:1 } }
 </style>
 </head>
 <body>
 
 <div class="card" role="region" aria-label="Biolink card">
-  <!-- LEFT: avatar -->
   <div class="left">
-    <div class="pfp" aria-hidden="false"><img src="assets/pfp.png" alt="Profile"></div>
+    <div class="avatar" aria-hidden="false">
+      <img src="assets/pfp.png" alt="Profile picture">
+    </div>
     <div class="role">Producer • Owner</div>
   </div>
 
-  <!-- RIGHT: main content -->
-  <div class="main" role="main">
-    <div class="top-row">
-      <div class="title-block">
-        <h1 class="name">Your Name <span class="handle">@yourhandle</span></h1>
-
-        <!-- badges pill -->
-        <div class="badges-pill" role="group" aria-label="Badges">
-          <div class="badge" data-label="Producer" tabindex="0"><img src="assets/artist.png" alt="producer"></div>
-          <div class="badge" data-label="Owner" tabindex="0"><img src="assets/crown.png" alt="owner"></div>
-          <div class="badge" data-label="Public Icon" tabindex="0"><img src="assets/icon.png" alt="public icon"></div>
-          <div class="badge" data-label="Premium" tabindex="0"><img src="assets/premium.png" alt="premium"></div>
+  <div class="main">
+    <div class="header">
+      <div class="title">
+        <div>
+          <div class="name">Your Name</div>
+          <div class="bio">Short bio goes here — one concise sentence that describes you.</div>
         </div>
+
+        <!-- badges pill (slim) -->
+        <div class="badges-pill" role="group" aria-label="Badges">
+          <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
+          <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
+          <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public icon"></div>
+          <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
+        </div>
+      </div>
+
+      <div class="links-row" aria-hidden="true">
+        <button class="link-btn">Portfolio</button>
+        <button class="link-btn">Contact</button>
       </div>
     </div>
 
-    <p class="bio">Minimal, modern, and tuned for clarity. This is your short bio — who you are and what you do. Keep it tight and meaningful.</p>
-
-    <!-- custom player -->
+    <!-- custom player (compact) -->
     <div class="player" aria-label="Music player">
-      <div class="song-cover"><img src="assets/songcover.png" alt="Song cover"></div>
+      <div class="song-cover"><img src="assets/songcover.png" alt="song cover"></div>
 
-      <div class="player-meta">
-        <div>
-          <div class="track-title" id="trackTitle">Song Title — Artist</div>
-          <div class="track-sub" id="trackSub">A short tagline about this track</div>
-        </div>
+      <div class="track-info">
+        <div class="track-title" id="trackTitle">Song Title — Artist</div>
+        <div class="track-sub" id="trackSub">A small line about the track</div>
 
-        <div class="controls-row" aria-hidden="false">
-          <button class="play-btn" id="playBtn" aria-label="Play">▶</button>
+        <div class="controls" aria-hidden="false">
+          <button class="play" id="playBtn" aria-label="Play">▶</button>
 
           <div class="time" id="currentTime">0:00</div>
 
           <div class="progress" id="progress" role="slider" aria-valuemin="0" aria-valuemax="100" tabindex="0" aria-valuenow="0">
-            <div class="bar" id="bar"></div>
+            <div class="fill" id="fill"></div>
           </div>
 
           <div class="time" id="duration">0:00</div>
 
-          <div class="vol" title="Volume">
+          <div class="volume" aria-hidden="false">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor" opacity="0.9"></path>
             </svg>
-            <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume slider">
+            <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
           </div>
         </div>
 
-        <div class="socials" aria-label="Social links">
+        <div class="socials" role="navigation" aria-label="Social links">
           <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
           <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
         </div>
 
-        <div class="footer">Tap the play button to start. Drag the progress bar to seek.</div>
+        <div class="footer-note">Click play to start. Drag the bar to seek.</div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- audio -->
+<!-- audio (actual mp3) -->
 <audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
 
 <script>
-  // Custom player wiring
+  // Custom player logic (compact)
   const audio = document.getElementById('audio');
   const playBtn = document.getElementById('playBtn');
   const progress = document.getElementById('progress');
-  const bar = document.getElementById('bar');
+  const fill = document.getElementById('fill');
   const currentTimeEl = document.getElementById('currentTime');
   const durationEl = document.getElementById('duration');
   const volume = document.getElementById('volume');
 
-  // Set initial volume
+  // initialize
   audio.volume = parseFloat(volume.value || 0.8);
 
-  // Play/pause
+  // play / pause
   playBtn.addEventListener('click', () => {
-    if (audio.paused) audio.play().catch(()=>{/* autoplay prevented */});
+    if (audio.paused) audio.play().catch(()=>{/* autoplay blocked */});
     else audio.pause();
   });
   audio.addEventListener('play', () => playBtn.textContent = '⏸');
   audio.addEventListener('pause', () => playBtn.textContent = '▶');
 
-  // Update time and progress
+  // time updates
   audio.addEventListener('timeupdate', () => {
     if (!audio.duration || isNaN(audio.duration)) return;
     const pct = (audio.currentTime / audio.duration) * 100;
-    bar.style.width = pct + '%';
+    fill.style.width = pct + '%';
     currentTimeEl.textContent = formatTime(audio.currentTime);
     progress.setAttribute('aria-valuenow', Math.round(pct));
   });
@@ -413,7 +406,7 @@
     durationEl.textContent = formatTime(audio.duration);
   });
 
-  // Click to seek
+  // progress seek on click
   progress.addEventListener('click', (e) => {
     if (!audio.duration || isNaN(audio.duration)) return;
     const rect = progress.getBoundingClientRect();
@@ -421,69 +414,58 @@
     audio.currentTime = pct * audio.duration;
   });
 
-  // Drag to seek (pointer events)
+  // pointer drag seek
   let dragging = false;
   progress.addEventListener('pointerdown', (e) => {
     dragging = true;
     progress.setPointerCapture(e.pointerId);
-    seekFromEvent(e);
+    seekFromPointer(e);
   });
-  progress.addEventListener('pointermove', (e) => {
-    if (dragging) seekFromEvent(e);
-  });
-  progress.addEventListener('pointerup', (e) => {
-    dragging = false;
-    try { progress.releasePointerCapture(e.pointerId);}catch(e){}
-  });
+  progress.addEventListener('pointermove', (e) => { if (dragging) seekFromPointer(e); });
+  progress.addEventListener('pointerup', (e) => { dragging = false; try{ progress.releasePointerCapture(e.pointerId);}catch(_){} });
 
-  function seekFromEvent(e){
+  function seekFromPointer(e){
     if (!audio.duration || isNaN(audio.duration)) return;
     const rect = progress.getBoundingClientRect();
     const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-    bar.style.width = (pct*100) + '%';
+    fill.style.width = (pct*100) + '%';
     audio.currentTime = pct * audio.duration;
   }
 
-  // Volume control
-  volume.addEventListener('input', () => {
-    audio.volume = parseFloat(volume.value);
-  });
+  // volume control
+  volume.addEventListener('input', () => { audio.volume = parseFloat(volume.value); });
 
-  // Keyboard accessibility for progress
+  // keyboard accessibility for progress
   progress.addEventListener('keydown', (e) => {
     if (!audio.duration || isNaN(audio.duration)) return;
-    const stepSeconds = Math.max(1, Math.floor(audio.duration / 20));
-    if (e.key === 'ArrowRight') audio.currentTime = Math.min(audio.duration, audio.currentTime + stepSeconds);
-    if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - stepSeconds);
+    const step = Math.max(1, Math.floor(audio.duration / 20));
+    if (e.key === 'ArrowRight') audio.currentTime = Math.min(audio.duration, audio.currentTime + step);
+    if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - step);
     if (e.key === 'Home') audio.currentTime = 0;
     if (e.key === 'End') audio.currentTime = audio.duration;
   });
 
-  // Utility
-  function formatTime(s){
-    if (!s || isNaN(s)) return '0:00';
-    const m = Math.floor(s/60);
-    const sec = Math.floor(s%60).toString().padStart(2,'0');
-    return m + ':' + sec;
+  // helper: format time
+  function formatTime(sec){
+    if (!sec || isNaN(sec)) return '0:00';
+    const m = Math.floor(sec/60);
+    const s = Math.floor(sec%60).toString().padStart(2,'0');
+    return m + ':' + s;
   }
 
-  // Attempt a user-gesture friendly unlock
-  document.addEventListener('click', function unlockAudio(){
-    // just a trigger to allow potential audio autoplay (no forced play)
-    document.removeEventListener('click', unlockAudio);
-  });
+  // small UX: try to unlock audio context on first user gesture (no forced play)
+  document.addEventListener('click', function unlock(){ document.removeEventListener('click', unlock); });
 
-  // Nice: show focus ring on badges when keyboard navigating
+  // small animation feedback for badges when keyboard-activated
   document.querySelectorAll('.badge').forEach(b => {
     b.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        // optionally open a modal or copy badge name — currently just flash
-        b.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-4px)' }, { transform: 'translateY(0)' }], { duration: 220 });
+        b.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)'}], { duration:220 });
       }
     });
   });
-
 </script>
+
 </body>
 </html>
