@@ -20,12 +20,15 @@
   body {
     font-family:Inter,system-ui,sans-serif; 
     color:var(--text);
-    background: linear-gradient(270deg, var(--accentA), var(--accentB), var(--accentC), var(--accentA));
-    background-size: 800% 800%;
-    animation: flowBG 20s ease infinite;
+    background:
+      radial-gradient(800px 420px at 8% 12%, rgba(255,74,74,0.06), transparent 25%),
+      radial-gradient(700px 360px at 92% 88%, rgba(255,74,74,0.04), transparent 20%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    background-size: 200% 200%;
+    animation: redFlow 15s ease-in-out infinite;
     display:flex; align-items:center; justify-content:center; padding:40px;
   }
-  @keyframes flowBG {
+  @keyframes redFlow {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
@@ -39,7 +42,7 @@
     border:1px solid rgba(255,255,255,0.035);
     display:grid; grid-template-columns:180px 1fr 340px; gap:22px; align-items:start;
     min-height:420px; backdrop-filter:blur(10px) saturate(120%);
-    position:relative; overflow:hidden; z-index: 1;
+    position:relative; overflow:hidden;
   }
   .card::before,.card::after {
     content:""; position:absolute; width:300px; height:300px; opacity:.15; z-index:0;
