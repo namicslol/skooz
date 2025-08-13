@@ -45,11 +45,8 @@
     justify-content:center;
     z-index:999;
     cursor:pointer;
-    opacity:0;
-    transition:opacity 0.6s ease;
-  }
-  .overlay.show {
     opacity:1;
+    transition:opacity 0.6s ease;
   }
   .overlay-text {
     font-size:28px;
@@ -93,6 +90,25 @@
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch }
   .divider { margin:10px 0; height:1px; background:rgba(255,255,255,0.05) }
   .now-playing { font-size:14px; color:var(--muted); font-style:italic }
+
+  /* Extra sections */
+  .about {
+    font-size:14px;
+    color:var(--text);
+    line-height:1.4;
+  }
+  .projects {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:14px;
+  }
+  .project {
+    padding:6px 10px;
+    background:rgba(255,255,255,0.02);
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.03);
+  }
 
   .right { display:flex; flex-direction:column; gap:14px; align-items:center; justify-content:center; height:100%; padding-top:10px; position:relative; z-index:1; }
   .vinyl {
@@ -144,6 +160,17 @@
     <div class="display-handle">@skoozuh</div>
     <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
     <div class="divider"></div>
+    <div class="about">
+      I’m a 17-year-old producer and photographer blending sounds and visuals into unique creative experiences.  
+      Always experimenting, always learning — welcome to my world.
+    </div>
+    <div class="divider"></div>
+    <div class="projects">
+      <div class="project">🎵 New EP: <em>Neon Dreams</em> (2025)</div>
+      <div class="project">📷 Photo Series: <em>Urban Shadows</em></div>
+      <div class="project">🎤 Collab: <em>wifiskeleton</em></div>
+    </div>
+    <div class="divider"></div>
     <div class="now-playing" id="nowPlaying">Now Playing: back to my day job — wifiskeleton</div>
   </div>
 
@@ -180,6 +207,8 @@
     <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank" rel="noopener">
       <img src="assets/lastfm.png" alt="Last.fm">
     </a>
+    <a class="social" href="#" target="_blank"><img src="assets/soundcloud.png" alt="SoundCloud"></a>
+    <a class="social" href="#" target="_blank"><img src="assets/twitter.png" alt="Twitter"></a>
   </div>
 </div>
 
@@ -202,13 +231,6 @@ const wave2 = document.getElementById('wave2');
 const overlay = document.getElementById('overlay');
 
 let lastVolume = volume.value;
-
-// Fade-in overlay on load
-window.addEventListener('load', () => {
-  requestAnimationFrame(() => {
-    overlay.classList.add('show');
-  });
-});
 
 overlay.addEventListener('click', () => {
   overlay.style.opacity = '0';
