@@ -6,216 +6,106 @@
 <title>prod. @skoozuh</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-0: #060607;
-    --bg-1: #0d0d11;
-    --muted: #9aa3ab;
-    --text: #e9f4ff;
-    --accentA: #6e7bff;
-    --accentB: #8b5cf6;
-    --accentC: #46e5c3;
-    --radius: 16px;
-    --shadow-strong: 0 18px 60px rgba(2,6,23,0.7);
-    --shadow-soft: 0 8px 30px rgba(2,6,23,0.45);
-    --card-width: 960px;
+  :root{
+    --bg-0:#060607; --bg-1:#0d0d11;
+    --muted:#9aa3ab; --text:#e9f4ff;
+    --accentA:#6e7bff; --accentB:#8b5cf6; --accentC:#46e5c3;
+    --radius:16px;
+    --shadow-strong:0 18px 60px rgba(2,6,23,0.7);
+    --shadow-soft:0 8px 30px rgba(2,6,23,0.45);
+    --card-width:960px;
   }
-  * { box-sizing: border-box; }
-  html,body { height:100%; margin:0; padding:0; }
-  body {
-    font-family: Inter, system-ui, sans-serif;
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family:Inter,system-ui,sans-serif;color:var(--text);
     background:
       radial-gradient(800px 420px at 8% 12%, rgba(110,123,255,0.04), transparent 8%),
       radial-gradient(700px 360px at 92% 88%, rgba(139,92,246,0.03), transparent 6%),
       linear-gradient(180deg,var(--bg-0),var(--bg-1));
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
+    display:flex;align-items:center;justify-content:center;padding:40px;
   }
 
-  .card {
-    width: 100%;
-    max-width: var(--card-width);
-    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.03));
-    border-radius: calc(var(--radius) + 6px);
-    padding: 28px;
-    box-shadow: var(--shadow-strong);
-    border: 1px solid rgba(255,255,255,0.035);
-    display: grid;
-    grid-template-columns: 180px 1fr 340px;
-    gap: 22px;
-    align-items: start;
-    min-height: 420px;
-    backdrop-filter: blur(10px) saturate(120%);
-    position: relative;
-    overflow: hidden;
+  .card{
+    width:100%;max-width:var(--card-width);
+    background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(0,0,0,0.03));
+    border-radius:calc(var(--radius) + 6px);
+    padding:28px;box-shadow:var(--shadow-strong);
+    border:1px solid rgba(255,255,255,0.035);
+    display:grid;grid-template-columns:180px 1fr 340px;gap:22px;align-items:start;
+    min-height:420px;backdrop-filter:blur(10px) saturate(120%);
+    position:relative;overflow:hidden;
+  }
+  /* Soft blurred gradient blobs inside the card */
+  .card::before,.card::after{
+    content:"";position:absolute;width:300px;height:300px;opacity:.15;z-index:0;
+    filter:blur(80px);animation:blobMove 18s infinite alternate ease-in-out;
+  }
+  .card::before{left:-40px;top:-40px;background:radial-gradient(circle,var(--accentA),transparent 70%)}
+  .card::after{right:-60px;bottom:-60px;background:radial-gradient(circle,var(--accentC),transparent 70%);animation-delay:5s}
+  @keyframes blobMove{0%{transform:translate(-50px,-50px)}100%{transform:translate(50px,50px)}}
+
+  @media (max-width:980px){.card{grid-template-columns:160px 1fr;grid-template-rows:auto auto}.right{grid-column:1/-1}}
+  @media (max-width:620px){.card{grid-template-columns:1fr;padding:20px;gap:14px}}
+
+  .left{display:flex;flex-direction:column;align-items:center;gap:12px;z-index:1}
+  .pfp-wrap{width:172px;height:172px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.04));box-shadow:var(--shadow-soft)}
+  .pfp{width:100%;height:100%;object-fit:cover;display:block}
+  .role{font-size:12px;color:var(--muted);text-transform:uppercase}
+
+  .main{display:flex;flex-direction:column;gap:12px;z-index:1}
+  .display-name{font-size:26px;font-weight:700;margin:0;line-height:1}
+  .display-handle{font-size:13px;color:var(--muted)}
+  .bio{font-size:15px;color:var(--muted);line-height:1.5;max-width:60ch}
+  .divider{margin:10px 0;height:1px;background:rgba(255,255,255,0.05)}
+  .now-playing{font-size:14px;color:var(--muted);font-style:italic}
+
+  .right{
+    display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
+    height:100%;padding-top:10px;position:relative;z-index:1;
   }
 
-  /* Blurred gradient blobs */
-  .card::before, .card::after {
-    content: "";
-    position: absolute;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle at center, var(--accentA), transparent 70%);
-    filter: blur(80px);
-    animation: blobMove 18s infinite alternate ease-in-out;
-    opacity: 0.15;
-    z-index: 0;
+  /* Transparent vinyl behind track info + visualizer */
+  .vinyl{
+    position:absolute;top:10%;left:50%;
+    width:280px;height:280px;
+    background:url('assets/songcover.png') center/cover no-repeat;
+    opacity:.15;transform:translateX(-50%) rotate(0deg);
+    transition:opacity .3s ease;z-index:0;border-radius:50%;
+    animation:spinIdle 60s linear infinite; /* faint idle rotation */
   }
-  .card::after {
-    background: radial-gradient(circle at center, var(--accentC), transparent 70%);
-    animation-delay: 5s;
-    right: 0;
-    bottom: 0;
+  .vinyl.rotate{animation:spin 14s linear infinite} /* faster when playing */
+  @keyframes spinIdle{0%{transform:translateX(-50%) rotate(0)}100%{transform:translateX(-50%) rotate(360deg)}}
+  @keyframes spin{0%{transform:translateX(-50%) rotate(0)}100%{transform:translateX(-50%) rotate(360deg)}}
+
+  .track-title{font-weight:700;font-size:20px;text-align:center}
+  .track-sub{font-size:14px;color:var(--muted);text-align:center}
+
+  .controls{display:flex;align-items:center;gap:8px;width:100%}
+  .play-btn{width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:#fff;cursor:pointer}
+  .play-btn svg{width:28px;height:28px}
+  .time{font-size:13px;min-width:44px;text-align:right;color:var(--muted)}
+  .progress{flex:1;height:10px;background:rgba(255,255,255,0.05);border-radius:8px;position:relative;overflow:hidden;cursor:pointer}
+  .progress .fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,var(--accentA),var(--accentB));border-radius:inherit}
+
+  .volume{width:120px;display:flex;gap:8px;align-items:center}
+  .volume svg{width:20px;height:20px}
+  .volume input[type="range"]{width:100%;-webkit-appearance:none;height:10px;background:transparent}
+  .volume input[type="range"]::-webkit-slider-runnable-track{height:10px;background:rgba(255,255,255,0.05);border-radius:8px}
+  .volume input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text);margin-top:-2px}
+
+  .visualizer{
+    height:42px;width:100%;border-radius:8px;overflow:hidden;
+    background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.02));
+    border:1px solid rgba(255,255,255,0.02);position:relative
   }
-  @keyframes blobMove {
-    0% { transform: translate(-50px, -50px); }
-    100% { transform: translate(50px, 50px); }
+  .visualizer .bar{
+    position:absolute;bottom:0;width:6px;background:linear-gradient(180deg,var(--accentC),var(--accentA));border-radius:4px;opacity:.9
   }
 
-  @media (max-width:980px) {
-    .card { grid-template-columns: 160px 1fr; grid-template-rows: auto auto; }
-    .right { grid-column: 1/-1; }
-  }
-  @media (max-width:620px) {
-    .card { grid-template-columns: 1fr; padding:20px; gap:14px; }
-  }
-
-  .left { display:flex; flex-direction:column; align-items:center; gap:12px; z-index: 1; }
-  .pfp-wrap {
-    width:172px; height:172px; border-radius:18px; overflow:hidden;
-    border:1px solid rgba(255,255,255,0.04);
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
-    box-shadow: var(--shadow-soft);
-  }
-  .pfp { width:100%; height:100%; object-fit:cover; display:block; }
-  .role { font-size:12px; color:var(--muted); text-transform:uppercase; }
-
-  .main { display:flex; flex-direction:column; gap:12px; z-index: 1; }
-  .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
-  .display-handle { font-size:13px; color:var(--muted); }
-  .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
-  .divider {
-    margin: 10px 0;
-    height: 1px;
-    background: rgba(255,255,255,0.05);
-  }
-  .now-playing {
-    font-size: 14px;
-    color: var(--muted);
-    font-style: italic;
-  }
-
-  /* Player Right Side */
-  .right {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding-top: 10px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Vinyl behind */
-  .vinyl {
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    width: 280px;
-    height: 280px;
-    background: url('assets/songcover.png') center/cover no-repeat;
-    opacity: 0.15;
-    transform: translateX(-50%) rotate(0deg);
-    transition: opacity 0.3s ease;
-    z-index: 0;
-  }
-  .vinyl.rotate {
-    animation: spin 14s linear infinite;
-  }
-  @keyframes spin {
-    0% { transform: translateX(-50%) rotate(0deg); }
-    100% { transform: translateX(-50%) rotate(360deg); }
-  }
-  .vinyl.glow {
-    box-shadow: 0 0 25px 5px var(--accentA), 0 0 50px 10px var(--accentB);
-    border-radius: 50%;
-  }
-
-  .track-title { font-weight: 700; font-size: 20px; text-align: center; }
-  .track-sub { font-size: 14px; color: var(--muted); text-align: center; }
-
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-  }
-  .play-btn {
-    width: 50px; height: 50px;
-    display: flex; align-items: center; justify-content: center;
-    background: none; border: none; color: white; cursor: pointer;
-  }
-  .play-btn svg { width: 28px; height: 28px; }
-  .time { font-size: 13px; min-width: 44px; text-align: right; color: var(--muted); }
-  .progress {
-    flex: 1; height: 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .progress .fill {
-    position: absolute; left:0; top:0; bottom:0;
-    width: 0%;
-    background: linear-gradient(90deg,var(--accentA),var(--accentB));
-    border-radius: inherit;
-  }
-
-  .volume {
-    width: 120px; display: flex; gap: 8px; align-items: center;
-  }
-  .volume svg { width: 20px; height: 20px; }
-  .volume input[type="range"] {
-    width: 100%; -webkit-appearance: none; height: 10px; background: transparent;
-  }
-  .volume input[type="range"]::-webkit-slider-runnable-track {
-    height: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;
-  }
-  .volume input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 14px; height: 14px;
-    border-radius: 50%; background: var(--text); margin-top: -2px;
-  }
-
-  .visualizer {
-    height: 42px; width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
-    border: 1px solid rgba(255,255,255,0.02);
-    position: relative;
-  }
-  .visualizer .bar {
-    position: absolute; bottom: 0; width: 6px;
-    background: linear-gradient(180deg,var(--accentC),var(--accentA));
-    border-radius: 4px; opacity: 0.9;
-  }
-
-  .socials {
-    display: flex; gap: 10px;
-    position: absolute; bottom: 20px; left: 20px;
-    z-index: 1;
-  }
-  .social { width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(0,0,0,0.02));
-    border: 1px solid rgba(255,255,255,0.02);
-  }
-  .social img { width: 22px; height: 22px; }
+  .socials{display:flex;gap:10px;position:absolute;bottom:20px;left:20px;z-index:1}
+  .social{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.008),rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.02)}
+  .social img{width:22px;height:22px}
 </style>
 </head>
 <body>
@@ -231,16 +121,17 @@
     <div class="display-handle">@skoozuh</div>
     <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
     <div class="divider"></div>
-    <div class="now-playing">Now Playing: back to my day job — wifiskeleton</div>
+    <div class="now-playing" id="nowPlaying">Now Playing: back to my day job — wifiskeleton</div>
   </div>
 
   <div class="right">
-    <div class="vinyl" id="vinyl"></div>
+    <div class="vinyl" id="vinyl" aria-hidden="true"></div>
+
     <div class="track-title" id="trackTitle">back to my day job</div>
     <div class="track-sub" id="trackSub">wifiskeleton</div>
 
     <div class="controls">
-      <button class="play-btn" id="playBtn">
+      <button class="play-btn" id="playBtn" aria-label="Play/Pause">
         <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
       </button>
@@ -248,8 +139,8 @@
       <div class="progress" id="progress"><div class="fill" id="fill"></div></div>
       <div class="time" id="duration">0:00</div>
       <div class="volume">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor"/></svg>
-        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor"/></svg>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
       </div>
     </div>
 
@@ -257,8 +148,8 @@
   </div>
 
   <div class="socials">
-    <a class="social" href="https://instagram.com/" target="_blank"><img src="assets/instagram.png"></a>
-    <a class="social" href="https://last.fm/" target="_blank"><img src="assets/lastfm.png"></a>
+    <a class="social" href="https://instagram.com/" target="_blank" rel="noopener"><img src="assets/instagram.png" alt="Instagram"></a>
+    <a class="social" href="https://last.fm/" target="_blank" rel="noopener"><img src="assets/lastfm.png" alt="Last.fm"></a>
   </div>
 </div>
 
@@ -276,36 +167,38 @@ const durationEl = document.getElementById('duration');
 const volume = document.getElementById('volume');
 const visualizer = document.getElementById('visualizer');
 const vinyl = document.getElementById('vinyl');
+const trackTitleEl = document.getElementById('trackTitle');
+const trackSubEl = document.getElementById('trackSub');
+const nowPlayingEl = document.getElementById('nowPlaying');
 
 audio.volume = parseFloat(volume.value || 0.8);
 
+// Keep the Now Playing line synced
+function syncNowPlaying(){
+  nowPlayingEl.textContent = `Now Playing: ${trackTitleEl.textContent} — ${trackSubEl.textContent}`;
+}
+syncNowPlaying();
+
 let audioCtx, analyser, sourceNode, dataArray, bars = [];
 let visualizerReady = false;
+let currentGlowSize = 0; // smoothed glow size
 
 playBtn.addEventListener('click', async () => {
-  if (audioCtx && audioCtx.state === 'suspended') {
-    await audioCtx.resume();
-  }
-  if (audio.paused) {
-    audio.play().catch(()=>{});
-  } else {
-    audio.pause();
-  }
+  if (audioCtx && audioCtx.state === 'suspended') { await audioCtx.resume(); }
+  if (audio.paused) { audio.play().catch(()=>{}); } else { audio.pause(); }
 });
 
-audio.addEventListener('play', () => { 
-  iconPlay.style.display = 'none'; 
-  iconPause.style.display = 'block'; 
-  vinyl.classList.add('rotate', 'glow');
-  if (!visualizerReady) {
-    initVisualizer();
-    visualizerReady = true;
-  }
+audio.addEventListener('play', () => {
+  iconPlay.style.display = 'none';
+  iconPause.style.display = 'block';
+  vinyl.classList.add('rotate');         // faster spin
+  if (!visualizerReady) { initVisualizer(); visualizerReady = true; }
 });
-audio.addEventListener('pause', () => { 
-  iconPlay.style.display = 'block'; 
-  iconPause.style.display = 'none'; 
-  vinyl.classList.remove('rotate', 'glow');
+
+audio.addEventListener('pause', () => {
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+  vinyl.classList.remove('rotate');      // back to idle spin
 });
 
 audio.addEventListener('timeupdate', () => {
@@ -314,8 +207,8 @@ audio.addEventListener('timeupdate', () => {
   fill.style.width = pct + '%';
   currentTimeEl.textContent = formatTime(audio.currentTime);
 });
-audio.addEventListener('loadedmetadata', () => { 
-  durationEl.textContent = formatTime(audio.duration); 
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
 });
 
 progress.addEventListener('click', (e) => {
@@ -326,7 +219,7 @@ progress.addEventListener('click', (e) => {
 });
 volume.addEventListener('input', () => { audio.volume = parseFloat(volume.value); });
 
-function formatTime(s) {
+function formatTime(s){
   if (!s || isNaN(s)) return '0:00';
   const m = Math.floor(s/60);
   const sec = Math.floor(s%60).toString().padStart(2,'0');
@@ -334,7 +227,7 @@ function formatTime(s) {
 }
 
 function initVisualizer(){
-  try {
+  try{
     if (audioCtx) return;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
@@ -345,8 +238,9 @@ function initVisualizer(){
     analyser.connect(audioCtx.destination);
     buildVisualizerBars();
     renderVisualizer();
-  } catch (e) { console.warn('Visualizer error', e); }
+  }catch(e){ console.warn('Visualizer error', e); }
 }
+
 function buildVisualizerBars(){
   visualizer.innerHTML = '';
   bars = [];
@@ -362,18 +256,48 @@ function buildVisualizerBars(){
     bars.push(b);
   }
 }
+
 function renderVisualizer(){
   if (!analyser) return;
+
   analyser.getByteFrequencyData(dataArray);
   const step = Math.floor(dataArray.length / bars.length);
+
+  // Update bar heights/opacities
   for (let i=0;i<bars.length;i++){
     const v = dataArray[i * step];
     const h = Math.max(4, (v / 255) * visualizer.clientHeight);
     bars[i].style.height = h + 'px';
     bars[i].style.opacity = (0.3 + (v / 255) * 0.7);
   }
+
+  // Bass-reactive glow with smoothing
+  const bassBins = 8;
+  let bassValue = 0;
+  for (let i=0; i<bassBins; i++){ bassValue += dataArray[i]; }
+  bassValue /= bassBins;
+
+  // Target glow size: 0 when paused, else 10..40 based on bass
+  const targetGlow = audio.paused ? 0 : (10 + (bassValue / 255) * 30);
+  currentGlowSize += (targetGlow - currentGlowSize) * 0.15; // smooth lerp
+
+  if (currentGlowSize > 0.5){
+    vinyl.style.boxShadow =
+      `0 0 ${currentGlowSize}px ${currentGlowSize/5}px var(--accentA),
+       0 0 ${currentGlowSize*2}px ${currentGlowSize/2.5}px var(--accentB)`;
+  } else {
+    vinyl.style.boxShadow = 'none';
+  }
+
   requestAnimationFrame(renderVisualizer);
 }
+
+// Handle resize: rebuild bars to fit width
+let resizeTO;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTO);
+  resizeTO = setTimeout(() => { if (visualizerReady) buildVisualizerBars(); }, 150);
+});
 </script>
 </body>
 </html>
