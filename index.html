@@ -35,6 +35,29 @@
     100% { background-position: 0% 50%; }
   }
 
+  /* Click to enter overlay */
+  .overlay {
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.9);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:999;
+    cursor:pointer;
+    transition:opacity 0.6s ease;
+  }
+  .overlay-text {
+    font-size:28px;
+    font-weight:700;
+    color:var(--text);
+    animation:pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; }
+    50% { opacity:0.5; }
+  }
+
   .card {
     width:100%; max-width:var(--card-width);
     background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(0,0,0,0.03));
@@ -66,6 +89,48 @@
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch }
   .divider { margin:10px 0; height:1px; background:rgba(255,255,255,0.05) }
   .now-playing { font-size:14px; color:var(--muted); font-style:italic }
+
+  /* New: stats */
+  .stats {
+    display:flex;
+    gap:24px;
+    font-size:14px;
+    margin-top:6px;
+  }
+  .stat {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .stat .num {
+    font-weight:700;
+    font-size:16px;
+  }
+  .stat .label {
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* New: quick links */
+  .quick-links {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:12px;
+  }
+  .qlink {
+    padding:8px 14px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.04));
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.05);
+    font-size:13px;
+    color:var(--text);
+    text-decoration:none;
+    transition:background 0.2s ease;
+  }
+  .qlink:hover {
+    background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.07));
+  }
 
   .right { display:flex; flex-direction:column; gap:14px; align-items:center; justify-content:center; height:100%; padding-top:10px; position:relative; z-index:1; }
   .vinyl {
@@ -102,6 +167,10 @@
 </head>
 <body>
 
+<div class="overlay" id="overlay">
+  <div class="overlay-text">Click to Enter</div>
+</div>
+
 <div class="card">
   <div class="left">
     <div class="pfp-wrap"><img src="assets/pfp.png" alt="Profile picture" class="pfp"></div>
@@ -112,6 +181,16 @@
     <div class="display-name">Skoozuh</div>
     <div class="display-handle">@skoozuh</div>
     <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
+    <div class="stats">
+      <div class="stat"><div class="num">5.2k</div><div class="label">Followers</div></div>
+      <div class="stat"><div class="num">24</div><div class="label">Tracks</div></div>
+      <div class="stat"><div class="num">1.1k</div><div class="label">Photos</div></div>
+    </div>
+    <div class="quick-links">
+      <a class="qlink" href="#">Website</a>
+      <a class="qlink" href="#">Portfolio</a>
+      <a class="qlink" href="#">Merch</a>
+    </div>
     <div class="divider"></div>
     <div class="now-playing" id="nowPlaying">Now Playing: back to my day job — wifiskeleton</div>
   </div>
@@ -168,8 +247,15 @@ const volume = document.getElementById('volume');
 const volumeIcon = document.getElementById('volumeIcon');
 const wave1 = document.getElementById('wave1');
 const wave2 = document.getElementById('wave2');
+const overlay = document.getElementById('overlay');
 
 let lastVolume = volume.value;
+
+overlay.addEventListener('click', () => {
+  overlay.style.opacity = '0';
+  setTimeout(() => overlay.style.display = 'none', 600);
+  audio.play();
+});
 
 playBtn.addEventListener('click', () => {
   audio.paused ? audio.play() : audio.pause();
