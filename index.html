@@ -9,7 +9,7 @@
   :root {
     --bg-0:#060607; --bg-1:#0d0d11;
     --muted:#9aa3ab; --text:#e9f4ff;
-    --accentA:#ff4a4a; --accentB:#ff7a4a;
+    --accentA:rgba(255,74,74,0.9); --accentB:rgba(255,122,74,0.9);
     --radius:16px;
     --shadow-strong:0 18px 60px rgba(2,6,23,0.7);
     --card-width:960px;
@@ -55,7 +55,7 @@
     border-radius:50%;
     z-index:1;
     position:relative;
-    box-shadow:0 0 15px rgba(255,74,74,0.4);
+    box-shadow:0 0 20px var(--accentA), 0 0 40px var(--accentB);
     transition:box-shadow 0.1s linear;
   }
   .vinyl.rotate{animation:spin 14s linear infinite;}
@@ -253,13 +253,15 @@ function renderVisualizer(){
   requestAnimationFrame(renderVisualizer);
   analyser.getByteFrequencyData(dataArray);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  
-  // Circular bars
+
+  if(audio.paused) return; // only animate when playing
+
+  // Circular bars (boosted)
   const bars=64;
   const radius=140;
   for(let i=0;i<bars;i++){
     const angle=(i/bars)*Math.PI*2;
-    const barHeight=dataArray[i]*0.8;
+    const barHeight=dataArray[i]*1.5; // boosted
     const x=canvas.width/2+Math.cos(angle)*radius;
     const y=canvas.height/2+Math.sin(angle)*radius;
     const xEnd=canvas.width/2+Math.cos(angle)*(radius+barHeight);
@@ -268,19 +270,19 @@ function renderVisualizer(){
     grad.addColorStop(0,'var(--accentA)');
     grad.addColorStop(1,'var(--accentB)');
     ctx.strokeStyle=grad;
-    ctx.lineWidth=3;
+    ctx.lineWidth=4;
     ctx.beginPath();
     ctx.moveTo(x,y);
     ctx.lineTo(xEnd,yEnd);
     ctx.stroke();
   }
-  
-  // Pulsing glow on vinyl
+
+  // Stronger pulsing glow on vinyl
   const bassBins = 8;
   let bass = 0;
   for (let i = 0; i < bassBins; i++) bass += dataArray[i];
   bass /= bassBins;
-  const glow = 10 + (bass / 255) * 25;
+  const glow = 15 + (bass / 255) * 45; // bigger range
   vinyl.style.boxShadow = `0 0 ${glow}px var(--accentA), 0 0 ${glow*1.5}px var(--accentB)`;
 }
 </script>
