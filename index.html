@@ -95,7 +95,7 @@
 <div class="card">
   <div class="left">
     <div class="pfp-wrap"><img src="assets/pfp.png" alt="Profile picture" class="pfp"></div>
-    <div class="role">Producer • Photographer</div>
+    <div class="role">Producer • Owner</div>
   </div>
 
   <div class="main">
@@ -136,7 +136,7 @@
     <a class="social" href="https://instagram.com/okok00101010110" target="_blank" rel="noopener">
       <img src="assets/instagram.png" alt="Instagram">
     </a>
-    <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank" rel="noopener">
+    <a class="social" href="https://www.last.fm/user/YOUR_LASTFM_USERNAME" target="_blank" rel="noopener">
       <img src="assets/lastfm.png" alt="Last.fm">
     </a>
   </div>
@@ -255,9 +255,10 @@ function renderGlow() {
   let bass = 0;
   for (let i = 0; i < bassBins; i++) bass += dataArray[i];
   bass /= bassBins;
-  const targetGlow = 20 + (bass / 255) * 50;
-  currentGlow += (targetGlow - currentGlow) * 0.25;
-  vinyl.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow/5}px var(--accentA), 0 0 ${currentGlow*2}px ${currentGlow/2.5}px var(--accentB)`;
+  const targetGlow = 10 + (bass / 255) * 25; // toned-down glow range
+  currentGlow += (targetGlow - currentGlow) * 0.18; // slightly slower fade
+  vinyl.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow/6}px var(--accentA),
+                           0 0 ${currentGlow*1.5}px ${currentGlow/3}px var(--accentB)`;
   requestAnimationFrame(renderGlow);
 }
 </script>
