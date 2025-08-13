@@ -213,12 +213,32 @@ const visualizer = document.getElementById('visualizer');
 
 audio.volume = parseFloat(volume.value || 0.8);
 
-playBtn.addEventListener('click', () => {
-  if (audio.paused) audio.play().catch(()=>{});
-  else audio.pause();
+let audioCtx, analyser, sourceNode, dataArray, bars = [];
+let visualizerReady = false;
+
+playBtn.addEventListener('click', async () => {
+  if (audioCtx && audioCtx.state === 'suspended') {
+    await audioCtx.resume();
+  }
+  if (audio.paused) {
+    audio.play().catch(()=>{});
+  } else {
+    audio.pause();
+  }
 });
-audio.addEventListener('play', () => { iconPlay.style.display = 'none'; iconPause.style.display = 'block'; });
-audio.addEventListener('pause', () => { iconPlay.style.display = 'block'; iconPause.style.display = 'none'; });
+
+audio.addEventListener('play', () => { 
+  iconPlay.style.display = 'none'; 
+  iconPause.style.display = 'block'; 
+  if (!visualizerReady) {
+    initVisualizer();
+    visualizerReady = true;
+  }
+});
+audio.addEventListener('pause', () => { 
+  iconPlay.style.display = 'block'; 
+  iconPause.style.display = 'none'; 
+});
 
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration || isNaN(audio.duration)) return;
@@ -226,7 +246,9 @@ audio.addEventListener('timeupdate', () => {
   fill.style.width = pct + '%';
   currentTimeEl.textContent = formatTime(audio.currentTime);
 });
-audio.addEventListener('loadedmetadata', () => { durationEl.textContent = formatTime(audio.duration); initVisualizer(); });
+audio.addEventListener('loadedmetadata', () => { 
+  durationEl.textContent = formatTime(audio.duration); 
+});
 
 progress.addEventListener('click', (e) => {
   if (!audio.duration || isNaN(audio.duration)) return;
@@ -243,7 +265,6 @@ function formatTime(s) {
   return m + ':' + sec;
 }
 
-let audioCtx, analyser, sourceNode, dataArray, bars = [];
 function initVisualizer(){
   try {
     if (audioCtx) return;
