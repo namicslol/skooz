@@ -36,7 +36,7 @@
     min-height:420px;backdrop-filter:blur(10px) saturate(120%);
     position:relative;overflow:hidden;
   }
-  /* Soft blurred gradient blobs inside the card */
+  /* Soft blurred gradient blobs */
   .card::before,.card::after{
     content:"";position:absolute;width:300px;height:300px;opacity:.15;z-index:0;
     filter:blur(80px);animation:blobMove 18s infinite alternate ease-in-out;
@@ -65,17 +65,15 @@
     height:100%;padding-top:10px;position:relative;z-index:1;
   }
 
-  /* Transparent vinyl behind track info + visualizer */
+  /* Vinyl */
   .vinyl{
     position:absolute;top:10%;left:50%;
     width:280px;height:280px;
     background:url('assets/songcover.png') center/cover no-repeat;
     opacity:.15;transform:translateX(-50%) rotate(0deg);
     transition:opacity .3s ease;z-index:0;border-radius:50%;
-    animation:spinIdle 60s linear infinite; /* faint idle rotation */
   }
-  .vinyl.rotate{animation:spin 14s linear infinite} /* faster when playing */
-  @keyframes spinIdle{0%{transform:translateX(-50%) rotate(0)}100%{transform:translateX(-50%) rotate(360deg)}}
+  .vinyl.rotate{animation:spin 14s linear infinite}
   @keyframes spin{0%{transform:translateX(-50%) rotate(0)}100%{transform:translateX(-50%) rotate(360deg)}}
 
   .track-title{font-weight:700;font-size:20px;text-align:center}
@@ -94,15 +92,6 @@
   .volume input[type="range"]::-webkit-slider-runnable-track{height:10px;background:rgba(255,255,255,0.05);border-radius:8px}
   .volume input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text);margin-top:-2px}
 
-  .visualizer{
-    height:42px;width:100%;border-radius:8px;overflow:hidden;
-    background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.02));
-    border:1px solid rgba(255,255,255,0.02);position:relative
-  }
-  .visualizer .bar{
-    position:absolute;bottom:0;width:6px;background:linear-gradient(180deg,var(--accentC),var(--accentA));border-radius:4px;opacity:.9
-  }
-
   .socials{display:flex;gap:10px;position:absolute;bottom:20px;left:20px;z-index:1}
   .social{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.008),rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.02)}
   .social img{width:22px;height:22px}
@@ -119,9 +108,9 @@
   <div class="main">
     <div class="display-name">Skoozuh</div>
     <div class="display-handle">@skoozuh</div>
-    <p class="bio">Producer & Photographer | 17 | achieve what you want.</p>
+    <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
     <div class="divider"></div>
-    <div class="now-playing" id="nowPlaying">@skoozuh on everything</div>
+    <div class="now-playing" id="nowPlaying">Now Playing: back to my day job — wifiskeleton</div>
   </div>
 
   <div class="right">
@@ -143,8 +132,6 @@
         <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
       </div>
     </div>
-
-    <div class="visualizer" id="visualizer"></div>
   </div>
 
   <div class="socials">
@@ -165,7 +152,6 @@ const fill = document.getElementById('fill');
 const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 const volume = document.getElementById('volume');
-const visualizer = document.getElementById('visualizer');
 const vinyl = document.getElementById('vinyl');
 const trackTitleEl = document.getElementById('trackTitle');
 const trackSubEl = document.getElementById('trackSub');
@@ -173,32 +159,32 @@ const nowPlayingEl = document.getElementById('nowPlaying');
 
 audio.volume = parseFloat(volume.value || 0.8);
 
-// Keep the Now Playing line synced
 function syncNowPlaying(){
   nowPlayingEl.textContent = `Now Playing: ${trackTitleEl.textContent} — ${trackSubEl.textContent}`;
 }
 syncNowPlaying();
 
-let audioCtx, analyser, sourceNode, dataArray, bars = [];
-let visualizerReady = false;
-let currentGlowSize = 0; // smoothed glow size
+let audioCtx, analyser, sourceNode, dataArray;
+let currentGlowSize = 0;
 
 playBtn.addEventListener('click', async () => {
-  if (audioCtx && audioCtx.state === 'suspended') { await audioCtx.resume(); }
-  if (audio.paused) { audio.play().catch(()=>{}); } else { audio.pause(); }
+  if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
+  if (audio.paused) { audio.play().catch(()=>{}); }
+  else { audio.pause(); }
 });
 
 audio.addEventListener('play', () => {
   iconPlay.style.display = 'none';
   iconPause.style.display = 'block';
-  vinyl.classList.add('rotate');         // faster spin
-  if (!visualizerReady) { initVisualizer(); visualizerReady = true; }
+  vinyl.classList.add('rotate');
+  if (!audioCtx) initVisualizer();
 });
 
 audio.addEventListener('pause', () => {
   iconPlay.style.display = 'block';
   iconPause.style.display = 'none';
-  vinyl.classList.remove('rotate');      // back to idle spin
+  vinyl.classList.remove('rotate');
+  vinyl.style.boxShadow = 'none';
 });
 
 audio.addEventListener('timeupdate', () => {
@@ -228,7 +214,6 @@ function formatTime(s){
 
 function initVisualizer(){
   try{
-    if (audioCtx) return;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
@@ -236,68 +221,30 @@ function initVisualizer(){
     sourceNode = audioCtx.createMediaElementSource(audio);
     sourceNode.connect(analyser);
     analyser.connect(audioCtx.destination);
-    buildVisualizerBars();
-    renderVisualizer();
+    renderGlow();
   }catch(e){ console.warn('Visualizer error', e); }
 }
 
-function buildVisualizerBars(){
-  visualizer.innerHTML = '';
-  bars = [];
-  const count = Math.min(64, Math.max(12, Math.floor(visualizer.clientWidth / 8)));
-  for (let i=0;i<count;i++){
-    const b = document.createElement('div');
-    b.className = 'bar';
-    const w = Math.max(4, (visualizer.clientWidth / count) - 4);
-    b.style.width = w + 'px';
-    b.style.left = (i * (100 / count)) + '%';
-    b.style.height = '6px';
-    visualizer.appendChild(b);
-    bars.push(b);
-  }
-}
-
-function renderVisualizer(){
+function renderGlow(){
   if (!analyser) return;
-
   analyser.getByteFrequencyData(dataArray);
-  const step = Math.floor(dataArray.length / bars.length);
 
-  // Update bar heights/opacities
-  for (let i=0;i<bars.length;i++){
-    const v = dataArray[i * step];
-    const h = Math.max(4, (v / 255) * visualizer.clientHeight);
-    bars[i].style.height = h + 'px';
-    bars[i].style.opacity = (0.3 + (v / 255) * 0.7);
-  }
-
-  // Bass-reactive glow with smoothing
+  // Average bass frequencies
   const bassBins = 8;
   let bassValue = 0;
   for (let i=0; i<bassBins; i++){ bassValue += dataArray[i]; }
   bassValue /= bassBins;
 
-  // Target glow size: 0 when paused, else 10..40 based on bass
-  const targetGlow = audio.paused ? 0 : (10 + (bassValue / 255) * 30);
-  currentGlowSize += (targetGlow - currentGlowSize) * 0.15; // smooth lerp
+  // Target glow size
+  const targetGlow = 10 + (bassValue / 255) * 30;
+  currentGlowSize += (targetGlow - currentGlowSize) * 0.15;
 
-  if (currentGlowSize > 0.5){
-    vinyl.style.boxShadow =
-      `0 0 ${currentGlowSize}px ${currentGlowSize/5}px var(--accentA),
-       0 0 ${currentGlowSize*2}px ${currentGlowSize/2.5}px var(--accentB)`;
-  } else {
-    vinyl.style.boxShadow = 'none';
-  }
+  vinyl.style.boxShadow =
+    `0 0 ${currentGlowSize}px ${currentGlowSize/5}px var(--accentA),
+     0 0 ${currentGlowSize*2}px ${currentGlowSize/2.5}px var(--accentB)`;
 
-  requestAnimationFrame(renderVisualizer);
+  requestAnimationFrame(renderGlow);
 }
-
-// Handle resize: rebuild bars to fit width
-let resizeTO;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTO);
-  resizeTO = setTimeout(() => { if (visualizerReady) buildVisualizerBars(); }, 150);
-});
 </script>
 </body>
 </html>
