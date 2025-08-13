@@ -47,7 +47,7 @@
     top:50%;left:50%;
     transform:translate(-50%,-50%);
     z-index:0;
-    pointer-events:none; /* ✅ Fix so canvas doesn't block clicks */
+    pointer-events:none;
   }
   .vinyl{
     width:280px;height:280px;
@@ -55,6 +55,8 @@
     border-radius:50%;
     z-index:1;
     position:relative;
+    box-shadow:0 0 15px rgba(255,74,74,0.4);
+    transition:box-shadow 0.1s linear;
   }
   .vinyl.rotate{animation:spin 14s linear infinite;}
   @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
@@ -69,7 +71,25 @@
   .progress .fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,var(--accentA),var(--accentB));border-radius:inherit;}
   .volume{display:flex;align-items:center;gap:8px;margin-top:4px;}
   .volume svg{width:24px;height:24px;cursor:pointer;}
-  .volume input[type="range"]{width:100%;}
+  .volume input[type="range"]{
+    -webkit-appearance:none;
+    width:100%;
+    height:10px;
+    background:rgba(255,255,255,0.05);
+    border-radius:999px;
+    background-image:linear-gradient(90deg,var(--accentA),var(--accentB));
+    background-size:var(--val,80%) 100%;
+    background-repeat:no-repeat;
+  }
+  .volume input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    height:16px;width:16px;border-radius:50%;
+    background:#fff;cursor:pointer;
+  }
+  .volume input[type="range"]::-moz-range-thumb{
+    height:16px;width:16px;border-radius:50%;
+    background:#fff;cursor:pointer;border:none;
+  }
   .socials{display:flex;gap:10px;position:absolute;bottom:20px;left:20px;}
   .social{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);}
   .social img{width:22px;height:22px;}
@@ -182,11 +202,13 @@ volumeIcon.addEventListener('click',()=>{
     volume.value=lastVolume;
   }
   updateVolumeIcon(audio.volume);
+  updateVolumeSlider();
 });
 
 volume.addEventListener('input',()=>{
   audio.volume=parseFloat(volume.value);
   updateVolumeIcon(audio.volume);
+  updateVolumeSlider();
 });
 
 function updateVolumeIcon(vol){
@@ -203,6 +225,10 @@ function updateVolumeIcon(vol){
     wave1.style.opacity=1;
     wave2.style.opacity=1;
   }
+}
+
+function updateVolumeSlider(){
+  volume.style.setProperty('--val', (volume.value*100)+'%');
 }
 
 function formatTime(s){
@@ -227,6 +253,8 @@ function renderVisualizer(){
   requestAnimationFrame(renderVisualizer);
   analyser.getByteFrequencyData(dataArray);
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  
+  // Circular bars
   const bars=64;
   const radius=140;
   for(let i=0;i<bars;i++){
@@ -246,6 +274,14 @@ function renderVisualizer(){
     ctx.lineTo(xEnd,yEnd);
     ctx.stroke();
   }
+  
+  // Pulsing glow on vinyl
+  const bassBins = 8;
+  let bass = 0;
+  for (let i = 0; i < bassBins; i++) bass += dataArray[i];
+  bass /= bassBins;
+  const glow = 10 + (bass / 255) * 25;
+  vinyl.style.boxShadow = `0 0 ${glow}px var(--accentA), 0 0 ${glow*1.5}px var(--accentB)`;
 }
 </script>
 </body>
