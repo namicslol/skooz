@@ -145,7 +145,121 @@
 <audio id="audio" src="assets/song.mp3"></audio>
 
 <script>
-/* same JS from last working version (play/pause, vinyl, glow, volume) */
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const iconPlay = playBtn.querySelector('.icon-play');
+const iconPause = playBtn.querySelector('.icon-pause');
+const progress = document.getElementById('progress');
+const fill = document.getElementById('fill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const vinyl = document.getElementById('vinyl');
+const volume = document.getElementById('volume');
+const volumeIcon = document.getElementById('volumeIcon');
+const wave1 = document.getElementById('wave1');
+const wave2 = document.getElementById('wave2');
+
+let audioCtx, analyser, sourceNode, dataArray;
+let lastVolume = volume.value;
+let currentGlow = 0;
+
+playBtn.addEventListener('click', async () => {
+  if (!audioCtx) initVisualizer();
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+  audio.paused ? audio.play() : audio.pause();
+});
+
+audio.addEventListener('play', () => {
+  iconPlay.style.display = 'none';
+  iconPause.style.display = 'block';
+  vinyl.classList.add('rotate');
+});
+
+audio.addEventListener('pause', () => {
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+  vinyl.classList.remove('rotate');
+  vinyl.style.boxShadow = 'none';
+});
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  fill.style.width = (audio.currentTime / audio.duration) * 100 + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+progress.addEventListener('click', e => {
+  const rect = progress.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+});
+
+volumeIcon.addEventListener('click', () => {
+  if (audio.volume > 0) {
+    lastVolume = audio.volume;
+    audio.volume = 0;
+    volume.value = 0;
+  } else {
+    audio.volume = lastVolume;
+    volume.value = lastVolume;
+  }
+  updateVolumeIcon(audio.volume);
+});
+
+volume.addEventListener('input', () => {
+  audio.volume = parseFloat(volume.value);
+  updateVolumeIcon(audio.volume);
+});
+
+function updateVolumeIcon(vol) {
+  if (vol === 0) {
+    wave1.style.opacity = 0;
+    wave2.style.opacity = 0;
+  } else if (vol < 0.33) {
+    wave1.style.opacity = 1;
+    wave2.style.opacity = 0;
+  } else if (vol < 0.66) {
+    wave1.style.opacity = 1;
+    wave2.style.opacity = 0.5;
+  } else {
+    wave1.style.opacity = 1;
+    wave2.style.opacity = 1;
+  }
+}
+
+function formatTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s/60);
+  const sec = Math.floor(s%60).toString().padStart(2,'0');
+  return m + ':' + sec;
+}
+
+function initVisualizer() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 256;
+  dataArray = new Uint8Array(analyser.frequencyBinCount);
+  sourceNode = audioCtx.createMediaElementSource(audio);
+  sourceNode.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  renderGlow();
+}
+
+function renderGlow() {
+  if (!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+  const bassBins = 8;
+  let bass = 0;
+  for (let i = 0; i < bassBins; i++) bass += dataArray[i];
+  bass /= bassBins;
+  const targetGlow = 20 + (bass / 255) * 50;
+  currentGlow += (targetGlow - currentGlow) * 0.25;
+  vinyl.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow/5}px var(--accentA), 0 0 ${currentGlow*2}px ${currentGlow/2.5}px var(--accentB)`;
+  requestAnimationFrame(renderGlow);
+}
 </script>
 </body>
 </html>
