@@ -9,7 +9,9 @@
   :root{
     --bg-0:#060607; --bg-1:#0d0d11;
     --muted:#9aa3ab; --text:#e9f4ff;
-    --accentA:#6e7bff; --accentB:#8b5cf6; --accentC:#46e5c3;
+    --accentA:#ff4a4a; /* vivid red */
+    --accentB:#ff7a4a; /* warm reddish-orange */
+    --accentC:#ff5959; /* softer red for blobs */
     --radius:16px;
     --shadow-strong:0 18px 60px rgba(2,6,23,0.7);
     --shadow-soft:0 8px 30px rgba(2,6,23,0.45);
@@ -20,8 +22,8 @@
   body{
     font-family:Inter,system-ui,sans-serif;color:var(--text);
     background:
-      radial-gradient(800px 420px at 8% 12%, rgba(110,123,255,0.04), transparent 8%),
-      radial-gradient(700px 360px at 92% 88%, rgba(139,92,246,0.03), transparent 6%),
+      radial-gradient(800px 420px at 8% 12%, rgba(255,74,74,0.04), transparent 8%),
+      radial-gradient(700px 360px at 92% 88%, rgba(255,121,74,0.03), transparent 6%),
       linear-gradient(180deg,var(--bg-0),var(--bg-1));
     display:flex;align-items:center;justify-content:center;padding:40px;
   }
