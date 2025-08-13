@@ -72,7 +72,8 @@
     position:absolute;top:10%;left:50%;
     width:280px;height:280px;
     background:url('assets/songcover.png') center/cover no-repeat;
-    opacity:.15;transform:translateX(-50%) rotate(0deg);
+    opacity:.25; /* brighter vinyl for stronger glow visibility */
+    transform:translateX(-50%) rotate(0deg);
     transition:opacity .3s ease;z-index:0;border-radius:50%;
   }
   .vinyl.rotate{animation:spin 14s linear infinite}
@@ -237,9 +238,9 @@ function renderGlow(){
   for (let i=0; i<bassBins; i++){ bassValue += dataArray[i]; }
   bassValue /= bassBins;
 
-  // Target glow size
-  const targetGlow = 10 + (bassValue / 255) * 30;
-  currentGlowSize += (targetGlow - currentGlowSize) * 0.15;
+  // Stronger, faster glow reaction
+  const targetGlow = 20 + (bassValue / 255) * 50;
+  currentGlowSize += (targetGlow - currentGlowSize) * 0.25;
 
   vinyl.style.boxShadow =
     `0 0 ${currentGlowSize}px ${currentGlowSize/5}px var(--accentA),
