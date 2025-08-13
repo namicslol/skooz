@@ -48,6 +48,30 @@
     align-items: start;
     min-height: 420px;
     backdrop-filter: blur(10px) saturate(120%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Blurred gradient blobs */
+  .card::before, .card::after {
+    content: "";
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle at center, var(--accentA), transparent 70%);
+    filter: blur(80px);
+    animation: blobMove 18s infinite alternate ease-in-out;
+    opacity: 0.15;
+    z-index: 0;
+  }
+  .card::after {
+    background: radial-gradient(circle at center, var(--accentC), transparent 70%);
+    animation-delay: 5s;
+    right: 0;
+    bottom: 0;
+  }
+  @keyframes blobMove {
+    0% { transform: translate(-50px, -50px); }
+    100% { transform: translate(50px, 50px); }
   }
 
   @media (max-width:980px) {
@@ -58,7 +82,7 @@
     .card { grid-template-columns: 1fr; padding:20px; gap:14px; }
   }
 
-  .left { display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .left { display:flex; flex-direction:column; align-items:center; gap:12px; z-index: 1; }
   .pfp-wrap {
     width:172px; height:172px; border-radius:18px; overflow:hidden;
     border:1px solid rgba(255,255,255,0.04);
@@ -68,12 +92,22 @@
   .pfp { width:100%; height:100%; object-fit:cover; display:block; }
   .role { font-size:12px; color:var(--muted); text-transform:uppercase; }
 
-  .main { display:flex; flex-direction:column; gap:12px; }
+  .main { display:flex; flex-direction:column; gap:12px; z-index: 1; }
   .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
   .display-handle { font-size:13px; color:var(--muted); }
   .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
+  .divider {
+    margin: 10px 0;
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+  }
+  .now-playing {
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+  }
 
-  /* Player Right Side (No cover image) */
+  /* Player Right Side */
   .right {
     display: flex;
     flex-direction: column;
@@ -82,6 +116,33 @@
     justify-content: center;
     height: 100%;
     padding-top: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Vinyl behind */
+  .vinyl {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 280px;
+    height: 280px;
+    background: url('assets/songcover.png') center/cover no-repeat;
+    opacity: 0.15;
+    transform: translateX(-50%) rotate(0deg);
+    transition: opacity 0.3s ease;
+    z-index: 0;
+  }
+  .vinyl.rotate {
+    animation: spin 14s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg); }
+  }
+  .vinyl.glow {
+    box-shadow: 0 0 25px 5px var(--accentA), 0 0 50px 10px var(--accentB);
+    border-radius: 50%;
   }
 
   .track-title { font-weight: 700; font-size: 20px; text-align: center; }
@@ -147,6 +208,7 @@
   .socials {
     display: flex; gap: 10px;
     position: absolute; bottom: 20px; left: 20px;
+    z-index: 1;
   }
   .social { width: 48px; height: 48px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
@@ -168,9 +230,12 @@
     <div class="display-name">Skoozuh</div>
     <div class="display-handle">@skoozuh</div>
     <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
+    <div class="divider"></div>
+    <div class="now-playing">Now Playing: back to my day job — wifiskeleton</div>
   </div>
 
   <div class="right">
+    <div class="vinyl" id="vinyl"></div>
     <div class="track-title" id="trackTitle">back to my day job</div>
     <div class="track-sub" id="trackSub">wifiskeleton</div>
 
@@ -210,6 +275,7 @@ const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 const volume = document.getElementById('volume');
 const visualizer = document.getElementById('visualizer');
+const vinyl = document.getElementById('vinyl');
 
 audio.volume = parseFloat(volume.value || 0.8);
 
@@ -230,6 +296,7 @@ playBtn.addEventListener('click', async () => {
 audio.addEventListener('play', () => { 
   iconPlay.style.display = 'none'; 
   iconPause.style.display = 'block'; 
+  vinyl.classList.add('rotate', 'glow');
   if (!visualizerReady) {
     initVisualizer();
     visualizerReady = true;
@@ -238,6 +305,7 @@ audio.addEventListener('play', () => {
 audio.addEventListener('pause', () => { 
   iconPlay.style.display = 'block'; 
   iconPause.style.display = 'none'; 
+  vinyl.classList.remove('rotate', 'glow');
 });
 
 audio.addEventListener('timeupdate', () => {
