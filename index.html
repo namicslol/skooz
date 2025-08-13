@@ -18,12 +18,16 @@
   * { box-sizing:border-box; }
   html,body { height:100%; margin:0; }
   body {
-    font-family:Inter,system-ui,sans-serif; color:var(--text);
+    font-family:Inter,system-ui,sans-serif; 
+    color:var(--text);
     background:
-      radial-gradient(800px 420px at 8% 12%, rgba(255,74,74,0.04), transparent 8%),
-      radial-gradient(700px 360px at 92% 88%, rgba(255,121,74,0.03), transparent 6%),
+      radial-gradient(1000px 500px at 8% 12%, rgba(255,74,74,0.12), transparent 15%),
+      radial-gradient(900px 420px at 92% 88%, rgba(255,121,74,0.1), transparent 12%),
+      radial-gradient(600px 300px at 50% 50%, rgba(255,89,89,0.08), transparent 18%),
       linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    background-attachment: fixed;
     display:flex; align-items:center; justify-content:center; padding:40px;
+    transition: background-size 0.15s ease, background-position 0.15s ease;
   }
   .card {
     width:100%; max-width:var(--card-width);
@@ -255,9 +259,20 @@ function renderGlow() {
   let bass = 0;
   for (let i = 0; i < bassBins; i++) bass += dataArray[i];
   bass /= bassBins;
+
+  // Vinyl glow
   const targetGlow = 20 + (bass / 255) * 50;
   currentGlow += (targetGlow - currentGlow) * 0.25;
   vinyl.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow/5}px var(--accentA), 0 0 ${currentGlow*2}px ${currentGlow/2.5}px var(--accentB)`;
+
+  // Bass-reactive background pulse
+  const bassScale = 1 + (bass / 255) * 0.2; 
+  document.body.style.backgroundSize = 
+    `${1000 * bassScale}px ${500 * bassScale}px, 
+     ${900 * bassScale}px ${420 * bassScale}px, 
+     ${600 * bassScale}px ${300 * bassScale}px, 
+     auto`;
+
   requestAnimationFrame(renderGlow);
 }
 </script>
