@@ -136,6 +136,7 @@ const canvas=document.getElementById('visualizerCanvas');
 const ctx=canvas.getContext('2d');
 
 let audioCtx, analyser, sourceNode, dataArray;
+let lastVolume=volume.value;
 
 playBtn.addEventListener('click', async()=>{
   if(!audioCtx) initVisualizer();
@@ -148,6 +149,7 @@ audio.addEventListener('play',()=>{
   iconPause.style.display='block';
   vinyl.classList.add('rotate');
 });
+
 audio.addEventListener('pause',()=>{
   iconPlay.style.display='block';
   iconPause.style.display='none';
@@ -159,36 +161,56 @@ audio.addEventListener('timeupdate',()=>{
   fill.style.width=(audio.currentTime/audio.duration)*100+'%';
   currentTimeEl.textContent=formatTime(audio.currentTime);
 });
+
 audio.addEventListener('loadedmetadata',()=>{
   durationEl.textContent=formatTime(audio.duration);
 });
+
 progress.addEventListener('click',e=>{
   const rect=progress.getBoundingClientRect();
   audio.currentTime=((e.clientX-rect.left)/rect.width)*audio.duration;
 });
+
 volumeIcon.addEventListener('click',()=>{
   if(audio.volume>0){
-    audio.volume=0; volume.value=0;
+    lastVolume=audio.volume;
+    audio.volume=0;
+    volume.value=0;
   } else {
-    audio.volume=0.8; volume.value=0.8;
+    audio.volume=lastVolume;
+    volume.value=lastVolume;
   }
   updateVolumeIcon(audio.volume);
 });
+
 volume.addEventListener('input',()=>{
   audio.volume=parseFloat(volume.value);
   updateVolumeIcon(audio.volume);
 });
 
 function updateVolumeIcon(vol){
-  wave1.style.opacity = vol===0?0:1;
-  wave2.style.opacity = vol>0.66?1:vol>0.33?0.5:0;
+  if(vol===0){
+    wave1.style.opacity=0;
+    wave2.style.opacity=0;
+  } else if(vol<0.33){
+    wave1.style.opacity=1;
+    wave2.style.opacity=0;
+  } else if(vol<0.66){
+    wave1.style.opacity=1;
+    wave2.style.opacity=0.5;
+  } else {
+    wave1.style.opacity=1;
+    wave2.style.opacity=1;
+  }
 }
+
 function formatTime(s){
   if(!s||isNaN(s)) return '0:00';
   const m=Math.floor(s/60);
   const sec=Math.floor(s%60).toString().padStart(2,'0');
   return m+':'+sec;
 }
+
 function initVisualizer(){
   audioCtx=new (window.AudioContext||window.webkitAudioContext)();
   analyser=audioCtx.createAnalyser();
@@ -199,6 +221,7 @@ function initVisualizer(){
   analyser.connect(audioCtx.destination);
   renderVisualizer();
 }
+
 function renderVisualizer(){
   requestAnimationFrame(renderVisualizer);
   analyser.getByteFrequencyData(dataArray);
