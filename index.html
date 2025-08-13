@@ -27,8 +27,22 @@
       linear-gradient(180deg,var(--bg-0),var(--bg-1));
     background-attachment: fixed;
     display:flex; align-items:center; justify-content:center; padding:40px;
-    transition: background-size 0.15s ease, background-position 0.15s ease;
+    position: relative;
+    overflow: hidden;
   }
+
+  /* Glow overlay */
+  .bg-glow {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, var(--accentA), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    mix-blend-mode: screen;
+    z-index: 0;
+  }
+
   .card {
     width:100%; max-width:var(--card-width);
     background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(0,0,0,0.03));
@@ -37,7 +51,7 @@
     border:1px solid rgba(255,255,255,0.035);
     display:grid; grid-template-columns:180px 1fr 340px; gap:22px; align-items:start;
     min-height:420px; backdrop-filter:blur(10px) saturate(120%);
-    position:relative; overflow:hidden;
+    position:relative; overflow:hidden; z-index: 1;
   }
   .card::before,.card::after {
     content:""; position:absolute; width:300px; height:300px; opacity:.15; z-index:0;
@@ -95,6 +109,8 @@
 </style>
 </head>
 <body>
+
+<div class="bg-glow" id="bgGlow"></div>
 
 <div class="card">
   <div class="left">
@@ -162,6 +178,7 @@ const volume = document.getElementById('volume');
 const volumeIcon = document.getElementById('volumeIcon');
 const wave1 = document.getElementById('wave1');
 const wave2 = document.getElementById('wave2');
+const bgGlow = document.getElementById('bgGlow');
 
 let audioCtx, analyser, sourceNode, dataArray;
 let lastVolume = volume.value;
@@ -184,6 +201,7 @@ audio.addEventListener('pause', () => {
   iconPause.style.display = 'none';
   vinyl.classList.remove('rotate');
   vinyl.style.boxShadow = 'none';
+  bgGlow.style.opacity = 0;
 });
 
 audio.addEventListener('timeupdate', () => {
@@ -265,13 +283,8 @@ function renderGlow() {
   currentGlow += (targetGlow - currentGlow) * 0.25;
   vinyl.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow/5}px var(--accentA), 0 0 ${currentGlow*2}px ${currentGlow/2.5}px var(--accentB)`;
 
-  // Bass-reactive background pulse
-  const bassScale = 1 + (bass / 255) * 0.2; 
-  document.body.style.backgroundSize = 
-    `${1000 * bassScale}px ${500 * bassScale}px, 
-     ${900 * bassScale}px ${420 * bassScale}px, 
-     ${600 * bassScale}px ${300 * bassScale}px, 
-     auto`;
+  // Soft background glow overlay
+  bgGlow.style.opacity = (bass / 255) * 0.6;
 
   requestAnimationFrame(renderGlow);
 }
