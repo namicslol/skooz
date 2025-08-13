@@ -20,27 +20,15 @@
   body {
     font-family:Inter,system-ui,sans-serif; 
     color:var(--text);
-    background:
-      radial-gradient(1000px 500px at 8% 12%, rgba(255,74,74,0.12), transparent 15%),
-      radial-gradient(900px 420px at 92% 88%, rgba(255,121,74,0.1), transparent 12%),
-      radial-gradient(600px 300px at 50% 50%, rgba(255,89,89,0.08), transparent 18%),
-      linear-gradient(180deg,var(--bg-0),var(--bg-1));
-    background-attachment: fixed;
+    background: linear-gradient(270deg, var(--accentA), var(--accentB), var(--accentC), var(--accentA));
+    background-size: 800% 800%;
+    animation: flowBG 20s ease infinite;
     display:flex; align-items:center; justify-content:center; padding:40px;
-    position: relative;
-    overflow: hidden;
   }
-
-  /* Glow overlay */
-  .bg-glow {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    background: radial-gradient(circle, var(--accentA), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    mix-blend-mode: screen;
-    z-index: 0;
+  @keyframes flowBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 
   .card {
@@ -110,8 +98,6 @@
 </head>
 <body>
 
-<div class="bg-glow" id="bgGlow"></div>
-
 <div class="card">
   <div class="left">
     <div class="pfp-wrap"><img src="assets/pfp.png" alt="Profile picture" class="pfp"></div>
@@ -178,15 +164,10 @@ const volume = document.getElementById('volume');
 const volumeIcon = document.getElementById('volumeIcon');
 const wave1 = document.getElementById('wave1');
 const wave2 = document.getElementById('wave2');
-const bgGlow = document.getElementById('bgGlow');
 
-let audioCtx, analyser, sourceNode, dataArray;
 let lastVolume = volume.value;
-let currentGlow = 0;
 
-playBtn.addEventListener('click', async () => {
-  if (!audioCtx) initVisualizer();
-  if (audioCtx.state === 'suspended') await audioCtx.resume();
+playBtn.addEventListener('click', () => {
   audio.paused ? audio.play() : audio.pause();
 });
 
@@ -200,8 +181,6 @@ audio.addEventListener('pause', () => {
   iconPlay.style.display = 'block';
   iconPause.style.display = 'none';
   vinyl.classList.remove('rotate');
-  vinyl.style.boxShadow = 'none';
-  bgGlow.style.opacity = 0;
 });
 
 audio.addEventListener('timeupdate', () => {
@@ -257,36 +236,6 @@ function formatTime(s) {
   const m = Math.floor(s/60);
   const sec = Math.floor(s%60).toString().padStart(2,'0');
   return m + ':' + sec;
-}
-
-function initVisualizer() {
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 256;
-  dataArray = new Uint8Array(analyser.frequencyBinCount);
-  sourceNode = audioCtx.createMediaElementSource(audio);
-  sourceNode.connect(analyser);
-  analyser.connect(audioCtx.destination);
-  renderGlow();
-}
-
-function renderGlow() {
-  if (!analyser) return;
-  analyser.getByteFrequencyData(dataArray);
-  const bassBins = 8;
-  let bass = 0;
-  for (let i = 0; i < bassBins; i++) bass += dataArray[i];
-  bass /= bassBins;
-
-  // Vinyl glow
-  const targetGlow = 20 + (bass / 255) * 50;
-  currentGlow += (targetGlow - currentGlow) * 0.25;
-  vinyl.style.boxShadow = `0 0 ${currentGlow}px ${currentGlow/5}px var(--accentA), 0 0 ${currentGlow*2}px ${currentGlow/2.5}px var(--accentB)`;
-
-  // Soft background glow overlay
-  bgGlow.style.opacity = (bass / 255) * 0.6;
-
-  requestAnimationFrame(renderGlow);
 }
 </script>
 </body>
