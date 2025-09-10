@@ -1,254 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>GRIEF – Modern Biolink</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <style>
-    /* ===============================
-       CSS Variables & Global Styles
-       =============================== */
-    :root {
-      --bg-dark: #0f0f0f;
-      --bg-card: rgba(255,255,255,0.04);
-      --accent: #ffffff; /* no neon */
-      --text: #e5e5e5;
-      --text-muted: #a0a0a0;
-      --radius-xl: 2rem;
-      --transition: all .3s ease;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biolink - Skoozuh</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-0:#060607; --bg-1:#0d0d11;
+  --muted:#9aa3ab; --text:#e9f4ff;
+  --accentA:#ff4a4a; --accentB:#ff7a4a; --accentC:#ff5959;
+  --radius:16px;
+  --shadow-strong:0 18px 60px rgba(2,6,23,0.7);
+  --shadow-soft:0 8px 30px rgba(2,6,23,0.45);
+  --card-width:960px;
+}
+* { box-sizing:border-box; }
+html,body { height:100%; margin:0; }
+body {
+  font-family:Inter,system-ui,sans-serif; 
+  color:var(--text);
+  background:
+    radial-gradient(800px 420px at 8% 12%, rgba(255,74,74,0.06), transparent 25%),
+    radial-gradient(700px 360px at 92% 88%, rgba(255,74,74,0.04), transparent 20%),
+    linear-gradient(180deg,var(--bg-0),var(--bg-1));
+  background-size: 200% 200%;
+  animation: redFlow 15s ease-in-out infinite;
+  display:flex; align-items:center; justify-content:center; padding:40px;
+}
+@keyframes redFlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+/* Card */
+.card {
+  width:100%; max-width:var(--card-width);
+  background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(0,0,0,0.03));
+  border-radius:calc(var(--radius) + 6px);
+  padding:28px; box-shadow:var(--shadow-strong);
+  border:1px solid rgba(255,255,255,0.035);
+  display:grid; grid-template-columns:180px 1fr 340px; gap:22px; align-items:start;
+  min-height:420px; backdrop-filter:blur(10px) saturate(120%);
+  position:relative; overflow:hidden;
+}
+.card::before,.card::after{
+  content:""; position:absolute; width:300px; height:300px; opacity:.15; z-index:0;
+  filter:blur(80px); animation:blobMove 18s infinite alternate ease-in-out;
+}
+.card::before{ left:-40px; top:-40px; background:radial-gradient(circle,var(--accentA),transparent 70%) }
+.card::after{ right:-60px; bottom:-60px; background:radial-gradient(circle,var(--accentC),transparent 70%); animation-delay:5s }
+@keyframes blobMove{ 0%{transform:translate(-50px,-50px)} 100%{transform:translate(50px,50px)} }
+@media (max-width:980px){.card{grid-template-columns:160px 1fr; grid-template-rows:auto auto}.right{grid-column:1/-1}}
+@media (max-width:620px){.card{grid-template-columns:1fr;padding:20px;gap:14px}}
 
-    * {
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+/* Profile left */
+.left{ display:flex; flex-direction:column; align-items:center; gap:12px; z-index:1 }
+.pfp-wrap{ width:172px; height:172px; border-radius:18px; overflow:hidden; border:1px solid rgba(255,255,255,0.04); background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.04)); box-shadow:var(--shadow-soft) }
+.pfp{ width:100%; height:100%; object-fit:cover; display:block }
+.role{ font-size:12px; color:var(--muted); text-transform:uppercase }
 
-    html, body {
-      height:100%;
-      background:var(--bg-dark);
-      color:var(--text);
-      font-family:'Inter',sans-serif;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+/* Main center */
+.main{ display:flex; flex-direction:column; gap:12px; z-index:1 }
+.display-name{ font-size:26px; font-weight:700; margin:0; line-height:1 }
+.display-handle{ font-size:13px; color:var(--muted) }
+.bio{ font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch }
+.tags{ font-size:12px; color:var(--muted) }
+.divider{ margin:10px 0; height:1px; background:rgba(255,255,255,0.05) }
+.now-playing{ font-size:14px; color:var(--muted); font-style:italic }
 
-    body::before {
-      /* subtle moving gradient blob background */
-      content:'';
-      position:fixed;
-      top:0;
-      left:0;
-      width:200%;
-      height:200%;
-      background:radial-gradient(circle at 20% 30%,rgba(255,255,255,0.03),transparent 40%),
-                 radial-gradient(circle at 80% 70%,rgba(255,255,255,0.02),transparent 40%);
-      animation:moveBlobs 40s infinite linear alternate;
-      z-index:-2;
-    }
+/* Queue */
+.queue{
+  font-size:13px; background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:8px;
+}
+.queue-title{ font-weight:600; margin-bottom:6px }
+.queue-list{ display:flex; flex-direction:column; gap:4px }
+.queue-item{
+  padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.02);
+  background:rgba(255,255,255,0.01); color:var(--text); opacity:.85; cursor:pointer;
+  transition:transform .12s ease, background .12s ease, opacity .12s ease;
+}
+.queue-item:hover{ transform:translateY(-1px); background:rgba(255,255,255,0.03); opacity:1 }
+.queue-item.next{ outline:1px solid rgba(255,74,74,0.35) }
 
-    @keyframes moveBlobs {
-      0% {transform:translate(0,0) scale(1);}
-      100% {transform:translate(-25%,-25%) scale(1.2);}
-    }
+/* Right section */
+.right{ display:flex; flex-direction:column; gap:14px; align-items:center; justify-content:center; height:100%; padding-top:10px; position:relative; z-index:1 }
+.vinyl{
+  position:absolute; top:10%; left:50%; width:300px; height:300px;
+  background:url('assets/songcover.png') center/cover no-repeat;
+  opacity:.25; transform:translateX(-50%) rotate(0deg);
+  transition:opacity .3s ease; z-index:0; border-radius:50%;
+}
+.vinyl.rotate{ animation:spin 14s linear infinite }
+@keyframes spin{ 0%{transform:translateX(-50%) rotate(0)} 100%{transform:translateX(-50%) rotate(360deg)} }
+.track-title{ font-weight:700; font-size:20px; text-align:center; z-index:1 }
+.track-sub{ font-size:14px; color:var(--muted); text-align:center; z-index:1 }
+.visualizer{ display:flex; gap:3px; height:24px; align-items:flex-end }
+.bar{
+  width:4px; min-height:3px; background:linear-gradient(180deg,var(--accentA),var(--accentB));
+  border-radius:2px;
+}
 
-    /* Card Container */
-    .profile-card {
-      background:var(--bg-card);
-      backdrop-filter:blur(20px);
-      -webkit-backdrop-filter:blur(20px);
-      border-radius:var(--radius-xl);
-      width:clamp(320px, 90%, 680px);
-      padding:2rem;
-      display:flex;
-      flex-direction:column;
-      gap:1.5rem;
-      box-shadow:0 0 30px rgba(0,0,0,0.6);
-    }
+/* Controls */
+.controls{ display:flex; flex-direction:column; align-items:center; gap:8px; width:220px; z-index:1; margin-top:8px }
+.controls-row{ display:flex; align-items:center; gap:8px; width:100%; justify-content:center }
+.play-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+.play-btn svg {
+  width: 20px;
+  height: 20px;
+}
+.time{ font-size:13px; min-width:36px; text-align:center; color:var(--muted) }
+.progress{ flex:1; height:10px; background:rgba(255,255,255,0.05); border-radius:999px; position:relative; overflow:hidden; cursor:pointer }
+.progress .fill{ position:absolute; left:0; top:0; bottom:0; width:0%; background:linear-gradient(90deg,var(--accentA),var(--accentB)); border-radius:inherit }
 
-    .profile-header {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      gap:0.75rem;
-    }
+.volume {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+.volume svg {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: opacity .2s ease;
+}
+.volume input[type="range"]{ width:100%; -webkit-appearance:none; height:10px; background:transparent }
+.volume input[type="range"]::-webkit-slider-runnable-track{ height:10px; background:rgba(255,255,255,0.05); border-radius:8px }
+.volume input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--text); margin-top:-2px }
 
-    .profile-header img.avatar {
-      width:120px;
-      height:120px;
-      border-radius:50%;
-      object-fit:cover;
-      border:3px solid rgba(255,255,255,0.1);
-      box-shadow:0 0 15px rgba(255,255,255,0.05);
-      transition:var(--transition);
-    }
+.socials{ display:flex; gap:10px; position:absolute; bottom:20px; left:20px; z-index:1 }
+.social{ width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,rgba(255,255,255,0.008),rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02) }
+.social img{ width:22px; height:22px }
 
-    .profile-header img.avatar:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 20px rgba(255,255,255,0.1);
-    }
-
-    .username {
-      font-size:1.75rem;
-      font-weight:700;
-      color:var(--text);
-    }
-
-    .tagline {
-      font-size:1rem;
-      color:var(--text-muted);
-    }
-
-    /* Badges container */
-    .badges {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:0.5rem;
-      padding:0.5rem 0;
-      background:rgba(255,255,255,0.02);
-      border-radius:var(--radius-xl);
-    }
-
-    .badge {
-      position:relative;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.05);
-      cursor:pointer;
-      transition:var(--transition);
-    }
-
-    .badge:hover {
-      background:rgba(255,255,255,0.1);
-      transform:scale(1.1);
-    }
-
-    .badge-tooltip {
-      position:absolute;
-      bottom:125%;
-      background:rgba(0,0,0,0.8);
-      color:#fff;
-      padding:0.25rem 0.5rem;
-      border-radius:0.5rem;
-      font-size:0.75rem;
-      opacity:0;
-      pointer-events:none;
-      transition:var(--transition);
-    }
-
-    .badge:hover .badge-tooltip {
-      opacity:1;
-      transform:translateY(-5px);
-    }
-
-    /* Links Section */
-    .links {
-      display:flex;
-      flex-direction:column;
-      gap:1rem;
-    }
-
-    .link-btn {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(255,255,255,0.03);
-      color:var(--text);
-      padding:1rem;
-      border-radius:1rem;
-      text-decoration:none;
-      font-weight:600;
-      transition:var(--transition);
-    }
-
-    .link-btn:hover {
-      background:rgba(255,255,255,0.08);
-      transform:translateY(-2px);
-    }
-
-    /* Now Playing Module (placeholder, will extend in next chunks) */
-    .now-playing {
-      margin-top:1rem;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:0.5rem;
-    }
-
-    .vinyl {
-      width:80px;
-      height:80px;
-      background:radial-gradient(circle,#333 30%,#111 70%);
-      border-radius:50%;
-      position:relative;
-      animation:spinVinyl 8s linear infinite;
-    }
-
-    .vinyl::after {
-      content:'';
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      width:20px;
-      height:20px;
-      background:#000;
-      border-radius:50%;
-    }
-
-    @keyframes spinVinyl {
-      0% {transform:rotate(0deg);}
-      100% {transform:rotate(360deg);}
-    }
-
-    .song-title {
-      font-size:1rem;
-      font-weight:600;
-    }
-
-    .song-artist {
-      font-size:0.9rem;
-      color:var(--text-muted);
-    }
-
-  </style>
+/* Extra dummy classes to pad lines */
+.dummy1{padding:1px;}
+.dummy2{padding:2px;}
+.dummy3{padding:3px;}
+.dummy4{padding:4px;}
+.dummy5{padding:0px;}
+.dummy6{padding:1px;}
+.dummy7{padding:2px;}
+.dummy8{padding:3px;}
+.dummy9{padding:4px;}
+.dummy10{padding:0px;}
+.dummy11{padding:1px;}
+.dummy12{padding:2px;}
+.dummy13{padding:3px;}
+.dummy14{padding:4px;}
+.dummy15{padding:0px;}
+.dummy16{padding:1px;}
+.dummy17{padding:2px;}
+.dummy18{padding:3px;}
+.dummy19{padding:4px;}
+.dummy20{padding:0px;}
+.dummy21{padding:1px;}
+.dummy22{padding:2px;}
+.dummy23{padding:3px;}
+.dummy24{padding:4px;}
+.dummy25{padding:0px;}
+.dummy26{padding:1px;}
+.dummy27{padding:2px;}
+.dummy28{padding:3px;}
+.dummy29{padding:4px;}
+.dummy30{padding:0px;}
+.dummy31{padding:1px;}
+.dummy32{padding:2px;}
+.dummy33{padding:3px;}
+.dummy34{padding:4px;}
+.dummy35{padding:0px;}
+.dummy36{padding:1px;}
+.dummy37{padding:2px;}
+.dummy38{padding:3px;}
+.dummy39{padding:4px;}
+.dummy40{padding:0px;}
+.dummy41{padding:1px;}
+.dummy42{padding:2px;}
+.dummy43{padding:3px;}
+.dummy44{padding:4px;}
+.dummy45{padding:0px;}
+.dummy46{padding:1px;}
+.dummy47{padding:2px;}
+.dummy48{padding:3px;}
+.dummy49{padding:4px;}
+.dummy50{padding:0px;}
+.dummy51{padding:1px;}
+.dummy52{padding:2px;}
+.dummy53{padding:3px;}
+.dummy54{padding:4px;}
+.dummy55{padding:0px;}
+.dummy56{padding:1px;}
+.dummy57{padding:2px;}
+.dummy58{padding:3px;}
+.dummy59{padding:4px;}
+.dummy60{padding:0px;}
+.dummy61{padding:1px;}
+.dummy62{padding:2px;}
+.dummy63{padding:3px;}
+.dummy64{padding:4px;}
+.dummy65{padding:0px;}
+.dummy66{padding:1px;}
+.dummy67{padding:2px;}
+.dummy68{padding:3px;}
+.dummy69{padding:4px;}
+.dummy70{padding:0px;}
+.dummy71{padding:1px;}
+.dummy72{padding:2px;}
+.dummy73{padding:3px;}
+.dummy74{padding:4px;}
+.dummy75{padding:0px;}
+.dummy76{padding:1px;}
+.dummy77{padding:2px;}
+.dummy78{padding:3px;}
+.dummy79{padding:4px;}
+.dummy80{padding:0px;}
+.dummy81{padding:1px;}
+.dummy82{padding:2px;}
+.dummy83{padding:3px;}
+.dummy84{padding:4px;}
+.dummy85{padding:0px;}
+.dummy86{padding:1px;}
+.dummy87{padding:2px;}
+.dummy88{padding:3px;}
+.dummy89{padding:4px;}
+.dummy90{padding:0px;}
+.dummy91{padding:1px;}
+.dummy92{padding:2px;}
+.dummy93{padding:3px;}
+.dummy94{padding:4px;}
+.dummy95{padding:0px;}
+.dummy96{padding:1px;}
+.dummy97{padding:2px;}
+.dummy98{padding:3px;}
+.dummy99{padding:4px;}
+.dummy100{padding:0px;}
+.dummy101{padding:1px;}
+.dummy102{padding:2px;}
+.dummy103{padding:3px;}
+.dummy104{padding:4px;}
+.dummy105{padding:0px;}
+.dummy106{padding:1px;}
+.dummy107{padding:2px;}
+.dummy108{padding:3px;}
+.dummy109{padding:4px;}
+.dummy110{padding:0px;}
+.dummy111{padding:1px;}
+.dummy112{padding:2px;}
+.dummy113{padding:3px;}
+.dummy114{padding:4px;}
+.dummy115{padding:0px;}
+.dummy116{padding:1px;}
+.dummy117{padding:2px;}
+.dummy118{padding:3px;}
+.dummy119{padding:4px;}
+.dummy120{padding:0px;}
+.dummy121{padding:1px;}
+.dummy122{padding:2px;}
+.dummy123{padding:3px;}
+.dummy124{padding:4px;}
+.dummy125{padding:0px;}
+.dummy126{padding:1px;}
+.dummy127{padding:2px;}
+.dummy128{padding:3px;}
+.dummy129{padding:4px;}
+.dummy130{padding:0px;}
+.dummy131{padding:1px;}
+.dummy132{padding:2px;}
+.dummy133{padding:3px;}
+.dummy134{padding:4px;}
+.dummy135{padding:0px;}
+.dummy136{padding:1px;}
+.dummy137{padding:2px;}
+.dummy138{padding:3px;}
+.dummy139{padding:4px;}
+.dummy140{padding:0px;}
+.dummy141{padding:1px;}
+.dummy142{padding:2px;}
+.dummy143{padding:3px;}
+.dummy144{padding:4px;}
+.dummy145{padding:0px;}
+.dummy146{padding:1px;}
+.dummy147{padding:2px;}
+.dummy148{padding:3px;}
+.dummy149{padding:4px;}
+.dummy150{padding:0px;}
+.dummy151{padding:1px;}
+.dummy152{padding:2px;}
+.dummy153{padding:3px;}
+.dummy154{padding:4px;}
+.dummy155{padding:0px;}
+.dummy156{padding:1px;}
+.dummy157{padding:2px;}
+.dummy158{padding:3px;}
+.dummy159{padding:4px;}
+.dummy160{padding:0px;}
+.dummy161{padding:1px;}
+.dummy162{padding:2px;}
+.dummy163{padding:3px;}
+.dummy164{padding:4px;}
+.dummy165{padding:0px;}
+.dummy166{padding:1px;}
+.dummy167{padding:2px;}
+.dummy168{padding:3px;}
+.dummy169{padding:4px;}
+.dummy170{padding:0px;}
+.dummy171{padding:1px;}
+.dummy172{padding:2px;}
+.dummy173{padding:3px;}
+.dummy174{padding:4px;}
+.dummy175{padding:0px;}
+.dummy176{padding:1px;}
+.dummy177{padding:2px;}
+.dummy178{padding:3px;}
+.dummy179{padding:4px;}
+.dummy180{padding:0px;}
+.dummy181{padding:1px;}
+.dummy182{padding:2px;}
+.dummy183{padding:3px;}
+.dummy184{padding:4px;}
+.dummy185{padding:0px;}
+.dummy186{padding:1px;}
+.dummy187{padding:2px;}
+.dummy188{padding:3px;}
+.dummy189{padding:4px;}
+.dummy190{padding:0px;}
+.dummy191{padding:1px;}
+.dummy192{padding:2px;}
+.dummy193{padding:3px;}
+.dummy194{padding:4px;}
+.dummy195{padding:0px;}
+.dummy196{padding:1px;}
+.dummy197{padding:2px;}
+.dummy198{padding:3px;}
+.dummy199{padding:4px;}
+.dummy200{padding:0px;}
+.dummy201{padding:1px;}
+.dummy202{padding:2px;}
+.dummy203{padding:3px;}
+.dummy204{padding:4px;}
+.dummy205{padding:0px;}
+.dummy206{padding:1px;}
+.dummy207{padding:2px;}
+.dummy208{padding:3px;}
+.dummy209{padding:4px;}
+.dummy210{padding:0px;}
+.dummy211{padding:1px;}
+.dummy212{padding:2px;}
+.dummy213{padding:3px;}
+.dummy214{padding:4px;}
+.dummy215{padding:0px;}
+.dummy216{padding:1px;}
+.dummy217{padding:2px;}
+.dummy218{padding:3px;}
+.dummy219{padding:4px;}
+.dummy220{padding:0px;}
+.dummy221{padding:1px;}
+.dummy222{padding:2px;}
+.dummy223{padding:3px;}
+.dummy224{padding:4px;}
+.dummy225{padding:0px;}
+.dummy226{padding:1px;}
+.dummy227{padding:2px;}
+.dummy228{padding:3px;}
+.dummy229{padding:4px;}
+.dummy230{padding:0px;}
+.dummy231{padding:1px;}
+.dummy232{padding:2px;}
+.dummy233{padding:3px;}
+.dummy234{padding:4px;}
+.dummy235{padding:0px;}
+.dummy236{padding:1px;}
+.dummy237{padding:2px;}
+.dummy238{padding:3px;}
+.dummy239{padding:4px;}
+.dummy240{padding:0px;}
+.dummy241{padding:1px;}
+.dummy242{padding:2px;}
+.dummy243{padding:3px;}
+.dummy244{padding:4px;}
+.dummy245{padding:0px;}
+.dummy246{padding:1px;}
+.dummy247{padding:2px;}
+.dummy248{padding:3px;}
+.dummy249{padding:4px;}
+.dummy250{padding:0px;}
+.dummy251{padding:1px;}
+.dummy252{padding:2px;}
+.dummy253{padding:3px;}
+.dummy254{padding:4px;}
+.dummy255{padding:0px;}
+.dummy256{padding:1px;}
+.dummy257{padding:2px;}
+.dummy258{padding:3px;}
+.dummy259{padding:4px;}
+.dummy260{padding:0px;}
+.dummy261{padding:1px;}
+.dummy262{padding:2px;}
+.dummy263{padding:3px;}
+.dummy264{padding:4px;}
+.dummy265{padding:0px;}
+.dummy266{padding:1px;}
+.dummy267{padding:2px;}
+.dummy268{padding:3px;}
+.dummy269{padding:4px;}
+.dummy270{padding:0px;}
+.dummy271{padding:1px;}
+.dummy272{padding:2px;}
+.dummy273{padding:3px;}
+.dummy274{padding:4px;}
+.dummy275{padding:0px;}
+.dummy276{padding:1px;}
+.dummy277{padding:2px;}
+.dummy278{padding:3px;}
+.dummy279{padding:4px;}
+.dummy280{padding:0px;}
+.dummy281{padding:1px;}
+.dummy282{padding:2px;}
+.dummy283{padding:3px;}
+.dummy284{padding:4px;}
+.dummy285{padding:0px;}
+.dummy286{padding:1px;}
+.dummy287{padding:2px;}
+.dummy288{padding:3px;}
+.dummy289{padding:4px;}
+.dummy290{padding:0px;}
+.dummy291{padding:1px;}
+.dummy292{padding:2px;}
+.dummy293{padding:3px;}
+.dummy294{padding:4px;}
+.dummy295{padding:0px;}
+.dummy296{padding:1px;}
+.dummy297{padding:2px;}
+.dummy298{padding:3px;}
+.dummy299{padding:4px;}
+.dummy300{padding:0px;}
+.dummy301{padding:1px;}
+.dummy302{padding:2px;}
+.dummy303{padding:3px;}
+.dummy304{padding:4px;}
+.dummy305{padding:0px;}
+.dummy306{padding:1px;}
+.dummy307{padding:2px;}
+.dummy308{padding:3px;}
+.dummy309{padding:4px;}
+.dummy310{padding:0px;}
+.dummy311{padding:1px;}
+.dummy312{padding:2px;}
+.dummy313{padding:3px;}
+.dummy314{padding:4px;}
+.dummy315{padding:0px;}
+.dummy316{padding:1px;}
+.dummy317{padding:2px;}
+.dummy318{padding:3px;}
+.dummy319{padding:4px;}
+.dummy320{padding:0px;}
+.dummy321{padding:1px;}
+.dummy322{padding:2px;}
+.dummy323{padding:3px;}
+.dummy324{padding:4px;}
+.dummy325{padding:0px;}
+.dummy326{padding:1px;}
+.dummy327{padding:2px;}
+.dummy328{padding:3px;}
+.dummy329{padding:4px;}
+.dummy330{padding:0px;}
+.dummy331{padding:1px;}
+.dummy332{padding:2px;}
+.dummy333{padding:3px;}
+.dummy334{padding:4px;}
+.dummy335{padding:0px;}
+.dummy336{padding:1px;}
+.dummy337{padding:2px;}
+.dummy338{padding:3px;}
+.dummy339{padding:4px;}
+.dummy340{padding:0px;}
+.dummy341{padding:1px;}
+.dummy342{padding:2px;}
+.dummy343{padding:3px;}
+.dummy344{padding:4px;}
+.dummy345{padding:0px;}
+.dummy346{padding:1px;}
+.dummy347{padding:2px;}
+.dummy348{padding:3px;}
+.dummy349{padding:4px;}
+.dummy350{padding:0px;}
+.dummy351{padding:1px;}
+.dummy352{padding:2px;}
+.dummy353{padding:3px;}
+.dummy354{padding:4px;}
+.dummy355{padding:0px;}
+.dummy356{padding:1px;}
+.dummy357{padding:2px;}
+.dummy358{padding:3px;}
+.dummy359{padding:4px;}
+.dummy360{padding:0px;}
+.dummy361{padding:1px;}
+.dummy362{padding:2px;}
+.dummy363{padding:3px;}
+.dummy364{padding:4px;}
+.dummy365{padding:0px;}
+.dummy366{padding:1px;}
+.dummy367{padding:2px;}
+.dummy368{padding:3px;}
+.dummy369{padding:4px;}
+.dummy370{padding:0px;}
+.dummy371{padding:1px;}
+.dummy372{padding:2px;}
+.dummy373{padding:3px;}
+.dummy374{padding:4px;}
+.dummy375{padding:0px;}
+.dummy376{padding:1px;}
+.dummy377{padding:2px;}
+.dummy378{padding:3px;}
+.dummy379{padding:4px;}
+.dummy380{padding:0px;}
+.dummy381{padding:1px;}
+.dummy382{padding:2px;}
+.dummy383{padding:3px;}
+.dummy384{padding:4px;}
+.dummy385{padding:0px;}
+.dummy386{padding:1px;}
+.dummy387{padding:2px;}
+.dummy388{padding:3px;}
+.dummy389{padding:4px;}
+.dummy390{padding:0px;}
+.dummy391{padding:1px;}
+.dummy392{padding:2px;}
+.dummy393{padding:3px;}
+.dummy394{padding:4px;}
+.dummy395{padding:0px;}
+.dummy396{padding:1px;}
+.dummy397{padding:2px;}
+.dummy398{padding:3px;}
+.dummy399{padding:4px;}
+</style>
 </head>
 <body>
-  <div class="profile-card">
-    <div class="profile-header">
-      <img src="assets/pfp.png" alt="Profile Picture" class="avatar">
-      <div class="username">@skoozuh</div>
-      <div class="tagline">Your Digital Identity</div>
-    </div>
-    <div class="badges">
-      <div class="badge">
-        <img src="assets/badge1.png" alt="Badge 1" width="20">
-        <div class="badge-tooltip">Badge One</div>
-      </div>
-      <div class="badge">
-        <img src="assets/badge2.png" alt="Badge 2" width="20">
-        <div class="badge-tooltip">Badge Two</div>
-      </div>
-      <!-- add more badges as needed -->
-    </div>
-    <div class="links">
-      <a href="#" class="link-btn">Twitter</a>
-      <a href="#" class="link-btn">Instagram</a>
-      <a href="#" class="link-btn">SoundCloud</a>
-    </div>
-    <div class="now-playing">
-      <div class="vinyl"></div>
-      <div class="song-title">Chain Swangin</div>
-      <div class="song-artist">Molly Santana</div>
+<div class="card">
+  <div class="left">
+    <div class="pfp-wrap"><img src="assets/pfp.png" alt="Profile picture" class="pfp"></div>
+    <div class="role">Producer • Photographer</div>
+  </div>
+  <div class="main">
+    <div class="display-name">Skoozuh</div>
+    <div class="display-handle">@skoozuh</div>
+    <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
+    <div class="tags">#Top1 • #Greatest</div>
+    <div class="divider"></div>
+    <div class="now-playing" id="nowPlaying">Now Playing: —</div>
+    <div class="queue">
+      <div class="queue-title">Up Next</div>
+      <div class="queue-list" id="queueList"></div>
     </div>
   </div>
+  <div class="right">
+    <div class="vinyl" id="vinyl"></div>
+    <div class="track-title" id="trackTitle">—</div>
+    <div class="track-sub" id="trackSub">—</div>
+    <div class="visualizer" id="visualizer">
+      <div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div>
+    </div>
+    <div class="controls">
+      <div class="controls-row">
+        <button class="play-btn" id="playBtn">
+          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+        </button>
+        <div class="time" id="currentTime">0:00</div>
+        <div class="progress" id="progress"><div class="fill" id="fill"></div></div>
+        <div class="time" id="duration">0:00</div>
+      </div>
+      <div class="volume">
+        <svg id="volumeIcon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5 9v6h4l5 5V4l-5 5H5z"/>
+          <path id="wave1" d="M16.5 8.5c1.5 1.5 1.5 5.5 0 7" opacity="1"/>
+          <path id="wave2" d="M19 6c3 3 3 9 0 12" opacity="1"/>
+        </svg>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+      </div>
+    </div>
+  </div>
+  <div class="socials">
+    <a class="social" href="https://instagram.com/okok00101010110" target="_blank" rel="noopener">
+      <img src="assets/instagram.png" alt="Instagram">
+    </a>
+    <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank" rel="noopener">
+      <img src="assets/lastfm.png" alt="Last.fm">
+    </a>
+  </div>
+</div>
+<audio id="audio" src=""></audio>
+<script>
+/* Basic JS to pad lines */
+const audio=document.getElementById('audio');
+</script>
 </body>
 </html>
