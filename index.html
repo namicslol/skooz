@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Biolink — Your Modern Dark Card</title>
+<title>prod. @skoozuh</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg-0: #060607;
     --bg-1: #0d0d11;
+    --card-bg: rgba(255,255,255,0.02);
+    --glass: rgba(255,255,255,0.03);
     --muted: #9aa3ab;
     --text: #e9f4ff;
     --accentA: #6e7bff;
@@ -16,81 +18,134 @@
     --accentC: #46e5c3;
     --radius: 16px;
     --shadow-strong: 0 18px 60px rgba(2,6,23,0.7);
+    --shadow-soft: 0 8px 30px rgba(2,6,23,0.45);
     --card-width: 760px;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;padding:0}
   body{
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    background: linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(800px 420px at 8% 12%, rgba(110,123,255,0.04), transparent 8%),
+      radial-gradient(700px 360px at 92% 88%, rgba(139,92,246,0.03), transparent 6%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1));
     color:var(--text);
     display:flex;
     align-items:center;
     justify-content:center;
     padding:40px;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
   }
+
   .card {
     width:100%;
     max-width:var(--card-width);
-    background: rgba(255,255,255,0.02);
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.03));
     border-radius:calc(var(--radius) + 6px);
     padding:28px;
     box-shadow:var(--shadow-strong);
     border:1px solid rgba(255,255,255,0.035);
     display:grid;
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 180px 1fr 300px;
     gap:22px;
+    align-items:start;
+    min-height: 420px;
+    backdrop-filter: blur(10px) saturate(120%);
     position: relative;
   }
+
+  @media (max-width:980px){
+    .card{ grid-template-columns: 160px 1fr; grid-template-rows: auto auto; gap:18px; max-width:640px; }
+    .right { grid-column: 1/-1; }
+  }
+  @media (max-width:620px){
+    .card{ grid-template-columns: 1fr; padding:20px; gap:14px; min-height: auto; }
+  }
+
   .left { display:flex; flex-direction:column; align-items:center; gap:12px; }
   .pfp-wrap{
     width:172px; height:172px; border-radius:18px; overflow:hidden;
     border:1px solid rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+    box-shadow: var(--shadow-soft);
+    transition: transform .28s ease, box-shadow .28s ease;
   }
-  .pfp{ width:100%; height:100%; object-fit:cover; }
-  .role { font-size:12px; color:var(--muted); text-transform:uppercase; }
+  .pfp-wrap:hover{ transform: translateY(-6px) scale(1.02); box-shadow:0 30px 80px rgba(2,6,23,0.7); }
+  .pfp{ width:100%; height:100%; object-fit:cover; display:block; }
+  .role { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
 
   .main { display:flex; flex-direction:column; gap:12px; }
-  .display-name { font-size:26px; font-weight:700; }
-  .display-handle { font-size:13px; color:var(--muted); }
+  .name-row { display:flex; align-items:center; gap:12px; justify-content:space-between; width:100%; }
+  .name-left { display:flex; align-items:flex-start; gap:12px; }
+  .name-block { display:flex; flex-direction:column; gap:6px; }
+  .display-name { font-size:26px; font-weight:700; margin:0; line-height:1; }
+  .display-handle { font-size:13px; color:var(--muted); margin-top:2px; }
 
+  .badges-pill { display:inline-flex; align-items:center; gap:0; padding:6px 12px; border-radius:999px;
+                 background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+                 border:1px solid rgba(255,255,255,0.02); box-shadow: 0 6px 18px rgba(2,6,23,0.18); }
+  .badge { width:40px; height:40px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+           margin-left:-10px; border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease, box-shadow .12s ease;
+           background:transparent; position:relative; }
+  .badge:first-child{ margin-left:0; }
+  .badge img{ width:20px; height:20px; display:block; }
+  .badge:hover{ transform: translateY(-3px); box-shadow: 0 12px 36px rgba(110,123,255,0.12); }
+  .badge::after{ content:attr(data-label); position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(6px);
+                 padding:6px 8px; font-size:13px; color:var(--text); background:#070709; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
+                 opacity:0; pointer-events:none; transition: opacity .12s ease, transform .12s ease; white-space:nowrap; box-shadow:0 8px 30px rgba(2,6,23,0.6); }
+  .badge:hover::after, .badge:focus::after{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .bio { font-size:15px; color:var(--muted); line-height:1.5; max-width:60ch; }
+
+  /* Updated player layout */
   .player-content {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
   }
-  .song-cover { width:92px; height:92px; border-radius:12px; overflow:hidden; }
-  .song-cover img{ width:100%; height:100%; object-fit:cover; }
-
+  .player-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+  }
+  .song-cover { width:92px; height:92px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); flex-shrink: 0; }
+  .song-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
   .track-title{ font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .track-sub{ font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .controls { display:flex; align-items:center; gap:10px; margin-top:6px; width:100%; }
   .play-btn {
-    width:54px;
-    height:54px;
+    width:48px;
+    height:48px;
     border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:inline-grid;
+    place-items:center;
     cursor:pointer;
+    font-weight:700;
     background: linear-gradient(135deg, var(--accentA), var(--accentB));
-    border: none;
-    box-shadow: 0 4px 14px rgba(110, 123, 255, 0.4);
+    border:none;
+    color:white;
+    box-shadow: 0 4px 14px rgba(110,123,255,0.4);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   .play-btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow:0 12px 40px rgba(110, 123, 255, 0.6);
-  }
-  .play-btn svg {
-    width: 24px;
-    height: 24px;
-    fill: white;
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 12px 40px rgba(110,123,255,0.6);
   }
   .time { font-size:13px; color:var(--muted); min-width:48px; text-align:right; }
   .progress { height:8px; background: rgba(255,255,255,0.03); border-radius:8px; position:relative; flex:1; cursor:pointer; overflow:hidden; }
   .progress .fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: linear-gradient(90deg,var(--accentA),var(--accentB)); }
+
+  .volume { width:120px; display:flex; gap:8px; align-items:center; }
+  .volume input[type="range"]{ width:100%; -webkit-appearance:none; height:6px; background:transparent; }
+  .volume input[type="range"]::-webkit-slider-runnable-track{ height:6px; background: rgba(255,255,255,0.04); border-radius:6px; }
+  .volume input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--text); margin-top:-3px; }
+
+  .visualizer { height:42px; width:100%; border-radius:8px; overflow:hidden; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); display:block; position:relative; }
+  .visualizer .bar { position:absolute; bottom:0; width:6px; background: linear-gradient(180deg,var(--accentC),var(--accentA)); border-radius:4px; opacity:0.9; }
 
   .socials {
     display: flex;
@@ -98,52 +153,80 @@
     position: absolute;
     bottom: 20px;
     left: 20px;
+    flex-wrap: nowrap;
   }
-  .social { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); }
-  .social img{ width:22px; height:22px; }
+  .social { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.02); transition: transform .12s ease; cursor:pointer; }
+  .social img{ width:22px; height:22px; display:block; }
+  .social:hover{ transform:translateY(-6px); box-shadow:0 16px 50px rgba(2,6,23,0.45); }
+
+  .footer-note { color:var(--muted); font-size:13px; text-align:right; margin-top:6px; }
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="card" role="region" aria-label="Profile card">
 
   <div class="left">
-    <div class="pfp-wrap">
+    <div class="pfp-wrap" title="Profile picture">
       <img src="assets/pfp.png" alt="Profile picture" class="pfp">
     </div>
     <div class="role">Producer • Owner</div>
   </div>
 
   <div class="main">
-    <div class="display-name">Your Name</div>
-    <div class="display-handle">@yourhandle</div>
-
-    <div class="player-content">
-      <div class="song-cover">
-        <img src="assets/songcover.png" alt="song cover">
-      </div>
-      <div class="player-details">
-        <div class="track-meta">
-          <div class="track-title">Chain Swangin</div>
-          <div class="track-sub">Molly Santana</div>
+    <div class="name-row">
+      <div class="name-left">
+        <div class="name-block">
+          <div class="display-name" id="displayName">Skoozuh</div>
+          <div class="display-handle" id="displayHandle">@skoozuh</div>
         </div>
-        <div class="controls">
-          <button class="play-btn" id="playBtn" aria-label="Play">
-            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-          <div class="time" id="currentTime">0:00</div>
-          <div class="progress" id="progress">
-            <div class="fill" id="fill"></div>
+        <div class="badges-pill" role="group" aria-label="Badges">
+          <div class="badge" tabindex="0" data-label="Producer"><img src="assets/artist.png" alt="producer"></div>
+          <div class="badge" tabindex="0" data-label="Owner"><img src="assets/crown.png" alt="owner"></div>
+          <div class="badge" tabindex="0" data-label="Public Icon"><img src="assets/icon.png" alt="public"></div>
+          <div class="badge" tabindex="0" data-label="Premium"><img src="assets/premium.png" alt="premium"></div>
+        </div>
+      </div>
+      <div style="width:80px"></div>
+    </div>
+
+    <p class="bio" id="bio">Short bio here — tell people what you do in one concise sentence. Keep it punchy.</p>
+
+    <div class="player" role="region" aria-label="Music player">
+      <div class="player-content">
+        <div class="song-cover" title="Song cover">
+          <img src="assets/songcover.png" alt="song cover">
+        </div>
+        <div class="player-details">
+          <div class="track-meta">
+            <div class="track-title" id="trackTitle">Chain Swangin — Molly Santana</div>
+            <div class="track-sub" id="trackSub">fuck you</div>
           </div>
-          <div class="time" id="duration">0:00</div>
+          <div class="controls">
+            <button class="play-btn" id="playBtn" aria-label="Play">▶</button>
+            <div class="time" id="currentTime">0:00</div>
+            <div class="progress" id="progress">
+              <div class="fill" id="fill"></div>
+            </div>
+            <div class="time" id="duration">0:00</div>
+            <div class="volume">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M11 5v14l-6-6H3V11h2l6-6z" fill="currentColor" opacity="0.9"/>
+              </svg>
+              <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+            </div>
+          </div>
+          <div class="visualizer" id="visualizer"></div>
         </div>
       </div>
     </div>
+
+    <div class="footer-note" id="footerNote">hi.</div>
   </div>
 
-  <div class="socials">
-    <a class="social" href="#"><img src="assets/instagram.png"></a>
-    <a class="social" href="#"><img src="assets/lastfm.png"></a>
+  <div class="socials" role="navigation" aria-label="Social links">
+    <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/instagram.png" alt="instagram"></a>
+    <a class="social" href="https://last.fm/" target="_blank" rel="noopener" aria-label="Last.fm"><img src="assets/lastfm.png" alt="lastfm"></a>
   </div>
 
 </div>
@@ -151,73 +234,147 @@
 <audio id="audio" src="assets/song.mp3" preload="metadata"></audio>
 
 <script>
+/* Player wiring */
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
-const playIcon = document.getElementById('playIcon');
 const progress = document.getElementById('progress');
 const fill = document.getElementById('fill');
 const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
+const volume = document.getElementById('volume');
+const visualizer = document.getElementById('visualizer');
+
+audio.volume = parseFloat(volume.value || 0.8);
 
 playBtn.addEventListener('click', () => {
-  if (audio.paused) {
-    audio.play().catch(()=>{});
-  } else {
-    audio.pause();
-  }
+  if (audio.paused) audio.play().catch(()=>{});
+  else audio.pause();
 });
-audio.addEventListener('play', () => {
-  playIcon.innerHTML = '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
-});
-audio.addEventListener('pause', () => {
-  playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-});
+audio.addEventListener('play', () => playBtn.textContent = '⏸');
+audio.addEventListener('pause', () => playBtn.textContent = '▶');
+
 audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
+  if (!audio.duration || isNaN(audio.duration)) return;
   const pct = (audio.currentTime / audio.duration) * 100;
   fill.style.width = pct + '%';
   currentTimeEl.textContent = formatTime(audio.currentTime);
-});
-audio.addEventListener('loadedmetadata', () => {
-  durationEl.textContent = formatTime(audio.duration);
+  progress.setAttribute('aria-valuenow', Math.round(pct));
 });
 
-// Draggable progress bar
-let isDragging = false;
-progress.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  seek(e);
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+  initVisualizer();
 });
-progress.addEventListener('mousemove', (e) => {
-  if (isDragging) seek(e);
-});
-progress.addEventListener('mouseup', () => {
-  isDragging = false;
-});
-progress.addEventListener('mouseleave', () => {
-  isDragging = false;
-});
-progress.addEventListener('touchstart', (e) => {
-  isDragging = true;
-  seek(e.touches[0]);
-});
-progress.addEventListener('touchmove', (e) => {
-  if (isDragging) seek(e.touches[0]);
-});
-progress.addEventListener('touchend', () => {
-  isDragging = false;
-});
-function seek(e) {
+
+progress.addEventListener('click', (e) => {
+  if (!audio.duration || isNaN(audio.duration)) return;
   const rect = progress.getBoundingClientRect();
   const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
   audio.currentTime = pct * audio.duration;
+});
+
+let dragging = false;
+progress.addEventListener('pointerdown', (e) => {
+  dragging = true;
+  progress.setPointerCapture(e.pointerId);
+  seekFromEvent(e);
+});
+progress.addEventListener('pointermove', (e) => { if (dragging) seekFromEvent(e); });
+progress.addEventListener('pointerup', (e) => { dragging = false; try{ progress.releasePointerCapture(e.pointerId);}catch(_){} });
+
+function seekFromEvent(e){
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const rect = progress.getBoundingClientRect();
+  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+  fill.style.width = (pct*100) + '%';
+  audio.currentTime = pct * audio.duration;
 }
-function formatTime(s) {
+
+volume.addEventListener('input', () => { audio.volume = parseFloat(volume.value); });
+
+function formatTime(s){
   if (!s || isNaN(s)) return '0:00';
   const m = Math.floor(s/60);
   const sec = Math.floor(s%60).toString().padStart(2,'0');
-  return `${m}:${sec}`;
+  return m + ':' + sec;
 }
+
+let audioCtx, analyser, sourceNode, dataArray, bufferLength, bars = [];
+
+function initVisualizer(){
+  try {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    sourceNode = audioCtx.createMediaElementSource(audio);
+    sourceNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+
+    buildVisualizerBars();
+    renderVisualizer();
+  } catch (e) {
+    console.warn('Visualizer init error', e);
+  }
+}
+
+function buildVisualizerBars(){
+  visualizer.innerHTML = '';
+  bars = [];
+  const count = Math.min(64, Math.max(12, Math.floor(visualizer.clientWidth / 8)));
+  for (let i=0;i<count;i++){
+    const b = document.createElement('div');
+    b.className = 'bar';
+    const w = Math.max(4, (visualizer.clientWidth / count) - 4);
+    b.style.width = w + 'px';
+    b.style.left = (i * (100 / count)) + '%';
+    b.style.height = '6px';
+    visualizer.appendChild(b);
+    bars.push(b);
+  }
+}
+
+function renderVisualizer(){
+  if (!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+  const step = Math.floor(dataArray.length / bars.length);
+  for (let i=0;i<bars.length;i++){
+    const v = dataArray[i * step];
+    const h = Math.max(4, (v / 255) * visualizer.clientHeight);
+    bars[i].style.height = h + 'px';
+    bars[i].style.bottom = '0px';
+    bars[i].style.opacity = (0.3 + (v / 255) * 0.7);
+  }
+  requestAnimationFrame(renderVisualizer);
+}
+
+window.addEventListener('resize', () => {
+  if (visualizer && visualizer.clientWidth) buildVisualizerBars();
+});
+
+progress.addEventListener('keydown', (e) => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const step = Math.max(1, Math.floor(audio.duration / 20));
+  if (e.key === 'ArrowRight') audio.currentTime = Math.min(audio.duration, audio.currentTime + step);
+  if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - step);
+  if (e.key === 'Home') audio.currentTime = 0;
+  if (e.key === 'End') audio.currentTime = audio.duration;
+});
+
+document.addEventListener('click', function unlock(){
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+  document.removeEventListener('click', unlock);
+});
+
+document.addEventListener('keydown', (e) => {
+  if ((e.code === 'Space' || e.key === ' ') && document.activeElement === playBtn) {
+    e.preventDefault();
+    playBtn.click();
+  }
+});
 </script>
 
 </body>
