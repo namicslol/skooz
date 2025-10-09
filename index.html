@@ -68,30 +68,31 @@
       50% { opacity: 0; }
     }
     .console {
-      width: auto;
-      max-width: 900px;
+      width: 90vw;
+      max-width: 1000px;
+      height: 240px;
       background: var(--dark2);
       border: 1px solid var(--neon);
       box-shadow: 0 0 20px var(--neon), inset 0 0 20px rgba(255, 42, 109, .1);
       display: grid;
-      grid-template-columns: 220px 1fr 280px;
-      gap: 16px;
-      padding: 16px;
+      grid-template-columns: 200px 1fr 280px;
+      gap: 12px;
+      padding: 12px;
       border-radius: var(--radius);
       position: relative;
       z-index: 1;
     }
     @media (max-width: 840px) {
-      .console { grid-template-columns: 1fr 1fr; }
+      .console { grid-template-columns: 1fr 1fr; height: auto; }
       .stats-box { grid-column: 1 / -1; }
     }
     @media (max-width: 560px) {
-      .console { grid-template-columns: 1fr; padding: 12px; gap: 12px; }
+      .console { grid-template-columns: 1fr; height: auto; }
     }
     .side {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       z-index: 1;
     }
     .pfp {
@@ -108,7 +109,7 @@
     }
     .glitch {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: var(--neon);
       position: relative;
     }
@@ -142,25 +143,21 @@
       0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
       20% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -1px); }
       40% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 1px); }
-      60% { clip-path: inset(50% 0 20% 0); transform: translate(1px, -2px); }
       80% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 2px); }
     }
     .bio {
-      font-size: .8rem;
+      font-size: .75rem;
       color: var(--gray);
       line-height: 1.4;
     }
-    .center {
+    .player-area {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      z-index: 1;
+      gap: 10px;
     }
     .ring {
-      width: 140px;
-      height: 140px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       background: conic-gradient(var(--neon) 0deg, transparent 0deg);
       display: grid;
@@ -174,14 +171,14 @@
     .ring::before {
       content: "";
       position: absolute;
-      width: 100px;
-      height: 100px;
+      width: 66px;
+      height: 66px;
       border-radius: 50%;
       background: var(--dark2);
     }
     .cover {
-      width: 95px;
-      height: 95px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       object-fit: cover;
       z-index: 1;
@@ -190,7 +187,7 @@
     .viz-horizontal {
       display: flex;
       gap: 2px;
-      height: 24px;
+      height: 22px;
       align-items: flex-end;
     }
     .bar-h {
@@ -199,22 +196,39 @@
       background: linear-gradient(180deg, var(--neon), var(--neon2));
       border-radius: 2px;
     }
+    .meta {
+      min-width: 0;
+    }
+    .track-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-sub {
+      font-size: .65rem;
+      color: var(--gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .controls {
       display: flex;
       align-items: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 220px;
+      gap: 6px;
+      margin-top: 4px;
     }
     .btn {
       background: transparent;
       border: 1px solid var(--neon);
       color: var(--neon);
-      padding: 4px 10px;
+      padding: 3px 8px;
       font-family: inherit;
       cursor: pointer;
       transition: background .2s ease, color .2s ease;
       border-radius: var(--radius);
+      font-size: .7rem;
     }
     .btn:hover {
       background: var(--neon);
@@ -222,9 +236,9 @@
     }
     .progress {
       flex: 1;
-      height: 5px;
+      height: 4px;
       background: rgba(255, 255, 255, .05);
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
       cursor: pointer;
       position: relative;
@@ -236,22 +250,22 @@
       transition: width .1s linear;
     }
     .time {
-      font-size: .7rem;
+      font-size: .6rem;
       color: var(--gray);
-      min-width: 30px;
+      min-width: 28px;
       text-align: center;
     }
     .stats-box {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       z-index: 1;
     }
     .stat-line {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: .75rem;
+      font-size: .7rem;
       color: var(--gray);
     }
     .stat-line svg {
@@ -265,9 +279,9 @@
       gap: 4px;
     }
     .badge {
-      padding: 3px 6px;
+      padding: 2px 5px;
       border: 1px solid var(--neon);
-      font-size: .65rem;
+      font-size: .6rem;
       text-transform: uppercase;
       letter-spacing: .5px;
       transition: background .2s ease, color .2s ease;
@@ -278,14 +292,36 @@
       background: var(--neon);
       color: var(--dark);
     }
+    .queue-box {
+      border: 1px solid var(--neon);
+      padding: 6px;
+      max-height: 90px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .queue-box::-webkit-scrollbar {
+      display: none;
+    }
+    .queue-item {
+      padding: 3px 5px;
+      margin: 2px 0;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+      font-size: .65rem;
+      border-radius: var(--radius);
+    }
+    .queue-item:hover {
+      background: var(--neon);
+      color: var(--dark);
+    }
     .socials {
       display: flex;
       gap: 6px;
       margin-top: auto;
     }
     .social {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border: 1px solid var(--neon);
       display: grid;
       place-items: center;
@@ -297,8 +333,8 @@
       transform: translateY(-2px);
     }
     .social img {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       filter: invert(1);
     }
   </style>
@@ -315,30 +351,30 @@
       <div class="glitch" data-text="skoozuh">skoozuh</div>
       <div class="bio">17 · producer · photographer · <span class="rgb">creative director</span></div>
 
-      <div class="center">
+      <div class="player-area">
         <div class="ring" id="ring">
           <img src="assets/songcover.png" alt="cover" class="cover" id="cover">
         </div>
-        <div id="trackTitle" style="font-family: 'Orbitron', sans-serif; font-size: 1rem;">—</div>
-        <div id="trackSub" style="font-size: .75rem; color: var(--gray);">—</div>
-        <div class="viz-horizontal" id="viz"></div>
-        <div class="controls">
-          <button class="btn" id="prevBtn">≪</button>
-          <button class="btn" id="playBtn">▶</button>
-          <button class="btn" id="nextBtn">≫</button>
+        <div class="meta">
+          <div class="track-title" id="trackTitle">—</div>
+          <div class="track-sub" id="trackSub">—</div>
+          <div class="controls">
+            <button class="btn" id="prevBtn">≪</button>
+            <button class="btn" id="playBtn">▶</button>
+            <button class="btn" id="nextBtn">≫</button>
+          </div>
           <div class="progress" id="progress">
             <div class="fill" id="fill"></div>
           </div>
           <div class="time" id="currentTime">0:00</div>
         </div>
       </div>
+
+      <div class="viz-horizontal" id="viz"></div>
     </div>
 
-    <!-- MIDDLE: only large player + classic viz -->
-    <div class="center">
-      <div class="ring" id="ringMid">
-        <img src="assets/songcover.png" alt="cover" class="cover" id="coverMid">
-      </div>
+    <!-- MIDDLE: only large visualiser -->
+    <div class="side" style="justify-content: center; align-items: center;">
       <div class="viz-horizontal" id="vizMid"></div>
     </div>
 
@@ -365,7 +401,7 @@
       </div>
 
       <div class="queue-box">
-        <div style="margin-bottom: 6px; color: var(--neon);">► QUEUE</div>
+        <div style="margin-bottom: 4px; color: var(--neon); font-size: .65rem;">► QUEUE</div>
         <div id="queueList"></div>
       </div>
 
@@ -398,13 +434,21 @@
     const trackTitleEl = $('#trackTitle');
     const trackSubEl = $('#trackSub');
     const coverEl = $('#cover');
-    const coverMidEl = $('#coverMid');
     const queueList = $('#queueList');
     const overlay = $('#overlay');
     const viz = $('#viz');
     const vizMid = $('#vizMid');
 
-    // single visualiser (mirrored to both containers)
+    // build visualisers
+    [viz, vizMid].forEach(v => {
+      for (let i = 0; i < 24; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'bar-h';
+        bar.style.height = '2px';
+        v.appendChild(bar);
+      }
+    });
+
     function initAudioGraph() {
       if (audioCtx) return;
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -426,11 +470,9 @@
         const h = [];
         for (let i = 0; i < 24; i++) {
           const val = dataArray.slice(i * step, (i + 1) * step).reduce((a, b) => a + b, 0) / step;
-          h.push(Math.max(2, (val / 255) * 22));
+          h.push(Math.max(2, (val / 255) * 20));
         }
-        // left player
         viz.querySelectorAll('.bar-h').forEach((bar, i) => bar.style.height = h[i] + 'px');
-        // centre player
         vizMid.querySelectorAll('.bar-h').forEach((bar, i) => bar.style.height = h[i] + 'px');
         rafId = requestAnimationFrame(loop);
       }
@@ -449,7 +491,6 @@
       trackTitleEl.textContent = t.title;
       trackSubEl.textContent = t.artist;
       coverEl.src = t.cover;
-      coverMidEl.src = t.cover;
       renderQueue();
       if (autoplay) audio.play();
     }
