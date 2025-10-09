@@ -28,7 +28,6 @@
       overflow: hidden;
       position: relative;
     }
-    /* subtle noise */
     body::before {
       content: "";
       position: absolute;
@@ -153,9 +152,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 16px;
       z-index: 1;
+      padding-top: 8px;
     }
     .ring {
       width: 160px;
@@ -297,6 +297,77 @@
       height: 16px;
       filter: invert(1);
     }
+    /* NEW MIDDLE WIDGETS */
+    .ticker {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: .8rem;
+      color: var(--neon);
+      text-shadow: 0 0 4px var(--neon);
+    }
+    .ticker span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 10s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    .rgb-meter {
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(90deg, var(--neon), var(--neon2), var(--neon));
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    .rgb-meter .bar {
+      height: 100%;
+      width: 0%;
+      background: #fff;
+      mix-blend-mode: difference;
+      transition: width .1s ease;
+    }
+    .palette {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--neon);
+      cursor: pointer;
+      transition: transform .2s ease;
+    }
+    .swatch:hover {
+      transform: scale(1.15);
+    }
+    .mini-badge-wall {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .mini-badge {
+      padding: 3px 6px;
+      border: 1px solid var(--neon);
+      font-size: .6rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+    }
+    .mini-badge:active {
+      background: var(--neon);
+      color: var(--dark);
+    }
+    .crt-clock {
+      font-size: .7rem;
+      color: var(--gray);
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body class="crt">
@@ -330,8 +401,31 @@
       </div>
     </div>
 
-    <!-- MIDDLE: empty spacer (keeps grid) -->
-    <div class="center" style="justify-content: flex-start; padding-top: 8px;"></div>
+    <!-- MIDDLE: new widgets -->
+    <div class="center">
+      <!-- scrolling now-playing -->
+      <div class="ticker" id="ticker"><span id="tickerText">—</span></div>
+      <!-- RGB meter -->
+      <div class="rgb-meter" id="rgbMeter"><div class="bar" id="rgbBar"></div></div>
+      <!-- palette -->
+      <div class="palette">
+        <div class="swatch" style="background: var(--neon)" data-hex="#ff2a6d"></div>
+        <div class="swatch" style="background: var(--neon2)" data-hex="#05d9e8"></div>
+        <div class="swatch" style="background: var(--gray)" data-hex="#3d3d45"></div>
+        <div class="swatch" style="background: var(--dark)" data-hex="#0c0c0f"></div>
+      </div>
+      <!-- mini-badge wall -->
+      <div class="mini-badge-wall">
+        <div class="mini-badge" data-text="Owner">Owner</div>
+        <div class="mini-badge" data-text="Creator">Creator</div>
+        <div class="mini-badge" data-text="Photographer">Photographer</div>
+        <div class="mini-badge" data-text="Producer">Producer</div>
+        <div class="mini-badge" data-text="TX">TX</div>
+        <div class="mini-badge" data-text="17">17</div>
+      </div>
+      <!-- crt clock -->
+      <div class="crt-clock" id="crtClock">00:00:00</div>
+    </div>
 
     <!-- RIGHT: stats + queue -->
     <div class="side stats-box">
@@ -355,13 +449,11 @@
         <div class="badge">Producer</div>
       </div>
 
-      <!-- queue -->
       <div class="queue-box">
         <div style="margin-bottom: 6px; color: var(--neon);">► QUEUE</div>
         <div id="queueList"></div>
       </div>
 
-      <!-- socials inside stats box → no cut-off -->
       <div class="socials">
         <a class="social" href="https://instagram.com/okok00101010110" target="_blank"><img src="assets/instagram.png" alt="IG"></a>
         <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank"><img src="assets/lastfm.png" alt="LM"></a>
@@ -394,6 +486,9 @@
     const queueList = $('#queueList');
     const overlay = $('#overlay');
     const viz = $('#viz');
+    const tickerText = $('#tickerText');
+    const rgbBar = $('#rgbBar');
+    const crtClock = $('#crtClock');
 
     for (let i = 0; i < 24; i++) {
       const bar = document.createElement('div');
@@ -421,10 +516,14 @@
       function loop() {
         analyser.getByteFrequencyData(dataArray);
         const step = Math.floor(dataArray.length / bars.length);
-        bars.forEach((bar, i) => {
-          const avg = dataArray.slice(i * step, (i + 1) * step).reduce((a, b) => a + b, 0) / step;
-          bar.style.height = Math.max(3, (avg / 255) * 22) + 'px';
-        });
+        let avg = 0;
+        for (let i = 0; i < bars.length; i++) {
+          const val = dataArray.slice(i * step, (i + 1) * step).reduce((a, b) => a + b, 0) / step;
+          bars[i].style.height = Math.max(3, (val / 255) * 22) + 'px';
+          avg += val;
+        }
+        avg /= bars.length;
+        rgbBar.style.width = (avg / 255) * 100 + '%';
         rafId = requestAnimationFrame(loop);
       }
       loop();
@@ -433,6 +532,7 @@
     function stopViz() {
       cancelAnimationFrame(rafId);
       bars.forEach(bar => bar.style.height = '3px');
+      rgbBar.style.width = '0%';
     }
 
     function loadTrack(i, autoplay = false) {
@@ -442,6 +542,7 @@
       trackTitleEl.textContent = t.title;
       trackSubEl.textContent = t.artist;
       coverEl.src = t.cover;
+      tickerText.textContent = `♪ ${t.title} — ${t.artist}`;
       renderQueue();
       if (autoplay) audio.play();
     }
@@ -457,6 +558,35 @@
         queueList.appendChild(item);
       }
     }
+
+    // clock
+    function updateClock() {
+      const d = new Date();
+      crtClock.textContent = d.toLocaleTimeString('en-GB');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // palette copy
+    document.querySelectorAll('.swatch').forEach(s => {
+      s.addEventListener('click', () => {
+        navigator.clipboard.writeText(s.dataset.hex);
+        s.style.transform = 'scale(1.3)';
+        setTimeout(() => s.style.transform = 'scale(1)', 200);
+      });
+    });
+
+    // mini-badge flash
+    document.querySelectorAll('.mini-badge').forEach(b => {
+      b.addEventListener('click', () => {
+        b.style.background = 'var(--neon)';
+        b.style.color = 'var(--dark)';
+        setTimeout(() => {
+          b.style.background = '';
+          b.style.color = '';
+        }, 200);
+      });
+    });
 
     overlay.addEventListener('click', async () => {
       overlay.style.opacity = 0;
