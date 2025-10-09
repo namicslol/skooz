@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>skoozuh.exe // NEON</title>
-  <link rel="icon" type="image/png" href="head.png" />
+  <link rel="icon" type="image/png" href="head.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -13,8 +13,7 @@
       --dark: #0c0c0f;
       --dark2: #18181f;
       --gray: #3d3d45;
-      --radius: 0;
-      --scan: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='2'%3E%3Cpath d='M0 1h100' stroke='%23ff2a6d' stroke-width='.5'/%3E%3C/svg%3E");
+      --radius: 4px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
@@ -25,29 +24,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
       overflow: hidden;
       position: relative;
     }
-    body::after {
+    /* subtle noise */
+    body::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: var(--scan) repeat-y;
-      opacity: .15;
+      opacity: .03;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       pointer-events: none;
-      animation: scan 4s linear infinite;
+      z-index: 0;
     }
-    @keyframes scan {
-      to { background-position: 0 100vh; }
-    }
-    .crt::before {
+    .crt::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      background-size: 100% 2px, 3px 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 2px);
       pointer-events: none;
-      z-index: 999;
+      z-index: 2;
     }
     .overlay {
       position: fixed;
@@ -73,20 +70,20 @@
     }
     .console {
       width: 90vw;
-      max-width: 1000px;
+      max-width: 1100px;
       background: var(--dark2);
       border: 1px solid var(--neon);
-      box-shadow: 0 0 20px var(--neon), inset 0 0 20px rgba(255, 42, 109, 0.1);
+      box-shadow: 0 0 20px var(--neon), inset 0 0 20px rgba(255, 42, 109, .1);
       display: grid;
-      grid-template-columns: 240px 1fr 280px;
+      grid-template-columns: 260px 1fr 320px;
       gap: 24px;
       padding: 24px;
       position: relative;
-      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+      z-index: 1;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .console { grid-template-columns: 1fr 1fr; }
-      .queue-box { grid-column: 1 / -1; }
+      .stats-box { grid-column: 1 / -1; }
     }
     @media (max-width: 600px) {
       .console { grid-template-columns: 1fr; }
@@ -124,12 +121,12 @@
       height: 100%;
     }
     .glitch::before {
-      animation: glitch-1 0.5s infinite;
+      animation: glitch-1 .5s infinite;
       color: var(--neon2);
       z-index: -1;
     }
     .glitch::after {
-      animation: glitch-2 0.5s infinite;
+      animation: glitch-2 .5s infinite;
       color: var(--neon);
       z-index: -2;
     }
@@ -148,41 +145,9 @@
       80% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 2px); }
     }
     .bio {
-      font-size: 0.9rem;
+      font-size: .9rem;
       color: var(--gray);
       line-height: 1.5;
-    }
-    .rgb {
-      display: inline-block;
-      transition: transform 0.2s ease;
-    }
-    .rgb:hover {
-      transform: scale(1.05);
-      text-shadow:
-        -1px -1px 0 var(--neon),
-        1px -1px 0 var(--neon2),
-        -1px 1px 0 var(--neon),
-        1px 1px 0 var(--neon2);
-    }
-    .queue-box {
-      border: 1px solid var(--neon);
-      padding: 8px;
-      max-height: 140px;
-      overflow-y: auto;
-      scrollbar-width: none; /* Firefox */
-    }
-    .queue-box::-webkit-scrollbar {
-      display: none; /* Chrome / Safari */
-    }
-    .queue-item {
-      padding: 4px 6px;
-      margin: 2px 0;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-    .queue-item:hover {
-      background: var(--neon);
-      color: var(--dark);
     }
     .center {
       display: flex;
@@ -193,8 +158,8 @@
       z-index: 1;
     }
     .ring {
-      width: 180px;
-      height: 180px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       background: conic-gradient(var(--neon) 0deg, transparent 0deg);
       display: grid;
@@ -208,18 +173,18 @@
     .ring::before {
       content: "";
       position: absolute;
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background: var(--dark2);
     }
     .cover {
-      width: 130px;
-      height: 130px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
       object-fit: cover;
       z-index: 1;
-      filter: saturate(0.8) hue-rotate(320deg) drop-shadow(0 0 4px var(--neon));
+      filter: saturate(.8) hue-rotate(320deg) drop-shadow(0 0 4px var(--neon));
     }
     .viz-horizontal {
       display: flex;
@@ -238,7 +203,7 @@
       align-items: center;
       gap: 12px;
       width: 100%;
-      max-width: 300px;
+      max-width: 280px;
     }
     .btn {
       background: transparent;
@@ -247,7 +212,7 @@
       padding: 6px 12px;
       font-family: inherit;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: background .2s ease, color .2s ease;
     }
     .btn:hover {
       background: var(--neon);
@@ -256,7 +221,7 @@
     .progress {
       flex: 1;
       height: 6px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, .05);
       border-radius: 3px;
       overflow: hidden;
       cursor: pointer;
@@ -266,21 +231,54 @@
       height: 100%;
       width: 0%;
       background: var(--neon);
-      transition: width 0.1s linear;
+      transition: width .1s linear;
     }
     .time {
-      font-size: 0.75rem;
+      font-size: .75rem;
       color: var(--gray);
       min-width: 36px;
       text-align: center;
     }
+    .stats-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1;
+    }
+    .stat-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8rem;
+      color: var(--gray);
+    }
+    .stat-line svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--neon);
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .badge {
+      padding: 4px 8px;
+      border: 1px solid var(--neon);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      transition: background .2s ease, color .2s ease;
+      cursor: default;
+    }
+    .badge:hover {
+      background: var(--neon);
+      color: var(--dark);
+    }
     .socials {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
       display: flex;
       gap: 8px;
-      z-index: 1;
+      margin-top: auto;
     }
     .social {
       width: 32px;
@@ -288,7 +286,7 @@
       border: 1px solid var(--neon);
       display: grid;
       place-items: center;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background .2s ease, transform .2s ease;
     }
     .social:hover {
       background: var(--neon);
@@ -311,17 +309,14 @@
     <div class="side">
       <img src="assets/pfp.png" alt="pfp" class="pfp">
       <div class="glitch" data-text="skoozuh">skoozuh</div>
-      <div class="bio">
-        17 · producer · photographer · <span class="rgb">aesthetic hacker</span>
-      </div>
+      <div class="bio">17 · producer · photographer · <span class="rgb">creative director</span></div>
 
-      <!-- moved + re-coloured player -->
       <div class="center">
         <div class="ring" id="ring">
           <img src="assets/songcover.png" alt="cover" class="cover" id="cover">
         </div>
         <div id="trackTitle" style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem;">—</div>
-        <div id="trackSub" style="font-size: 0.8rem; color: var(--gray);">—</div>
+        <div id="trackSub" style="font-size: .8rem; color: var(--gray);">—</div>
         <div class="viz-horizontal" id="viz"></div>
         <div class="controls">
           <button class="btn" id="prevBtn">≪</button>
@@ -335,21 +330,42 @@
       </div>
     </div>
 
-    <!-- MIDDLE: spacer / optional badges could go here -->
-    <div class="center" style="justify-content: flex-start; padding-top: 8px;">
-      <!-- empty for now – keeps grid tidy -->
-    </div>
+    <!-- MIDDLE: empty spacer (keeps grid) -->
+    <div class="center" style="justify-content: flex-start; padding-top: 8px;"></div>
 
-    <!-- RIGHT: queue only -->
-    <div class="side queue-box">
-      <div style="margin-bottom: 6px; color: var(--neon);">► QUEUE</div>
-      <div id="queueList"></div>
-    </div>
+    <!-- RIGHT: stats + queue -->
+    <div class="side stats-box">
+      <div class="stat-line">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-4h2v2h-2v-2zm0-10h2v8h-2V6z"/></svg>
+        <span>Producer & Photographer</span>
+      </div>
+      <div class="stat-line">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>Based TX · 17 y/o</span>
+      </div>
+      <div class="stat-line">
+        <svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
+        <span>Active since 2021</span>
+      </div>
 
-    <!-- bottom-right socials -->
-    <div class="socials">
-      <a class="social" href="https://instagram.com/okok00101010110" target="_blank"><img src="assets/instagram.png" alt="IG"></a>
-      <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank"><img src="assets/lastfm.png" alt="LM"></a>
+      <div class="badge-row">
+        <div class="badge">Owner</div>
+        <div class="badge">Creative Director</div>
+        <div class="badge">Photographer</div>
+        <div class="badge">Producer</div>
+      </div>
+
+      <!-- queue -->
+      <div class="queue-box">
+        <div style="margin-bottom: 6px; color: var(--neon);">► QUEUE</div>
+        <div id="queueList"></div>
+      </div>
+
+      <!-- socials inside stats box → no cut-off -->
+      <div class="socials">
+        <a class="social" href="https://instagram.com/okok00101010110" target="_blank"><img src="assets/instagram.png" alt="IG"></a>
+        <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank"><img src="assets/lastfm.png" alt="LM"></a>
+      </div>
     </div>
   </div>
 
@@ -379,7 +395,6 @@
     const overlay = $('#overlay');
     const viz = $('#viz');
 
-    // build horizontal visualiser
     for (let i = 0; i < 24; i++) {
       const bar = document.createElement('div');
       bar.className = 'bar-h';
