@@ -38,8 +38,7 @@
       animation: scan 4s linear infinite;
     }
     @keyframes scan {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 100vh; }
+      to { background-position: 0 100vh; }
     }
     .crt::before {
       content: "";
@@ -79,7 +78,7 @@
       border: 1px solid var(--neon);
       box-shadow: 0 0 20px var(--neon), inset 0 0 20px rgba(255, 42, 109, 0.1);
       display: grid;
-      grid-template-columns: 200px 1fr 300px;
+      grid-template-columns: 240px 1fr 280px;
       gap: 24px;
       padding: 24px;
       position: relative;
@@ -87,7 +86,7 @@
     }
     @media (max-width: 900px) {
       .console { grid-template-columns: 1fr 1fr; }
-      .side { grid-column: 1 / -1; }
+      .queue-box { grid-column: 1 / -1; }
     }
     @media (max-width: 600px) {
       .console { grid-template-columns: 1fr; }
@@ -103,15 +102,15 @@
       aspect-ratio: 1;
       object-fit: cover;
       border: 1px solid var(--neon);
-      filter: grayscale(1) contrast(1.2);
+      filter: grayscale(1) contrast(1.2) drop-shadow(0 0 6px var(--neon));
       transition: filter .3s ease;
     }
     .pfp:hover {
-      filter: grayscale(0) contrast(1.2) drop-shadow(0 0 8px var(--neon));
+      filter: grayscale(0) contrast(1.2) drop-shadow(0 0 10px var(--neon));
     }
     .glitch {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       color: var(--neon);
       position: relative;
     }
@@ -165,13 +164,15 @@
         -1px 1px 0 var(--neon),
         1px 1px 0 var(--neon2);
     }
-    .queue {
-      margin-top: 12px;
-      font-size: 0.8rem;
+    .queue-box {
       border: 1px solid var(--neon);
       padding: 8px;
-      max-height: 120px;
+      max-height: 140px;
       overflow-y: auto;
+      scrollbar-width: none; /* Firefox */
+    }
+    .queue-box::-webkit-scrollbar {
+      display: none; /* Chrome / Safari */
     }
     .queue-item {
       padding: 4px 6px;
@@ -218,20 +219,19 @@
       border-radius: 50%;
       object-fit: cover;
       z-index: 1;
-      filter: saturate(0.8);
+      filter: saturate(0.8) hue-rotate(320deg) drop-shadow(0 0 4px var(--neon));
     }
-    .viz-vertical {
+    .viz-horizontal {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
-      height: 100px;
-      justify-content: flex-end;
+      gap: 3px;
+      height: 28px;
+      align-items: flex-end;
     }
-    .bar-v {
+    .bar-h {
       width: 4px;
-      background: var(--neon);
+      min-height: 3px;
+      background: linear-gradient(180deg, var(--neon), var(--neon2));
       border-radius: 2px;
-      transition: height 0.1s ease;
     }
     .controls {
       display: flex;
@@ -303,45 +303,53 @@
 </head>
 <body class="crt">
   <div class="overlay" id="overlay">
-    <div class="overlay-text">[ INIT ]</div>
+    <div class="overlay-text">[ WELCOME ]</div>
   </div>
 
   <div class="console">
+    <!-- LEFT: profile + player -->
     <div class="side">
       <img src="assets/pfp.png" alt="pfp" class="pfp">
       <div class="glitch" data-text="skoozuh">skoozuh</div>
       <div class="bio">
-        17 · producer · photographer · <span class="rgb">#neon-dreamer</span>
+        17 · producer · photographer · <span class="rgb">aesthetic hacker</span>
       </div>
-      <div class="queue">
-        <div style="margin-bottom: 6px; color: var(--neon);">► QUEUE</div>
-        <div id="queueList"></div>
-      </div>
-    </div>
 
-    <div class="center">
-      <div class="ring" id="ring">
-        <img src="assets/songcover.png" alt="cover" class="cover" id="cover">
-      </div>
-      <div id="trackTitle" style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem;">—</div>
-      <div id="trackSub" style="font-size: 0.8rem; color: var(--gray);">—</div>
-      <div class="viz-vertical" id="viz"></div>
-      <div class="controls">
-        <button class="btn" id="prevBtn">≪</button>
-        <button class="btn" id="playBtn">▶</button>
-        <button class="btn" id="nextBtn">≫</button>
-        <div class="progress" id="progress">
-          <div class="fill" id="fill"></div>
+      <!-- moved + re-coloured player -->
+      <div class="center">
+        <div class="ring" id="ring">
+          <img src="assets/songcover.png" alt="cover" class="cover" id="cover">
         </div>
-        <div class="time" id="currentTime">0:00</div>
+        <div id="trackTitle" style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem;">—</div>
+        <div id="trackSub" style="font-size: 0.8rem; color: var(--gray);">—</div>
+        <div class="viz-horizontal" id="viz"></div>
+        <div class="controls">
+          <button class="btn" id="prevBtn">≪</button>
+          <button class="btn" id="playBtn">▶</button>
+          <button class="btn" id="nextBtn">≫</button>
+          <div class="progress" id="progress">
+            <div class="fill" id="fill"></div>
+          </div>
+          <div class="time" id="currentTime">0:00</div>
+        </div>
       </div>
     </div>
 
-    <div class="side" style="align-items: flex-end;">
-      <div class="socials">
-        <a class="social" href="https://instagram.com/okok00101010110" target="_blank"><img src="assets/instagram.png" alt="IG"></a>
-        <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank"><img src="assets/lastfm.png" alt="LM"></a>
-      </div>
+    <!-- MIDDLE: spacer / optional badges could go here -->
+    <div class="center" style="justify-content: flex-start; padding-top: 8px;">
+      <!-- empty for now – keeps grid tidy -->
+    </div>
+
+    <!-- RIGHT: queue only -->
+    <div class="side queue-box">
+      <div style="margin-bottom: 6px; color: var(--neon);">► QUEUE</div>
+      <div id="queueList"></div>
+    </div>
+
+    <!-- bottom-right socials -->
+    <div class="socials">
+      <a class="social" href="https://instagram.com/okok00101010110" target="_blank"><img src="assets/instagram.png" alt="IG"></a>
+      <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank"><img src="assets/lastfm.png" alt="LM"></a>
     </div>
   </div>
 
@@ -371,14 +379,14 @@
     const overlay = $('#overlay');
     const viz = $('#viz');
 
-    // build vertical bars
-    for (let i = 0; i < 20; i++) {
+    // build horizontal visualiser
+    for (let i = 0; i < 24; i++) {
       const bar = document.createElement('div');
-      bar.className = 'bar-v';
-      bar.style.height = '4px';
+      bar.className = 'bar-h';
+      bar.style.height = '3px';
       viz.appendChild(bar);
     }
-    const bars = Array.from(viz.querySelectorAll('.bar-v'));
+    const bars = Array.from(viz.querySelectorAll('.bar-h'));
 
     function initAudioGraph() {
       if (audioCtx) return;
@@ -400,7 +408,7 @@
         const step = Math.floor(dataArray.length / bars.length);
         bars.forEach((bar, i) => {
           const avg = dataArray.slice(i * step, (i + 1) * step).reduce((a, b) => a + b, 0) / step;
-          bar.style.height = Math.max(4, (avg / 255) * 60) + 'px';
+          bar.style.height = Math.max(3, (avg / 255) * 22) + 'px';
         });
         rafId = requestAnimationFrame(loop);
       }
@@ -409,7 +417,7 @@
 
     function stopViz() {
       cancelAnimationFrame(rafId);
-      bars.forEach(bar => bar.style.height = '4px');
+      bars.forEach(bar => bar.style.height = '3px');
     }
 
     function loadTrack(i, autoplay = false) {
@@ -435,7 +443,6 @@
       }
     }
 
-    // events
     overlay.addEventListener('click', async () => {
       overlay.style.opacity = 0;
       setTimeout(() => overlay.remove(), 600);
@@ -484,7 +491,6 @@
       return `${m}:${sec}`;
     }
 
-    // init
     loadTrack(0, false);
   </script>
 </body>
