@@ -1,553 +1,266 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>skoozuh.exe // NEON</title>
-  <link rel="icon" type="image/png" href="head.png"/>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --neon: #ff2a6d;
-      --neon2: #05d9e8;
-      --dark: #0c0c0f;
-      --dark2: #18181f;
-      --gray: #3d3d45;
-      --radius: 8px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
-    body {
-      font-family: 'Space Mono', monospace;
-      background: var(--dark);
-      color: var(--neon2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-      overflow: hidden;
-      position: relative;
-    }
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: .03;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
-    .crt::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 2px);
-      pointer-events: none;
-      z-index: 2;
-    }
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      cursor: pointer;
-      transition: opacity .6s ease;
-    }
-    .overlay-text {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 3px;
-      color: var(--neon);
-      text-shadow: 0 0 8px var(--neon);
-      animation: blink 1s step-end infinite;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-    .console {
-      width: 90vw;
-      max-width: 1100px;
-      height: 200px;
-      background: var(--dark2);
-      border: 1px solid var(--neon);
-      box-shadow: 0 0 20px var(--neon), inset 0 0 20px rgba(255, 42, 109, .1);
-      display: grid;
-      grid-template-columns: 200px 1fr 280px;
-      gap: 12px;
-      padding: 12px;
-      border-radius: var(--radius);
-      position: relative;
-      z-index: 1;
-    }
-    @media (max-width: 840px) {
-      .console { grid-template-columns: 1fr 1fr; height: auto; }
-      .stats-box { grid-column: 1 / -1; }
-    }
-    @media (max-width: 560px) {
-      .console { grid-template-columns: 1fr; height: auto; }
-    }
-    .side {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1;
-    }
-    .pfp {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border: 1px solid var(--neon);
-      filter: grayscale(1) contrast(1.2) drop-shadow(0 0 6px var(--neon));
-      transition: filter .3s ease;
-      border-radius: var(--radius);
-    }
-    .pfp:hover {
-      filter: grayscale(0) contrast(1.2) drop-shadow(0 0 10px var(--neon));
-    }
-    .glitch {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
-      color: var(--neon);
-      position: relative;
-    }
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .glitch::before {
-      animation: glitch-1 .5s infinite;
-      color: var(--neon2);
-      z-index: -1;
-    }
-    .glitch::after {
-      animation: glitch-2 .5s infinite;
-      color: var(--neon);
-      z-index: -2;
-    }
-    @keyframes glitch-1 {
-      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-      20% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
-      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, -2px); }
-      60% { clip-path: inset(10% 0 80% 0); transform: translate(-1px, 1px); }
-      80% { clip-path: inset(80% 0 10% 0); transform: translate(1px, -1px); }
-    }
-    @keyframes glitch-2 {
-      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-      20% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -1px); }
-      40% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 1px); }
-      60% { clip-path: inset(50% 0 20% 0); transform: translate(1px, -2px); }
-      80% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 2px); }
-    }
-    .bio {
-      font-size: .7rem;
-      color: var(--gray);
-      line-height: 1.3;
-    }
-    .player-area {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .ring {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: conic-gradient(var(--neon) 0deg, transparent 0deg);
-      display: grid;
-      place-items: center;
-      position: relative;
-      animation: rotate 20s linear infinite;
-    }
-    @keyframes rotate {
-      to { transform: rotate(360deg); }
-    }
-    .ring::before {
-      content: "";
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--dark2);
-    }
-    .cover {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      object-fit: cover;
-      z-index: 1;
-      filter: saturate(.8) hue-rotate(320deg) drop-shadow(0 0 4px var(--neon));
-    }
-    .viz-horizontal {
-      display: flex;
-      gap: 2px;
-      height: 20px;
-      align-items: flex-end;
-    }
-    .bar-h {
-      width: 3px;
-      min-height: 2px;
-      background: linear-gradient(180deg, var(--neon), var(--neon2));
-      border-radius: 2px;
-    }
-    .meta {
-      min-width: 0;
-    }
-    .track-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: .8rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .track-sub {
-      font-size: .6rem;
-      color: var(--gray);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 3px;
-    }
-    .btn {
-      background: transparent;
-      border: 1px solid var(--neon);
-      color: var(--neon);
-      padding: 3px 6px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background .2s ease, color .2s ease;
-      border-radius: var(--radius);
-      font-size: .6rem;
-    }
-    .btn:hover {
-      background: var(--neon);
-      color: var(--dark);
-    }
-    .progress {
-      flex: 1;
-      height: 4px;
-      background: rgba(255, 255, 255, .05);
-      border-radius: 2px;
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
-    }
-    .progress .fill {
-      height: 100%;
-      width: 0%;
-      background: var(--neon);
-      transition: width .1s linear;
-    }
-    .time {
-      font-size: .55rem;
-      color: var(--gray);
-      min-width: 24px;
-      text-align: center;
-    }
-    .stats-box {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 1;
-    }
-    .stat-line {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: .65rem;
-      color: var(--gray);
-    }
-    .stat-line svg {
-      width: 11px;
-      height: 11px;
-      fill: var(--neon);
-    }
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 3px;
-    }
-    .badge {
-      padding: 2px 4px;
-      border: 1px solid var(--neon);
-      font-size: .55rem;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      transition: background .2s ease, color .2s ease;
-      cursor: default;
-      border-radius: var(--radius);
-    }
-    .badge:hover {
-      background: var(--neon);
-      color: var(--dark);
-    }
-    .queue-box {
-      border: 1px solid var(--neon);
-      padding: 5px;
-      max-height: 80px;
-      overflow-y: auto;
-      scrollbar-width: none;
-    }
-    .queue-box::-webkit-scrollbar {
-      display: none;
-    }
-    .queue-item {
-      padding: 3px 4px;
-      margin: 1px 0;
-      cursor: pointer;
-      transition: background .2s ease, color .2s ease;
-      font-size: .6rem;
-      border-radius: var(--radius);
-    }
-    .queue-item:hover {
-      background: var(--neon);
-      color: var(--dark);
-    }
-    .socials {
-      display: flex;
-      gap: 5px;
-      margin-top: auto;
-    }
-    .social {
-      width: 20px;
-      height: 20px;
-      border: 1px solid var(--neon);
-      display: grid;
-      place-items: center;
-      transition: background .2s ease, transform .2s ease;
-      border-radius: var(--radius);
-    }
-    .social:hover {
-      background: var(--neon);
-      transform: translateY(-1px);
-    }
-    .social img {
-      width: 10px;
-      height: 10px;
-      filter: invert(1);
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>prod. @skoozuh</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#060607; --bg-1:#0d0d11;
+    --muted:#9aa3ab; --text:#e9f4ff;
+    --accentA:#ff4a4a; --accentB:#ff7a4a; --accentC:#ff5959;
+    --radius:16px;
+    --shadow-strong:0 18px 60px rgba(2,6,23,0.7);
+    --shadow-soft:0 8px 30px rgba(2,6,23,0.45);
+    --card-width:960px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family:Inter,system-ui,sans-serif;color:var(--text);
+    background:
+      radial-gradient(800px 420px at 8% 12%, rgba(255,74,74,0.04), transparent 8%),
+      radial-gradient(700px 360px at 92% 88%, rgba(255,121,74,0.03), transparent 6%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    display:flex;align-items:center;justify-content:center;padding:40px;
+  }
+  .card{
+    width:100%;max-width:var(--card-width);
+    background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(0,0,0,0.03));
+    border-radius:calc(var(--radius) + 6px);
+    padding:28px;box-shadow:var(--shadow-strong);
+    border:1px solid rgba(255,255,255,0.035);
+    display:grid;grid-template-columns:180px 1fr 340px;gap:22px;align-items:start;
+    min-height:420px;backdrop-filter:blur(10px) saturate(120%);
+    position:relative;overflow:hidden;
+  }
+  .card::before,.card::after{
+    content:"";position:absolute;width:300px;height:300px;opacity:.15;z-index:0;
+    filter:blur(80px);animation:blobMove 18s infinite alternate ease-in-out;
+  }
+  .card::before{left:-40px;top:-40px;background:radial-gradient(circle,var(--accentA),transparent 70%)}
+  .card::after{right:-60px;bottom:-60px;background:radial-gradient(circle,var(--accentC),transparent 70%);animation-delay:5s}
+  @keyframes blobMove{0%{transform:translate(-50px,-50px)}100%{transform:translate(50px,50px)}}
+  @media (max-width:980px){.card{grid-template-columns:160px 1fr;grid-template-rows:auto auto}.right{grid-column:1/-1}}
+  @media (max-width:620px){.card{grid-template-columns:1fr;padding:20px;gap:14px}}
+
+  .left{display:flex;flex-direction:column;align-items:center;gap:12px;z-index:1}
+  .pfp-wrap{width:172px;height:172px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.04));box-shadow:var(--shadow-soft)}
+  .pfp{width:100%;height:100%;object-fit:cover;display:block}
+  .role{font-size:12px;color:var(--muted);text-transform:uppercase}
+
+  .main{display:flex;flex-direction:column;gap:12px;z-index:1}
+  .display-name{font-size:26px;font-weight:700;margin:0;line-height:1}
+  .display-handle{font-size:13px;color:var(--muted)}
+  .bio{font-size:15px;color:var(--muted);line-height:1.5;max-width:60ch}
+  .divider{margin:10px 0;height:1px;background:rgba(255,255,255,0.05)}
+  .now-playing{font-size:14px;color:var(--muted);font-style:italic}
+
+  .right{
+    display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
+    height:100%;padding-top:10px;position:relative;z-index:1;
+  }
+  .vinyl{
+    position:absolute;top:10%;left:50%;
+    width:280px;height:280px;
+    background:url('assets/songcover.png') center/cover no-repeat;
+    opacity:.25;transform:translateX(-50%) rotate(0deg);
+    transition:opacity .3s ease;z-index:0;border-radius:50%;
+  }
+  .vinyl.rotate{animation:spin 14s linear infinite}
+  @keyframes spin{0%{transform:translateX(-50%) rotate(0)}100%{transform:translateX(-50%) rotate(360deg)}}
+
+  .track-title{font-weight:700;font-size:20px;text-align:center;z-index:1}
+  .track-sub{font-size:14px;color:var(--muted);text-align:center;z-index:1}
+
+  .controls{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    width:220px;z-index:1;margin-top:8px;
+  }
+  .controls-row{
+    display:flex;align-items:center;gap:8px;width:100%;justify-content:center;
+  }
+  .play-btn{width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:#fff;cursor:pointer}
+  .play-btn svg{width:28px;height:28px}
+  .time{font-size:13px;min-width:36px;text-align:center;color:var(--muted)}
+  .progress{flex:1;height:10px;background:rgba(255,255,255,0.05);border-radius:999px;position:relative;overflow:hidden;cursor:pointer}
+  .progress .fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,var(--accentA),var(--accentB));border-radius:inherit}
+
+  .volume{display:flex;gap:8px;align-items:center;width:100%;justify-content:center;margin-top:4px;}
+  .volume svg{width:28px;height:28px}
+  .volume input[type="range"]{width:100%;-webkit-appearance:none;height:10px;background:transparent}
+  .volume input[type="range"]::-webkit-slider-runnable-track{height:10px;background:rgba(255,255,255,0.05);border-radius:8px}
+  .volume input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text);margin-top:-2px}
+
+  .socials{display:flex;gap:10px;position:absolute;bottom:20px;left:20px;z-index:1}
+  .social{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.008),rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.02)}
+  .social img{width:22px;height:22px}
+</style>
 </head>
-<body class="crt">
-  <div class="overlay" id="overlay">
-    <div class="overlay-text">[ WELCOME ]</div>
+<body>
+
+<div class="card">
+  <div class="left">
+    <div class="pfp-wrap"><img src="assets/pfp.png" alt="Profile picture" class="pfp"></div>
+    <div class="role">Producer • Owner</div>
   </div>
 
-  <div class="console">
-    <!-- LEFT: profile + player -->
-    <div class="side">
-      <img src="assets/pfp.png" alt="pfp" class="pfp">
-      <div class="glitch" data-text="skoozuh">skoozuh</div>
-      <div class="bio">17 · producer · photographer · <span class="rgb">creative director</span></div>
+  <div class="main">
+    <div class="display-name">Skoozuh</div>
+    <div class="display-handle">@skoozuh</div>
+    <p class="bio">Producer & Photographer | 17 | @skoozuh everywhere.</p>
+    <div class="divider"></div>
+    <div class="now-playing" id="nowPlaying">Now Playing: back to my day job — wifiskeleton</div>
+  </div>
 
-      <div class="player-area">
-        <div class="ring" id="ring">
-          <img src="assets/songcover.png" alt="cover" class="cover" id="cover">
-        </div>
-        <div class="meta">
-          <div class="track-title" id="trackTitle">—</div>
-          <div class="track-sub" id="trackSub">—</div>
-          <div class="controls">
-            <button class="btn" id="prevBtn">≪</button>
-            <button class="btn" id="playBtn">▶</button>
-            <button class="btn" id="nextBtn">≫</button>
-          </div>
-          <div class="progress" id="progress">
-            <div class="fill" id="fill"></div>
-          </div>
-          <div class="time" id="currentTime">0:00</div>
-        </div>
+  <div class="right">
+    <div class="vinyl" id="vinyl" aria-hidden="true"></div>
+    <div class="track-title" id="trackTitle">back to my day job</div>
+    <div class="track-sub" id="trackSub">wifiskeleton</div>
+
+    <div class="controls">
+      <div class="controls-row">
+        <button class="play-btn" id="playBtn" aria-label="Play/Pause">
+          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+        </button>
+        <div class="time" id="currentTime">0:00</div>
+        <div class="progress" id="progress"><div class="fill" id="fill"></div></div>
+        <div class="time" id="duration">0:00</div>
       </div>
-
-      <div class="viz-horizontal" id="viz"></div>
-    </div>
-
-    <!-- MIDDLE: only large visualiser -->
-    <div class="side" style="justify-content: center; align-items: center;">
-      <div class="viz-horizontal" id="vizMid"></div>
-    </div>
-
-    <!-- RIGHT: stats + queue -->
-    <div class="side stats-box">
-      <div class="stat-line">
-        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-4h2v2h-2v-2zm0-10h2v8h-2V6z"/></svg>
-        <span>Producer & Photographer</span>
-      </div>
-      <div class="stat-line">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>Based TX · 17 y/o</span>
-      </div>
-      <div class="stat-line">
-        <svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
-        <span>Active since 2021</span>
-      </div>
-
-      <div class="badge-row">
-        <div class="badge">Owner</div>
-        <div class="badge">Creative Director</div>
-        <div class="badge">Photographer</div>
-        <div class="badge">Producer</div>
-      </div>
-
-      <div class="queue-box">
-        <div style="margin-bottom: 4px; color: var(--neon); font-size: .6rem;">► QUEUE</div>
-        <div id="queueList"></div>
-      </div>
-
-      <div class="socials">
-        <a class="social" href="https://instagram.com/okok00101010110" target="_blank"><img src="assets/instagram.png" alt="IG"></a>
-        <a class="social" href="https://www.last.fm/user/skoozuh" target="_blank"><img src="assets/lastfm.png" alt="LM"></a>
+      <div class="volume">
+        <svg id="volumeIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5v14l-6-6H3V11h2l6-6z"/></svg>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
       </div>
     </div>
   </div>
 
-  <audio id="audio" preload="metadata"></audio>
+  <div class="socials">
+    <a class="social" href="https://instagram.com/" target="_blank" rel="noopener"><img src="assets/instagram.png" alt="Instagram"></a>
+    <a class="social" href="https://last.fm/" target="_blank" rel="noopener"><img src="assets/lastfm.png" alt="Last.fm"></a>
+  </div>
+</div>
 
-  <script>
-    const playlist = [
-      { src: 'assets/song.mp3', title: 'back to my day job', artist: 'wifiskeleton', cover: 'assets/songcover.png' },
-      { src: 'assets/song2.mp3', title: 'Chain Swangin', artist: 'Molly Santana', cover: 'assets/song2cover.png' },
-      { src: 'assets/song3.mp3', title: 'Stutter Flow', artist: 'Baby Tron', cover: 'assets/song3cover.png' }
-    ];
-    let index = 0;
-    let audioCtx, analyser, dataArray, rafId;
+<audio id="audio" src="assets/song.mp3"></audio>
 
-    const $ = sel => document.querySelector(sel);
-    const audio = $('#audio');
-    const playBtn = $('#playBtn');
-    const prevBtn = $('#prevBtn');
-    const nextBtn = $('#nextBtn');
-    const progress = $('#progress');
-    const fill = $('#fill');
-    const currentTimeEl = $('#currentTime');
-    const trackTitleEl = $('#trackTitle');
-    const trackSubEl = $('#trackSub');
-    const coverEl = $('#cover');
-    const queueList = $('#queueList');
-    const overlay = $('#overlay');
-    const viz = $('#viz');
-    const vizMid = $('#vizMid');
+<script>
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const iconPlay = playBtn.querySelector('.icon-play');
+const iconPause = playBtn.querySelector('.icon-pause');
+const progress = document.getElementById('progress');
+const fill = document.getElementById('fill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const volume = document.getElementById('volume');
+const vinyl = document.getElementById('vinyl');
+const trackTitleEl = document.getElementById('trackTitle');
+const trackSubEl = document.getElementById('trackSub');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const volumeIcon = document.getElementById('volumeIcon');
 
-    // single visualiser feed mirrored to both containers
-    function initAudioGraph() {
-      if (audioCtx) return;
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 128;
-      const bufferLength = analyser.frequencyBinCount;
-      dataArray = new Uint8Array(bufferLength);
-      const source = audioCtx.createMediaElementSource(audio);
-      source.connect(analyser);
-      analyser.connect(audioCtx.destination);
-    }
+audio.volume = parseFloat(volume.value || 0.8);
 
-    function drawViz() {
-      if (!analyser) return;
-      cancelAnimationFrame(rafId);
-      function loop() {
-        analyser.getByteFrequencyData(dataArray);
-        const step = Math.floor(dataArray.length / 24);
-        const h = [];
-        for (let i = 0; i < 24; i++) {
-          const val = dataArray.slice(i * step, (i + 1) * step).reduce((a, b) => a + b, 0) / step;
-          h.push(Math.max(2, (val / 255) * 18));
-        }
-        viz.querySelectorAll('.bar-h').forEach((bar, i) => bar.style.height = h[i] + 'px');
-        vizMid.querySelectorAll('.bar-h').forEach((bar, i) => bar.style.height = h[i] + 'px');
-        rafId = requestAnimationFrame(loop);
-      }
-      loop();
-    }
+function syncNowPlaying(){
+  nowPlayingEl.textContent = `Now Playing: ${trackTitleEl.textContent} — ${trackSubEl.textContent}`;
+}
+syncNowPlaying();
 
-    function stopViz() {
-      cancelAnimationFrame(rafId);
-      [viz, vizMid].forEach(v => v.querySelectorAll('.bar-h').forEach(bar => bar.style.height = '2px'));
-    }
+let audioCtx, analyser, sourceNode, dataArray;
+let currentGlowSize = 0;
 
-    function loadTrack(i, autoplay = false) {
-      index = (i + playlist.length) % playlist.length;
-      const t = playlist[index];
-      audio.src = t.src;
-      trackTitleEl.textContent = t.title;
-      trackSubEl.textContent = t.artist;
-      coverEl.src = t.cover;
-      renderQueue();
-      if (autoplay) audio.play();
-    }
+playBtn.addEventListener('click', async () => {
+  if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
+  if (audio.paused) { audio.play().catch(()=>{}); }
+  else { audio.pause(); }
+});
 
-    function renderQueue() {
-      queueList.innerHTML = '';
-      for (let n = 1; n < playlist.length; n++) {
-        const idx = (index + n) % playlist.length;
-        const item = document.createElement('div');
-        item.className = 'queue-item';
-        item.textContent = `${playlist[idx].title} — ${playlist[idx].artist}`;
-        item.onclick = () => loadTrack(idx, true);
-        queueList.appendChild(item);
-      }
-    }
+audio.addEventListener('play', () => {
+  iconPlay.style.display = 'none';
+  iconPause.style.display = 'block';
+  vinyl.classList.add('rotate');
+  if (!audioCtx) initVisualizer();
+});
 
-    overlay.addEventListener('click', async () => {
-      overlay.style.opacity = 0;
-      setTimeout(() => overlay.remove(), 600);
-      initAudioGraph();
-      loadTrack(0, true);
-      if (audioCtx.state === 'suspended') await audioCtx.resume();
-    });
+audio.addEventListener('pause', () => {
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+  vinyl.classList.remove('rotate');
+  vinyl.style.boxShadow = 'none';
+});
 
-    playBtn.addEventListener('click', async () => {
-      if (!audioCtx) initAudioGraph();
-      if (audioCtx.state === 'suspended') await audioCtx.resume();
-      audio.paused ? audio.play() : audio.pause();
-    });
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  fill.style.width = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
 
-    prevBtn.addEventListener('click', () => loadTrack(index - 1, true));
-    nextBtn.addEventListener('click', () => loadTrack(index + 1, true));
+progress.addEventListener('click', (e) => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const rect = progress.getBoundingClientRect();
+  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+  audio.currentTime = pct * audio.duration;
+});
+volume.addEventListener('input', () => { 
+  audio.volume = parseFloat(volume.value); 
+  updateVolumeIcon(audio.volume);
+});
 
-    audio.addEventListener('play', () => {
-      playBtn.textContent = '❚❚';
-      drawViz();
-    });
-    audio.addEventListener('pause', () => {
-      playBtn.textContent = '▶';
-      stopViz();
-    });
-    audio.addEventListener('ended', () => loadTrack(index + 1, true));
-    audio.addEventListener('timeupdate', () => {
-      if (!audio.duration) return;
-      fill.style.width = (audio.currentTime / audio.duration) * 100 + '%';
-      currentTimeEl.textContent = formatTime(audio.currentTime);
-    });
-    audio.addEventListener('loadedmetadata', () => {
-      currentTimeEl.textContent = '0:00';
-    });
+function updateVolumeIcon(vol) {
+  if (vol === 0) {
+    volumeIcon.innerHTML = '<path d="M16.5 12l5-5-1.5-1.5L15 10.5V5h-2l-6 6H3v2h4l6 6h2v-5.5l5 5 1.5-1.5-5-5z"/>';
+  } else if (vol < 0.33) {
+    volumeIcon.innerHTML = '<path d="M11 5v14l-6-6H3V11h2l6-6z"/>';
+  } else if (vol < 0.66) {
+    volumeIcon.innerHTML = '<path d="M11 5v14l-6-6H3V11h2l6-6z"/><path d="M15 8.34v7.32c1.99-.77 3.42-2.65 3.42-4.66S16.99 9.11 15 8.34z"/>';
+  } else {
+    volumeIcon.innerHTML = '<path d="M11 5v14l-6-6H3V11h2l6-6z"/><path d="M15 5v14c3.31-1.25 5.5-4.42 5.5-7.5S18.31 6.25 15 5z"/>';
+  }
+}
 
-    progress.addEventListener('click', e => {
-      const rect = progress.getBoundingClientRect();
-      const pct = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
-      audio.currentTime = pct * (audio.duration || 0);
-    });
+function formatTime(s){
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s/60);
+  const sec = Math.floor(s%60).toString().padStart(2,'0');
+  return m + ':' + sec;
+}
 
-    function formatTime(s) {
-      if (!s || isNaN(s)) return '0:00';
-      const m = Math.floor(s / 60);
-      const sec = Math.floor(s % 60).toString().padStart(2, '0');
-      return `${m}:${sec}`;
-    }
+function initVisualizer(){
+  try{
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    sourceNode = audioCtx.createMediaElementSource(audio);
+    sourceNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    renderGlow();
+  }catch(e){ console.warn('Visualizer error', e); }
+}
 
-    loadTrack(0, false);
-  </script>
+function renderGlow(){
+  if (!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+
+  const bassBins = 8;
+  let bassValue = 0;
+  for (let i=0; i<bassBins; i++){ bassValue += dataArray[i]; }
+  bassValue /= bassBins;
+
+  const targetGlow = 20 + (bassValue / 255) * 50;
+  currentGlowSize += (targetGlow - currentGlowSize) * 0.25;
+
+  vinyl.style.boxShadow =
+    `0 0 ${currentGlowSize}px ${currentGlowSize/5}px var(--accentA),
+     0 0 ${currentGlowSize*2}px ${currentGlowSize/2.5}px var(--accentB)`;
+
+  requestAnimationFrame(renderGlow);
+}
+</script>
 </body>
 </html>
