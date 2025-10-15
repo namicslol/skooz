@@ -1,266 +1,284 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>prod. @skoozuh</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg-0:#060607; --bg-1:#0d0d11;
-    --muted:#9aa3ab; --text:#e9f4ff;
-    --accentA:#ff4a4a; --accentB:#ff7a4a; --accentC:#ff5959;
-    --radius:16px;
-    --shadow-strong:0 18px 60px rgba(2,6,23,0.7);
-    --shadow-soft:0 8px 30px rgba(2,6,23,0.45);
-    --card-width:960px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
-  body{
-    font-family:Inter,system-ui,sans-serif;color:var(--text);
-    background:
-      radial-gradient(800px 420px at 8% 12%, rgba(255,74,74,0.04), transparent 8%),
-      radial-gradient(700px 360px at 92% 88%, rgba(255,121,74,0.03), transparent 6%),
-      linear-gradient(180deg,var(--bg-0),var(--bg-1));
-    display:flex;align-items:center;justify-content:center;padding:40px;
-  }
-  .card{
-    width:100%;max-width:var(--card-width);
-    background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(0,0,0,0.03));
-    border-radius:calc(var(--radius) + 6px);
-    padding:28px;box-shadow:var(--shadow-strong);
-    border:1px solid rgba(255,255,255,0.035);
-    display:grid;grid-template-columns:180px 1fr 340px;gap:22px;align-items:start;
-    min-height:420px;backdrop-filter:blur(10px) saturate(120%);
-    position:relative;overflow:hidden;
-  }
-  .card::before,.card::after{
-    content:"";position:absolute;width:300px;height:300px;opacity:.15;z-index:0;
-    filter:blur(80px);animation:blobMove 18s infinite alternate ease-in-out;
-  }
-  .card::before{left:-40px;top:-40px;background:radial-gradient(circle,var(--accentA),transparent 70%)}
-  .card::after{right:-60px;bottom:-60px;background:radial-gradient(circle,var(--accentC),transparent 70%);animation-delay:5s}
-  @keyframes blobMove{0%{transform:translate(-50px,-50px)}100%{transform:translate(50px,50px)}}
-  @media (max-width:980px){.card{grid-template-columns:160px 1fr;grid-template-rows:auto auto}.right{grid-column:1/-1}}
-  @media (max-width:620px){.card{grid-template-columns:1fr;padding:20px;gap:14px}}
+  <meta charset="UTF-8">
+  <title>Dark Minimal Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  .left{display:flex;flex-direction:column;align-items:center;gap:12px;z-index:1}
-  .pfp-wrap{width:172px;height:172px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.04));box-shadow:var(--shadow-soft)}
-  .pfp{width:100%;height:100%;object-fit:cover;display:block}
-  .role{font-size:12px;color:var(--muted);text-transform:uppercase}
+  <!-- ==========  BASIC RESET & GLOBAL STYLE  ========== -->
+  <style>
+    :root {
+      --bg: #000;
+      --card-bg: #0a0a0a;
+      --border: rgba(255, 255, 255, .08);
+      --text: rgba(255, 255, 255, .78);
+      --text-dim: rgba(255, 255, 255, .55);
+      --accent: #fff;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      font-family: system-ui, Inter, Poppins, sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+    /* subtle fade-in + slide-up for both cards */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 
-  .main{display:flex;flex-direction:column;gap:12px;z-index:1}
-  .display-name{font-size:26px;font-weight:700;margin:0;line-height:1}
-  .display-handle{font-size:13px;color:var(--muted)}
-  .bio{font-size:15px;color:var(--muted);line-height:1.5;max-width:60ch}
-  .divider{margin:10px 0;height:1px;background:rgba(255,255,255,0.05)}
-  .now-playing{font-size:14px;color:var(--muted);font-style:italic}
+  <!-- ==========  CARD SHARED STYLE  ========== -->
+  <style>
+    .card {
+      width: 320px;
+      max-width: 90vw;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .6);
+      animation: fadeUp .7s ease-out forwards;
+    }
+    .card + .card {
+      margin-top: 20px;
+    }
+  </style>
 
-  .right{
-    display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
-    height:100%;padding-top:10px;position:relative;z-index:1;
-  }
-  .vinyl{
-    position:absolute;top:10%;left:50%;
-    width:280px;height:280px;
-    background:url('assets/songcover.png') center/cover no-repeat;
-    opacity:.25;transform:translateX(-50%) rotate(0deg);
-    transition:opacity .3s ease;z-index:0;border-radius:50%;
-  }
-  .vinyl.rotate{animation:spin 14s linear infinite}
-  @keyframes spin{0%{transform:translateX(-50%) rotate(0)}100%{transform:translateX(-50%) rotate(360deg)}}
+  <!-- ==========  PROFILE CARD  ========== -->
+  <style>
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .08);
+      display: grid;
+      place-content: center;
+      font-size: 22px;
+    }
+    .badges {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      font-size: 18px;
+      opacity: .75;
+    }
+    .subtitle {
+      font-size: 14px;
+      opacity: .65;
+      margin-bottom: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 12px;
+    }
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      opacity: .7;
+    }
+    .meta span {
+      opacity: .9;
+    }
+  </style>
 
-  .track-title{font-weight:700;font-size:20px;text-align:center;z-index:1}
-  .track-sub{font-size:14px;color:var(--muted);text-align:center;z-index:1}
-
-  .controls{
-    display:flex;flex-direction:column;align-items:center;gap:8px;
-    width:220px;z-index:1;margin-top:8px;
-  }
-  .controls-row{
-    display:flex;align-items:center;gap:8px;width:100%;justify-content:center;
-  }
-  .play-btn{width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:#fff;cursor:pointer}
-  .play-btn svg{width:28px;height:28px}
-  .time{font-size:13px;min-width:36px;text-align:center;color:var(--muted)}
-  .progress{flex:1;height:10px;background:rgba(255,255,255,0.05);border-radius:999px;position:relative;overflow:hidden;cursor:pointer}
-  .progress .fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,var(--accentA),var(--accentB));border-radius:inherit}
-
-  .volume{display:flex;gap:8px;align-items:center;width:100%;justify-content:center;margin-top:4px;}
-  .volume svg{width:28px;height:28px}
-  .volume input[type="range"]{width:100%;-webkit-appearance:none;height:10px;background:transparent}
-  .volume input[type="range"]::-webkit-slider-runnable-track{height:10px;background:rgba(255,255,255,0.05);border-radius:8px}
-  .volume input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text);margin-top:-2px}
-
-  .socials{display:flex;gap:10px;position:absolute;bottom:20px;left:20px;z-index:1}
-  .social{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.008),rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.02)}
-  .social img{width:22px;height:22px}
-</style>
+  <!-- ==========  PLAYER CARD  ========== -->
+  <style>
+    .player {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .note {
+      font-size: 20px;
+      opacity: .75;
+    }
+    .progress-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bar {
+      position: relative;
+      height: 4px;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width .1s linear;
+    }
+    .time {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      opacity: .65;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+    }
+    .controls button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+      transition: background .2s;
+    }
+    .controls button:hover,
+    .controls button:focus-visible {
+      background: rgba(255, 255, 255, .12);
+      outline: none;
+    }
+  </style>
 </head>
+
 <body>
-
-<div class="card">
-  <div class="left">
-    <div class="pfp-wrap"><img src="assets/pfp.png" alt="Profile picture" class="pfp"></div>
-    <div class="role">Producer • Owner</div>
-  </div>
-
-  <div class="main">
-    <div class="display-name">Skoozuh</div>
-    <div class="display-handle">@skoozuh</div>
-    <p class="bio">Photographer | 18 | @skoozuh everywhere.</p>
-    <div class="divider"></div>
-    <div class="now-playing" id="nowPlaying">Now Playing: back to my day job — wifiskeleton</div>
-  </div>
-
-  <div class="right">
-    <div class="vinyl" id="vinyl" aria-hidden="true"></div>
-    <div class="track-title" id="trackTitle">back to my day job</div>
-    <div class="track-sub" id="trackSub">wifiskeleton</div>
-
-    <div class="controls">
-      <div class="controls-row">
-        <button class="play-btn" id="playBtn" aria-label="Play/Pause">
-          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
-        </button>
-        <div class="time" id="currentTime">0:00</div>
-        <div class="progress" id="progress"><div class="fill" id="fill"></div></div>
-        <div class="time" id="duration">0:00</div>
-      </div>
-      <div class="volume">
-        <svg id="volumeIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5v14l-6-6H3V11h2l6-6z"/></svg>
-        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+  <!-- ==========  PROFILE CARD  ========== -->
+  <section class="card" aria-label="Profile">
+    <div class="profile">
+      <div class="avatar">👤</div>
+      <div class="badges">
+        <span>⚙️</span>
+        <span>💎</span>
+        <span>🏠</span>
       </div>
     </div>
-  </div>
 
-  <div class="socials">
-    <a class="social" href="https://instagram.com/" target="_blank" rel="noopener"><img src="assets/instagram.png" alt="Instagram"></a>
-    <a class="social" href="https://last.fm/" target="_blank" rel="noopener"><img src="assets/lastfm.png" alt="Last.fm"></a>
-  </div>
-</div>
+    <p class="subtitle">listen to prettifun</p>
 
-<audio id="audio" src="assets/song.mp3"></audio>
+    <div class="divider"></div>
 
-<script>
-const audio = document.getElementById('audio');
-const playBtn = document.getElementById('playBtn');
-const iconPlay = playBtn.querySelector('.icon-play');
-const iconPause = playBtn.querySelector('.icon-pause');
-const progress = document.getElementById('progress');
-const fill = document.getElementById('fill');
-const currentTimeEl = document.getElementById('currentTime');
-const durationEl = document.getElementById('duration');
-const volume = document.getElementById('volume');
-const vinyl = document.getElementById('vinyl');
-const trackTitleEl = document.getElementById('trackTitle');
-const trackSubEl = document.getElementById('trackSub');
-const nowPlayingEl = document.getElementById('nowPlaying');
-const volumeIcon = document.getElementById('volumeIcon');
+    <div class="meta">
+      <span>👁 1,189</span>
+      <span>|</span>
+      <span>/quit /wreck /pollen</span>
+    </div>
+  </section>
 
-audio.volume = parseFloat(volume.value || 0.8);
+  <!-- ==========  AUDIO PLAYER CARD  ========== -->
+  <section class="card" aria-label="Audio player">
+    <div class="player">
+      <span class="note">🎵</span>
 
-function syncNowPlaying(){
-  nowPlayingEl.textContent = `Now Playing: ${trackTitleEl.textContent} — ${trackSubEl.textContent}`;
-}
-syncNowPlaying();
+      <div class="progress-area">
+        <div class="bar" id="progressBar">
+          <div class="bar-fill" id="barFill"></div>
+        </div>
+        <div class="time">
+          <span id="current">0:01</span>
+          <span id="duration">2:37</span>
+        </div>
+      </div>
 
-let audioCtx, analyser, sourceNode, dataArray;
-let currentGlowSize = 0;
+      <div class="controls">
+        <button id="prev" aria-label="Previous">⏮</button>
+        <button id="playPause" aria-label="Play/Pause">▶️</button>
+        <button id="next" aria-label="Next">⏭</button>
+      </div>
+    </div>
+  </section>
 
-playBtn.addEventListener('click', async () => {
-  if (audioCtx && audioCtx.state === 'suspended') await audioCtx.resume();
-  if (audio.paused) { audio.play().catch(()=>{}); }
-  else { audio.pause(); }
-});
+  <!-- ==========  AUDIO ELEMENT & SCRIPT  ========== -->
+  <audio id="audio" preload="metadata">
+    <!-- placeholder audio, replace with your own -->
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
-audio.addEventListener('play', () => {
-  iconPlay.style.display = 'none';
-  iconPause.style.display = 'block';
-  vinyl.classList.add('rotate');
-  if (!audioCtx) initVisualizer();
-});
+  <script>
+    /* ==========  SIMPLE PLAYER LOGIC  ========== */
+    const audio = document.getElementById('audio');
+    const playPause = document.getElementById('playPause');
+    const barFill = document.getElementById('barFill');
+    const currentEl = document.getElementById('current');
+    const durationEl = document.getElementById('duration');
+    const progressBar = document.getElementById('progressBar');
 
-audio.addEventListener('pause', () => {
-  iconPlay.style.display = 'block';
-  iconPause.style.display = 'none';
-  vinyl.classList.remove('rotate');
-  vinyl.style.boxShadow = 'none';
-});
+    let duration = 157; // fallback (2:37)
 
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration || isNaN(audio.duration)) return;
-  const pct = (audio.currentTime / audio.duration) * 100;
-  fill.style.width = pct + '%';
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-});
-audio.addEventListener('loadedmetadata', () => {
-  durationEl.textContent = formatTime(audio.duration);
-});
+    /* ---- convert seconds to mm:ss ---- */
+    function fmt(t) {
+      const m = Math.floor(t / 60);
+      const s = Math.floor(t % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
 
-progress.addEventListener('click', (e) => {
-  if (!audio.duration || isNaN(audio.duration)) return;
-  const rect = progress.getBoundingClientRect();
-  const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-  audio.currentTime = pct * audio.duration;
-});
-volume.addEventListener('input', () => { 
-  audio.volume = parseFloat(volume.value); 
-  updateVolumeIcon(audio.volume);
-});
+    /* ---- toggle play/pause ---- */
+    playPause.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playPause.textContent = '⏸';
+      } else {
+        audio.pause();
+        playPause.textContent = '▶️';
+      }
+    });
 
-function updateVolumeIcon(vol) {
-  if (vol === 0) {
-    volumeIcon.innerHTML = '<path d="M16.5 12l5-5-1.5-1.5L15 10.5V5h-2l-6 6H3v2h4l6 6h2v-5.5l5 5 1.5-1.5-5-5z"/>';
-  } else if (vol < 0.33) {
-    volumeIcon.innerHTML = '<path d="M11 5v14l-6-6H3V11h2l6-6z"/>';
-  } else if (vol < 0.66) {
-    volumeIcon.innerHTML = '<path d="M11 5v14l-6-6H3V11h2l6-6z"/><path d="M15 8.34v7.32c1.99-.77 3.42-2.65 3.42-4.66S16.99 9.11 15 8.34z"/>';
-  } else {
-    volumeIcon.innerHTML = '<path d="M11 5v14l-6-6H3V11h2l6-6z"/><path d="M15 5v14c3.31-1.25 5.5-4.42 5.5-7.5S18.31 6.25 15 5z"/>';
-  }
-}
+    /* ---- update progress bar & time ---- */
+    audio.addEventListener('timeupdate', () => {
+      const curr = audio.currentTime;
+      currentEl.textContent = fmt(curr);
+      const pct = (curr / duration) * 100;
+      barFill.style.width = pct + '%';
+    });
 
-function formatTime(s){
-  if (!s || isNaN(s)) return '0:00';
-  const m = Math.floor(s/60);
-  const sec = Math.floor(s%60).toString().padStart(2,'0');
-  return m + ':' + sec;
-}
+    /* ---- set duration when metadata loads ---- */
+    audio.addEventListener('loadedmetadata', () => {
+      duration = audio.duration || duration;
+      durationEl.textContent = fmt(duration);
+    });
 
-function initVisualizer(){
-  try{
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
-    dataArray = new Uint8Array(analyser.frequencyBinCount);
-    sourceNode = audioCtx.createMediaElementSource(audio);
-    sourceNode.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    renderGlow();
-  }catch(e){ console.warn('Visualizer error', e); }
-}
+    /* ---- allow clicking progress bar to seek ---- */
+    progressBar.addEventListener('click', e => {
+      const rect = progressBar.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = pct * duration;
+    });
 
-function renderGlow(){
-  if (!analyser) return;
-  analyser.getByteFrequencyData(dataArray);
-
-  const bassBins = 8;
-  let bassValue = 0;
-  for (let i=0; i<bassBins; i++){ bassValue += dataArray[i]; }
-  bassValue /= bassBins;
-
-  const targetGlow = 20 + (bassValue / 255) * 50;
-  currentGlowSize += (targetGlow - currentGlowSize) * 0.25;
-
-  vinyl.style.boxShadow =
-    `0 0 ${currentGlowSize}px ${currentGlowSize/5}px var(--accentA),
-     0 0 ${currentGlowSize*2}px ${currentGlowSize/2.5}px var(--accentB)`;
-
-  requestAnimationFrame(renderGlow);
-}
-</script>
+    /* ---- placeholder actions for prev/next ---- */
+    document.getElementById('prev').addEventListener('click', () => {
+      audio.currentTime = 0;
+    });
+    document.getElementById('next').addEventListener('click', () => {
+      audio.currentTime = duration - 1;
+    });
+  </script>
 </body>
 </html>
