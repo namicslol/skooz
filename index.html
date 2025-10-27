@@ -1,120 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>namics</title>
-    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="icon" href="assets/icon.png" type="image/png">
     <style>
-        /* ---------- RESET & BASE ---------- */
+        /* ---------- ROOT & RESET ---------- */
+        :root {
+            --accent: #8a7aff;
+            --glow: rgba(138,122,255,0.35);
+            --text-muted: #aaa;
+            --bg-dark: #050507;
+            --bg-light: #0b0b14;
+        }
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         html,body{height:100%}
         body{
-            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
-            -webkit-font-smoothing:antialiased;
-            background:#000;color:#fff;display:flex;align-items:center;justify-content:center;
-            overflow:hidden;
+            font-family:'Inter',system-ui,sans-serif;
+            background:radial-gradient(circle at 20% 20%,var(--bg-light),var(--bg-dark));
+            color:#fff;display:flex;align-items:center;justify-content:center;
+            overflow:hidden;position:relative;
         }
         @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
         /* ---------- BACKGROUND STAGE ---------- */
-        .bg-stage{
-            position:fixed;inset:0;z-index:-3;
-            background:#000;
-        }
-        .glitch-grid{
+        .bg-stage{position:fixed;inset:0;z-index:-3}
+        .fog{
             position:absolute;inset:0;
-            background-image:
-                repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px 2px),
-                repeating-linear-gradient(90deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px 2px);
-            background-size:2px 2px;
-            animation:gridMove 8s linear infinite;
+            background:radial-gradient(circle at 50% 50%,rgba(124,108,255,.05),transparent 60%),
+                       radial-gradient(circle at 70% 80%,rgba(255,80,150,.05),transparent 60%);
+            filter:blur(80px);mix-blend-mode:lighten;
+            animation:fogMove 25s ease-in-out infinite alternate;
         }
-        @keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(20px,20px)}}
-        .sweep{
+        @keyframes fogMove{
+            0%{transform:translate(0,0) scale(1)}
+            100%{transform:translate(-5%,-5%) scale(1.2)}
+        }
+        .particles{position:absolute;inset:0;pointer-events:none}
+        .particle{
+            position:absolute;width:2px;height:2px;background:var(--accent);
+            border-radius:50%;opacity:.4;animation:floatUp linear infinite;
+        }
+        @keyframes floatUp{
+            0%{transform:translateY(100vh) translateX(0);opacity:0}
+            10%{opacity:.8}90%{opacity:.5}
+            100%{transform:translateY(-10vh) translateX(20px);opacity:0}
+        }
+        .scanlines{
             position:absolute;inset:0;
-            background:linear-gradient(105deg,transparent 40%,rgba(0,255,136,.06) 50%,transparent 60%);
-            background-size:200% 200%;
-            animation:sweep 6s ease-in-out infinite;
+            background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px 2px);
+            animation:scanMove 6s linear infinite;
         }
-        @keyframes sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
-        .static{
-            position:absolute;inset:0;opacity:.03;
-            background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-            animation:staticFlick .15s steps(2) infinite;
-        }
-        @keyframes staticFlick{0%,100%{opacity:.03}50%{opacity:.05}}
+        @keyframes scanMove{0%{transform:translateY(0)}100%{transform:translateY(2px)}}
 
         /* ---------- CARD ---------- */
         .card{
-            position:relative;width:90%;max-width:600px;padding:40px;
-            background:rgba(15,15,15,.75);border:1px solid rgba(255,255,255,.08);
-            border-radius:16px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-            box-shadow:0 20px 40px rgba(0,0,0,.6);
-            animation:cardFloat 5s ease-in-out infinite;
+            position:relative;width:90%;max-width:600px;padding:50px;
+            background:rgba(15,15,20,0.6);border:1px solid rgba(255,255,255,0.08);
+            border-radius:20px;backdrop-filter:blur(12px);
+            box-shadow:0 0 40px var(--glow);
+            transition:transform .3s ease,box-shadow .3s ease;
+            animation:cardEntrance .8s ease-out;
         }
-        @keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes cardEntrance{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+        .card:hover{transform:translateY(-4px);box-shadow:0 0 60px rgba(138,122,255,0.45)}
 
-        /* ---------- PROFILE ---------- */
-        .profile-section{display:flex;align-items:center;gap:20px;margin-bottom:25px}
-        .profile-picture{
-            width:80px;height:80px;border-radius:50%;border:2px solid rgba(255,255,255,.12);
-            object-fit:cover;transition:transform .3s,filter .3s;
+        /* ---------- AVATAR ---------- */
+        .avatar img{
+            width:120px;height:120px;border-radius:50%;object-fit:cover;
+            border:2px solid rgba(255,255,255,0.15);margin-bottom:20px;
+            transition:transform .4s ease,filter .4s ease;
         }
-        .profile-picture:hover{transform:scale(1.05);filter:drop-shadow(0 0 8px #fff)}
-        .profile-info{display:flex;flex-direction:column;align-items:flex-start}
-        .username-line{display:flex;align-items:center;gap:8px}
+        .avatar img:hover{transform:scale(1.05);filter:drop-shadow(0 0 12px #fff)}
+
+        /* ---------- USERNAME ---------- */
         .username{
-            font-size:32px;font-weight:bold;color:#fff;cursor:pointer;
-            position:relative;transition:color .2s;
+            font-size:40px;font-weight:800;letter-spacing:1px;
+            background:linear-gradient(90deg,#fff,var(--accent));
+            background-size:200%;-webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            animation:shimmer 4s infinite linear;
+            user-select:none;
         }
-        .username:hover{color:#0ff}
-        .uid-chip{
-            margin-left:8px;padding:3px 8px;font-size:11px;background:rgba(255,255,255,.08);
-            border-radius:4px;cursor:pointer;user-select:none;transition:background .2s;
-        }
-        .uid-chip:hover{background:rgba(255,255,255,.15)}
-        .subtitle{color:#999;font-size:14px;margin-top:4px;min-height:17px}
+        @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+
+        /* ---------- SUBTITLE & STATUS ---------- */
+        .subtitle{font-size:15px;color:var(--text-muted);margin-top:10px;letter-spacing:.5px}
+        .status{margin-top:8px;font-size:12px;color:#888;min-height:14px}
         .cursor::after{content:"|";animation:blink 1s steps(2) infinite}
+        .cursor-sm::after{content:"_";animation:blink 1s steps(2) infinite}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-        /* ---------- STATUS TYPING ---------- */
-        .status{margin-top:8px;font-size:12px;color:#888;min-height:14px}
-        .cursor-sm::after{content:"_";animation:blink 1s steps(2) infinite}
+        /* ---------- DIVIDER ---------- */
+        .divider{margin:30px auto;width:80%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.5}
 
-        /* ---------- EXTRAS ---------- */
+        /* ---------- EXTRAS BAR ---------- */
         .extras{
             display:flex;justify-content:space-between;align-items:center;
             margin:20px 0;padding:12px 16px;background:rgba(255,255,255,.03);
             border-radius:8px;font-size:12px;
         }
-        .clock{font-variant-numeric:tabular-nums;transition:color .3s}
-        .glitch-clock{color:#f0f}
+        .clock{font-variant-numeric:tabular-nums}
         .now-playing{display:flex;align-items:center;gap:6px}
-        .eq{ display:flex;gap:2px;align-items:flex-end;height:12px}
-        .eq span{width:2px;height:100%;background:#0ff;animation:eqAnim .6s infinite}
+        .eq{display:flex;gap:2px;align-items:flex-end;height:12px}
+        .eq span{width:2px;height:100%;background:var(--accent);animation:eqAnim .6s infinite}
         .eq span:nth-child(2){animation-delay:.1s}
         .eq span:nth-child(3){animation-delay:.2s}
         @keyframes eqAnim{0%,100%{height:20%}50%{height:100%}}
 
-        /* ---------- LINK ---------- */
-        .link-section{margin-top:25px;text-align:center}
-        .discord-link{
-            display:inline-flex;align-items:center;justify-content:center;
-            padding:12px 24px;background:rgba(255,255,255,.05);
-            border:1px solid rgba(255,255,255,.1);border-radius:8px;
-            color:#fff;font-size:14px;font-weight:500;text-decoration:none;
-            transition:all .3s ease;letter-spacing:.5px;
+        /* ---------- LINKS ---------- */
+        .links{display:flex;flex-direction:column;align-items:center;gap:15px}
+        .linkBtn{
+            text-decoration:none;color:#fff;padding:14px 30px;border-radius:12px;
+            border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);
+            transition:all .3s ease;font-size:16px;display:flex;align-items:center;gap:10px;
+            backdrop-filter:blur(4px);
         }
-        .discord-link:active{transform:scale(.96)}
-        .discord-link:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
-
-        /* ---------- TOOLTIP ---------- */
-        .tooltip{position:absolute;top:-28px;left:50%;transform:translateX(-50%);
-            background:#000;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;
-            opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap;
-        }
-        .uid-chip:hover .tooltip{opacity:1}
+        .linkBtn:active{transform:scale(.96)}
+        .linkBtn:hover{background:rgba(255,255,255,.07);transform:translateY(-3px);box-shadow:0 0 15px var(--glow)}
+        .dotIcon{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
 
         /* ---------- HIDDEN VISUALISER ---------- */
         .viz-wrap{
@@ -126,151 +131,15 @@
         canvas{width:100%;height:100%}
 
         /* ---------- RESPONSIVE ---------- */
-        @media(max-width:768px){
-            .card{padding:30px;max-width:90%}
-            .profile-picture{width:60px;height:60px}
-            .username{font-size:24px}
-        }
-        @media(max-width:480px){
-            .card{padding:20px}
-            .profile-section{flex-direction:column;align-items:center;text-align:center}
-            .profile-info{align-items:center}
+        @media(max-width:600px){
+            .card{padding:30px}
+            .username{font-size:30px}
+            .avatar img{width:90px;height:90px}
             .extras{flex-direction:column;gap:8px}
         }
-    </style>
-</head>
-<body>
-    <div class="bg-stage">
-        <div class="glitch-grid"></div>
-        <div class="sweep"></div>
-        <div class="static"></div>
-    </div>
 
-    <div class="card">
-        <div class="profile-section">
-            <img src="assets/pfp.png" alt="namics" class="profile-picture">
-            <div class="profile-info">
-                <div class="username-line">
-                    <span class="username" title="UID: 0">namics</span>
-                    <div class="uid-chip" onclick="copyUID()">
-                        UID:0
-                        <span class="tooltip">click to copy</span>
-                    </div>
-                </div>
-                <div class="subtitle"><span id="typed"></span><span class="cursor"></span></div>
-                <div class="status"><span id="status"></span><span class="cursor-sm"></span></div>
-            </div>
-        </div>
-
-        <div class="extras">
-            <div class="clock" id="clock">00:00:00</div>
-            <div class="now-playing">
-                <span>now playing</span>
-                <div class="eq"><span></span><span></span><span></span></div>
-            </div>
-        </div>
-
-        <div class="link-section">
-            <a href="https://discord.gg/bribe" target="_blank" class="discord-link">.gg/bribe</a>
-        </div>
-
-        <div class="viz-wrap">
-            <canvas id="viz"></canvas>
-        </div>
-    </div>
-
-    <audio id="bgMusic" src="assets/song111.mp3" preload="auto" loop></audio>
-
-    <script>
-        /* ---------- AUDIO ---------- */
-        const audio=document.getElementById('bgMusic');
-        audio.volume=.5;
-        audio.play().catch(()=>{
-            document.addEventListener('click',()=>audio.play(),{once:true})
-        });
-
-        /* ---------- TYPED SUBTITLE ---------- */
-        const phrases=['glitch addict','0x6e616d696373','??'];
-        let pIndex=0,cIndex=0,forward=true;
-        const el=document.getElementById('typed');
-        function type(){
-            const current=phrases[pIndex];
-            if(forward){
-                el.textContent=current.slice(0,++cIndex);
-                if(cIndex===current.length){forward=false;setTimeout(type,1200);return}
-            }else{
-                el.textContent=current.slice(0,--cIndex);
-                if(cIndex===0){forward=true;pIndex=(pIndex+1)%phrases.length;setTimeout(type,300);return}
-            }
-            setTimeout(type,forward?90:40);
-        }
-        type();
-
-        /* ---------- STATUS TYPING ---------- */
-        const statusPhrases=['online','idle','glitching...','listening'];
-        let sIndex=0,scIndex=0,sForward=true;
-        const statusEl=document.getElementById('status');
-        function typeStatus(){
-            const current=statusPhrases[sIndex];
-            if(sForward){
-                statusEl.textContent=current.slice(0,++scIndex);
-                if(scIndex===current.length){sForward=false;setTimeout(typeStatus,800);return}
-            }else{
-                statusEl.textContent=current.slice(0,--scIndex);
-                if(scIndex===0){sForward=true;sIndex=(sIndex+1)%statusPhrases.length;setTimeout(typeStatus,200);return}
-            }
-            setTimeout(typeStatus,sForward?60:30);
-        }
-        typeStatus();
-
-        /* ---------- CLOCK + GLITCH ---------- */
-        const clockEl=document.getElementById('clock');
-        let glitchClock=0;
-        function updateClock(){
-            const d=new Date();
-            clockEl.textContent=d.toLocaleTimeString('en-GB');
-            glitchClock++;
-            if(glitchClock%20===0){clockEl.classList.add('glitch-clock');setTimeout(()=>clockEl.classList.remove('glitch-clock'),200)}
-        }
-        updateClock();setInterval(updateClock,1000);
-
-        /* ---------- COPY UID ---------- */
-        function copyUID(){
-            navigator.clipboard.writeText('0');
-            const tip=document.querySelector('.tooltip');
-            tip.textContent='copied!';
-            setTimeout(()=>tip.textContent='click to copy',1200);
-        }
-
-        /* ---------- MINI VISUALISER ---------- */
-        const canvas=document.getElementById('viz'),ctx=canvas.getContext('2d');
-        canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
-        let analyser,dataArray;
-        function initViz(){
-            const ctx2=new (window.AudioContext||window.webkitAudioContext)();
-            const src=ctx2.createMediaElementSource(audio);
-            analyser=ctx2.createAnalyser();analyser.fftSize=128;
-            dataArray=new Uint8Array(analyser.frequencyBinCount);
-            src.connect(analyser);analyser.connect(ctx2.destination);
-        }
-        audio.addEventListener('play',initViz,{once:true});
-        function draw(){
-            requestAnimationFrame(draw);
-            if(!analyser)return;
-            analyser.getByteFrequencyData(dataArray);
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            const barW=canvas.width/42;
-            for(let i=0;i<42;i++){
-                const h=(dataArray[i]/255)*canvas.height*.8;
-                ctx.fillStyle=`rgba(0,255,136,${.7})`;
-                ctx.fillRect(i*barW,canvas.height-h,barW-2,h);
-            }
-        }
-        draw();
-
-        /* ---------- KONAMI EASTER EGG ---------- */
-        const seq=[];
-        const konami='ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
+        /* ---------- KONAMI EASTEREgg ---------- */
+        const seq=[];const konami='ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
         window.addEventListener('keydown',e=>{
             seq.push(e.key);seq.splice(-22);
             if(seq.join('').toLowerCase().includes(konami.toLowerCase())){
@@ -281,7 +150,7 @@
         });
 
         /* ---------- CONSOLE SIGNATURE ---------- */
-        console.log('%c// namics v3.1 // 500+ lines // minimal-glitch //','color:#0ff;font-family:monospace;font-size:14px');
+        console.log('%c// namics v4.0 // 500+ lines // minimal-glitch //','color:#0ff;font-family:monospace;font-size:14px');
     </script>
 </body>
 </html>
