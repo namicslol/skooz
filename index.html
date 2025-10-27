@@ -3,14 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>namics - digital id</title>
-    <meta name="description" content="A dark digital biolink">
-    
-    <!-- Space Grotesk Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>namics - Biolink</title>
+    <meta name="description" content="namics personal biolink page">
     <style>
         * {
             margin: 0;
@@ -19,350 +13,232 @@
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: hsl(0, 0%, 6%);
-            color: hsl(0, 0%, 95%);
-            letter-spacing: -0.01em;
-            overflow-x: hidden;
-        }
-
-        .grain-texture {
-            position: relative;
-            min-height: 100vh;
-            width: 100%;
-        }
-
-        .grain-texture::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-            opacity: 0.6;
-            pointer-events: none;
-            mix-blend-mode: overlay;
-            z-index: 1;
-        }
-
-        .background {
-            position: absolute;
-            inset: 0;
-            background-image: url('assets/background.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%) brightness(0.4);
-        }
-
-        .gradient-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent, rgba(0, 0, 0, 0.7));
-        }
-
-        .container {
-            position: relative;
-            z-index: 10;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #141414;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-        }
-
-        .card-wrapper {
-            width: 100%;
-            max-width: 42rem;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .glass-card {
-            background: hsla(0, 0%, 10%, 0.3);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid hsla(0, 0%, 30%, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-        }
-
-        .card-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .avatar-container {
-            flex-shrink: 0;
             position: relative;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            filter: brightness(0.3);
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 48rem;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(48px);
+            border-radius: 1.5rem;
+            border: 1px solid #2a2a2a;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
         .avatar {
             width: 5rem;
             height: 5rem;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .status-indicator {
-            position: absolute;
-            bottom: -0.25rem;
-            right: -0.25rem;
-            width: 1.25rem;
-            height: 1.25rem;
-            background: rgba(34, 197, 94, 0.8);
-            border-radius: 50%;
-            border: 2px solid hsl(0, 0%, 6%);
-            animation: glow 3s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% {
-                opacity: 0.5;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
-        .content-section {
-            flex: 1;
-            width: 100%;
-        }
-
-        .user-info {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .username {
-            font-size: 1.5rem;
-            font-weight: 500;
-            line-height: 1.2;
-            color: hsl(0, 0%, 95%);
-            text-transform: lowercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .status-text {
-            font-size: 0.75rem;
-            color: hsl(0, 0%, 60%);
-            text-transform: lowercase;
-            letter-spacing: 0.05em;
-        }
-
-        .divider {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin: 1.5rem 0;
-        }
-
-        .music-player {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .player-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.75rem;
-        }
-
-        .track-details {
-            flex: 1;
-        }
-
-        .track-title {
-            color: hsl(0, 0%, 95%);
-            text-transform: lowercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-        }
-
-        .track-album {
-            color: hsl(0, 0%, 60%);
-            text-transform: lowercase;
-            font-size: 0.625rem;
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: hsl(0, 0%, 60%);
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            transition: color 0.3s;
-        }
-
-        .control-btn:hover {
-            color: hsl(0, 0%, 95%);
-        }
-
-        .progress-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .progress-bar {
-            height: 0.25rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 9999px;
+            background-color: #2a2a2a;
+            flex-shrink: 0;
             overflow: hidden;
         }
 
-        .progress-fill {
+        .avatar img {
+            width: 100%;
             height: 100%;
-            width: 33.333%;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 9999px;
+            object-fit: cover;
         }
 
-        .progress-time {
+        .profile-info {
+            flex: 1;
+        }
+
+        .name-section {
             display: flex;
-            justify-content: space-between;
-            font-size: 0.625rem;
-            color: hsl(0, 0%, 60%);
-            text-transform: lowercase;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .footer-hint {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.625rem;
-            color: hsl(0, 0%, 60%);
-            text-transform: lowercase;
-            letter-spacing: 0.15em;
+        .name {
+            color: #6a6a6a;
+            font-size: 1.5rem;
+            font-weight: 500;
         }
 
-        @media (min-width: 768px) {
-            .container {
-                padding: 2rem;
+        .badges {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+        }
+
+        .badge {
+            width: 1.25rem;
+            height: 1.25rem;
+            opacity: 0.6;
+        }
+
+        .bio {
+            color: #6a6a6a;
+            font-size: 0.875rem;
+        }
+
+        .globe-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .globe-button {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background-color: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .globe-button:hover {
+            background-color: #333333;
+        }
+
+        .globe-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+            color: #6a6a6a;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6a6a6a;
+            font-size: 0.875rem;
+        }
+
+        .plus-icon {
+            opacity: 0.6;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 1.5rem;
             }
 
-            .glass-card {
-                padding: 2rem;
-            }
-
-            .card-content {
-                flex-direction: row;
-                align-items: center;
-                gap: 2rem;
+            .profile-section {
+                gap: 1rem;
             }
 
             .avatar {
-                width: 6rem;
-                height: 6rem;
+                width: 4rem;
+                height: 4rem;
             }
 
-            .user-info {
-                text-align: left;
-            }
-
-            .username {
-                font-size: 1.875rem;
+            .name {
+                font-size: 1.25rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="grain-texture">
-        <!-- Background -->
-        <div class="background"></div>
-        
-        <!-- Gradient overlay -->
-        <div class="gradient-overlay"></div>
-        
-        <!-- Content -->
-        <div class="container">
-            <div class="card-wrapper">
-                <!-- Glass Card -->
-                <div class="glass-card">
-                    <div class="card-content">
-                        <!-- Avatar -->
-                        <div class="avatar-container">
-                            <img src="assets/pfp.png" alt="profile" class="avatar">
-                            <div class="status-indicator"></div>
-                        </div>
+    <!-- Hidden audio element for background music -->
+    <audio id="bgMusic" loop>
+        <source src="assets/song.mp3" type="audio/mpeg">
+    </audio>
 
-                        <!-- Content Section -->
-                        <div class="content-section">
-                            <!-- Username & Status -->
-                            <div class="user-info">
-                                <h1 class="username">namics</h1>
-                                <p class="status-text">joined over 1 year ago</p>
-                            </div>
+    <!-- Background -->
+    <div class="background"></div>
 
-                            <!-- Divider -->
-                            <div class="divider"></div>
-
-                            <!-- Music Player -->
-                            <div class="music-player">
-                                <div class="player-info">
-                                    <div class="track-details">
-                                        <p class="track-title">nocturne in shadows</p>
-                                        <p class="track-album">ambient collection</p>
-                                    </div>
-                                    <div class="player-controls">
-                                        <button class="control-btn" aria-label="Previous track">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <polygon points="19 20 9 12 19 4 19 20"></polygon>
-                                                <line x1="5" y1="19" x2="5" y2="5"></line>
-                                            </svg>
-                                        </button>
-                                        <button class="control-btn" aria-label="Play">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                            </svg>
-                                        </button>
-                                        <button class="control-btn" aria-label="Next track">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <polygon points="5 4 15 12 5 20 5 4"></polygon>
-                                                <line x1="19" y1="5" x2="19" y2="19"></line>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Progress Bar -->
-                                <div class="progress-section">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill"></div>
-                                    </div>
-                                    <div class="progress-time">
-                                        <span>1:24</span>
-                                        <span>3:47</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Main Container -->
+    <div class="container">
+        <div class="card">
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <!-- Avatar -->
+                <div class="avatar">
+                    <img src="assets/pfp.png" alt="Profile" onerror="this.style.display='none'">
                 </div>
 
-                <!-- Footer hint -->
-                <p class="footer-hint">esc to exit</p>
+                <!-- Name and Badges -->
+                <div class="profile-info">
+                    <div class="name-section">
+                        <h1 class="name">namics</h1>
+                        
+                        <!-- Badges -->
+                        <div class="badges">
+                            <img src="assets/Owner.png" alt="Owner" class="badge" onerror="this.style.display='none'">
+                            <img src="assets/crown.png" alt="Crown" class="badge" onerror="this.style.display='none'">
+                            <img src="assets/premium.png" alt="Premium" class="badge" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <p class="bio">??</p>
+                </div>
+            </div>
+
+            <!-- Globe Button -->
+            <div class="globe-section">
+                <a href="https://discord.gg/bribe" target="_blank" rel="noopener noreferrer" class="globe-button">
+                    <svg class="globe-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="2" y1="12" x2="22" y2="12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="plus-icon">
+                    <path d="M6 1L6 11M1 6L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>.gg/bribe</span>
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-play background music after user interaction
+        const audio = document.getElementById('bgMusic');
+        
+        // Try to play immediately
+        audio.play().catch(() => {
+            // If blocked, play after first user interaction
+            const playOnInteraction = () => {
+                audio.play();
+                document.removeEventListener('click', playOnInteraction);
+                document.removeEventListener('keydown', playOnInteraction);
+            };
+            
+            document.addEventListener('click', playOnInteraction);
+            document.addEventListener('keydown', playOnInteraction);
+        });
+    </script>
 </body>
 </html>
