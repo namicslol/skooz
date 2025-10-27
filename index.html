@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>namics - Biolink</title>
-    <meta name="description" content="namics personal biolink page">
+    <title>namics</title>
     <style>
         * {
             margin: 0;
@@ -13,192 +12,191 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #141414;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #121212;
+            color: #e5e5e5;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            position: relative;
             overflow: hidden;
+            position: relative;
         }
 
-        .background {
+        body::before {
+            content: '';
             position: absolute;
             inset: 0;
-            background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.2;
-            filter: brightness(0.3);
+            background: linear-gradient(to bottom right, #121212, #1a1a1a, rgba(51, 51, 51, 0.2));
+            z-index: 0;
         }
 
         .container {
             position: relative;
-            z-index: 10;
+            z-index: 1;
             width: 100%;
             max-width: 48rem;
         }
 
         .card {
-            background: rgba(26, 26, 26, 0.5);
-            backdrop-filter: blur(48px);
-            border-radius: 1.5rem;
-            border: 1px solid #2a2a2a;
+            background: rgba(31, 31, 31, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid #333;
+            border-radius: 1rem;
             padding: 2rem;
-            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         .profile-section {
             display: flex;
-            align-items: flex-start;
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            align-items: flex-start;
         }
 
-        .avatar {
-            width: 5rem;
-            height: 5rem;
-            border-radius: 50%;
-            background-color: #2a2a2a;
+        .profile-pic {
             flex-shrink: 0;
-            overflow: hidden;
         }
 
-        .avatar img {
-            width: 100%;
-            height: 100%;
+        .profile-pic img {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 50%;
+            border: 2px solid #333;
             object-fit: cover;
         }
 
         .profile-info {
             flex: 1;
+            padding-top: 0.5rem;
         }
 
-        .name-section {
+        .username-container {
             display: flex;
             align-items: center;
-            gap: 0.375rem;
-            margin-bottom: 0.25rem;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .name {
-            color: #6a6a6a;
+        .username {
             font-size: 1.5rem;
-            font-weight: 500;
-            cursor: help;
+            font-weight: 700;
+            color: #e5e5e5;
             position: relative;
+            cursor: default;
         }
 
-        .name::before {
-            content: 'UID 0';
+        .username::before {
+            content: 'UID: 0';
             position: absolute;
             bottom: 100%;
             left: 0;
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
+            margin-bottom: 0.5rem;
+            background: rgba(31, 31, 31, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.75rem;
-            font-weight: 500;
             white-space: nowrap;
+            border: 1px solid #333;
+            font-weight: 400;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s;
-            margin-bottom: 0.25rem;
         }
 
-        .name:hover::before {
+        .username:hover::before {
             opacity: 1;
         }
 
         .badges {
             display: flex;
-            gap: 0.125rem;
+            gap: 0.25rem;
             align-items: center;
         }
 
         .badge {
-            width: 1.5rem;
-            height: 1.5rem;
-            opacity: 0.6;
-            cursor: help;
-            transition: opacity 0.2s;
             position: relative;
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: transform 0.2s;
         }
 
         .badge:hover {
-            opacity: 1;
+            transform: scale(1.1);
         }
 
-        .badge::before {
-            content: attr(data-tooltip);
+        .badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .badge-tooltip {
             position: absolute;
-            bottom: 100%;
+            top: -2rem;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
+            background: rgba(31, 31, 31, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.75rem;
-            font-weight: 500;
             white-space: nowrap;
+            border: 1px solid #333;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s;
-            margin-bottom: 0.25rem;
         }
 
-        .badge:hover::before {
+        .badge:hover .badge-tooltip {
             opacity: 1;
         }
 
-        .bio {
-            color: #6a6a6a;
+        .status {
+            color: #999;
             font-size: 0.875rem;
+            margin-top: 0.5rem;
         }
 
-        .globe-section {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .globe-button {
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            background-color: #2a2a2a;
+        .link-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s;
+            gap: 0.75rem;
+            width: 100%;
+            background: rgba(51, 51, 51, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid #333;
+            border-radius: 0.75rem;
+            padding: 1rem;
             text-decoration: none;
+            color: #999;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
             cursor: pointer;
         }
 
-        .globe-button:hover {
-            background-color: #333333;
+        .link-button:hover {
+            background: rgba(51, 51, 51, 0.7);
+            transform: scale(1.02);
         }
 
-        .globe-icon {
-            width: 1.75rem;
-            height: 1.75rem;
-            color: #6a6a6a;
+        .link-button svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: rgba(229, 229, 229, 0.7);
+            transition: color 0.2s;
         }
 
-        .footer {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #6a6a6a;
-            font-size: 0.875rem;
-        }
-
-        .plus-icon {
-            opacity: 0.6;
+        .link-button:hover svg {
+            color: #e5e5e5;
         }
 
         @media (max-width: 640px) {
@@ -210,89 +208,85 @@
                 gap: 1rem;
             }
 
-            .avatar {
+            .profile-pic img {
                 width: 4rem;
                 height: 4rem;
             }
 
-            .name {
+            .username {
                 font-size: 1.25rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Hidden audio element for background music -->
-    <audio id="bgMusic" loop>
+    <!-- Audio element (hidden, auto-play) -->
+    <audio id="bgMusic" loop autoplay>
         <source src="assets/song.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Background -->
-    <div class="background"></div>
-
-    <!-- Main Container -->
     <div class="container">
         <div class="card">
-            <!-- Profile Section -->
+            <!-- Profile section -->
             <div class="profile-section">
-                <!-- Avatar -->
-                <div class="avatar">
-                    <img src="assets/pfp.png" alt="Profile" onerror="this.style.display='none'">
+                <!-- Profile picture -->
+                <div class="profile-pic">
+                    <img src="assets/pfp.png" alt="Profile">
                 </div>
 
-                <!-- Name and Badges -->
+                <!-- Username and badges -->
                 <div class="profile-info">
-                    <div class="name-section">
-                        <h1 class="name">namics</h1>
+                    <!-- Username with badges -->
+                    <div class="username-container">
+                        <span class="username">namics</span>
                         
                         <!-- Badges -->
                         <div class="badges">
-                            <img src="assets/Owner.png" alt="Owner" class="badge" data-tooltip="Owner" onerror="this.style.display='none'">
-                            <img src="assets/crown.png" alt="Crown" class="badge" data-tooltip="Crown" onerror="this.style.display='none'">
-                            <img src="assets/premium.png" alt="Premium" class="badge" data-tooltip="Premium" onerror="this.style.display='none'">
+                            <div class="badge">
+                                <img src="assets/Owner.png" alt="Owner">
+                                <div class="badge-tooltip">Owner</div>
+                            </div>
+                            <div class="badge">
+                                <img src="assets/crown.png" alt="Crown">
+                                <div class="badge-tooltip">Crown</div>
+                            </div>
+                            <div class="badge">
+                                <img src="assets/icon.png" alt="Icon">
+                                <div class="badge-tooltip">Icon</div>
+                            </div>
+                            <div class="badge">
+                                <img src="assets/premium.png" alt="Premium">
+                                <div class="badge-tooltip">Premium</div>
+                            </div>
                         </div>
                     </div>
-                    <p class="bio">??</p>
+
+                    <!-- Status text -->
+                    <p class="status">??</p>
                 </div>
             </div>
 
-            <!-- Globe Button -->
-            <div class="globe-section">
-                <a href="https://discord.gg/bribe" target="_blank" rel="noopener noreferrer" class="globe-button">
-                    <svg class="globe-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <line x1="2" y1="12" x2="22" y2="12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </a>
-            </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="plus-icon">
-                    <path d="M6 1L6 11M1 6L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Link button -->
+            <a href="https://discord.gg/bribe" target="_blank" rel="noopener noreferrer" class="link-button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                    <path d="M12 16v-4m0-4h.01" stroke-width="2" stroke-linecap="round"/>
                 </svg>
                 <span>.gg/bribe</span>
-            </div>
+            </a>
         </div>
     </div>
 
     <script>
-        // Auto-play background music after user interaction
-        const audio = document.getElementById('bgMusic');
-        
-        // Try to play immediately
-        audio.play().catch(() => {
-            // If blocked, play after first user interaction
-            const playOnInteraction = () => {
-                audio.play();
-                document.removeEventListener('click', playOnInteraction);
-                document.removeEventListener('keydown', playOnInteraction);
-            };
-            
-            document.addEventListener('click', playOnInteraction);
-            document.addEventListener('keydown', playOnInteraction);
-        });
+        // Attempt to play audio on user interaction if autoplay fails
+        document.addEventListener('click', function() {
+            var audio = document.getElementById('bgMusic');
+            if (audio.paused) {
+                audio.play().catch(function(error) {
+                    console.log('Audio playback failed:', error);
+                });
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
