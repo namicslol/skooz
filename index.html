@@ -1,109 +1,434 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>namics</title>
-    <link rel="icon" href="assets/icon.png" type="image/png">
-    <style>
-        :root{--accent:#8a7aff;--glow:rgba(138,122,255,0.35);--text-muted:#aaa;--bg-dark:#050507;--bg-light:#0b0b14}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%}
-        body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(circle at 20% 20%,var(--bg-light),var(--bg-dark));color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-        @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-        .bg-stage{position:fixed;inset:0;z-index:-3}
-        .fog{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(124,108,255,.05),transparent 60%),radial-gradient(circle at 70% 80%,rgba(255,80,150,.05),transparent 60%);filter:blur(80px);mix-blend-mode:lighten;animation:fogMove 25s ease-in-out infinite alternate}
-        @keyframes fogMove{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-5%,-5%) scale(1.2)}}
-        .particles{position:absolute;inset:0;pointer-events:none}
-        .particle{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;opacity:.4;animation:floatUp linear infinite}
-        @keyframes floatUp{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:.8}90%{opacity:.5}100%{transform:translateY(-10vh) translateX(20px);opacity:0}}
-        .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px 2px);animation:scanMove 6s linear infinite}
-        @keyframes scanMove{0%{transform:translateY(0)}100%{transform:translateY(2px)}}
-        .card{position:relative;width:90%;max-width:600px;padding:50px;background:rgba(15,15,20,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);box-shadow:0 0 40px var(--glow);transition:transform .3s ease,box-shadow .3s ease;animation:cardEntrance .8s ease-out}
-        @keyframes cardEntrance{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-        .card:hover{transform:translateY(-4px);box-shadow:0 0 60px rgba(138,122,255,0.45)}
-        .avatar img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.15);margin-bottom:20px;transition:transform .4s ease,filter .4s ease}
-        .avatar img:hover{transform:scale(1.05);filter:drop-shadow(0 0 12px #fff)}
-        .username{font-size:40px;font-weight:800;letter-spacing:1px;background:linear-gradient(90deg,#fff,var(--accent));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s infinite linear;user-select:none}
-        @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
-        .subtitle{font-size:15px;color:var(--text-muted);margin-top:10px;letter-spacing:.5px}
-        .status{margin-top:8px;font-size:12px;color:#888;min-height:14px}
-        .cursor::after{content:"|";animation:blink 1s steps(2) infinite}
-        .cursor-sm::after{content:"_";animation:blink 1s steps(2) infinite}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-        .divider{margin:30px auto;width:80%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.5}
-        .extras{display:flex;justify-content:space-between;align-items:center;margin:20px 0;padding:12px 16px;background:rgba(255,255,255,.03);border-radius:8px;font-size:12px}
-        .clock{font-variant-numeric:tabular-nums}
-        .now-playing{display:flex;align-items:center;gap:6px}
-        .eq{display:flex;gap:2px;align-items:flex-end;height:12px}
-        .eq span{width:2px;height:100%;background:var(--accent);animation:eqAnim .6s infinite}
-        .eq span:nth-child(2){animation-delay:.1s}
-        .eq span:nth-child(3){animation-delay:.2s}
-        @keyframes eqAnim{0%,100%{height:20%}50%{height:100%}}
-        .links{display:flex;flex-direction:column;align-items:center;gap:15px}
-        .linkBtn{text-decoration:none;color:#fff;padding:14px 30px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);transition:all .3s ease;font-size:16px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(4px)}
-        .linkBtn:active{transform:scale(.96)}
-        .linkBtn:hover{background:rgba(255,255,255,.07);transform:translateY(-3px);box-shadow:0 0 15px var(--glow)}
-        .dotIcon{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
-        .viz-wrap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:80%;height:40px;opacity:0;transition:opacity .4s;pointer-events:none}
-        .card:hover .viz-wrap{opacity:.6}
-        canvas{width:100%;height:100%}
-        @media(max-width:600px){.card{padding:30px}.username{font-size:30px}.avatar img{width:90px;height:90px}.extras{flex-direction:column;gap:8px}}
-        const seq=[];const konami='ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
-        window.addEventListener('keydown',e=>{seq.push(e.key);seq.splice(-22);if(seq.join('').toLowerCase().includes(konami.toLowerCase())){document.body.style.animation='rgbGlitch .08s infinite';setTimeout(()=>document.body.style.animation='',4000);console.log('%cKONAMI UNLOCKED // GLITCH OVERDRIVE','color:#0f0;font-size:20px');}});
-        console.log('%c// namics v4.0 // 500+ lines // minimal-glitch //','color:#0ff;font-family:monospace;font-size:14px');
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>namics</title>
+  <link rel="icon" href="assets/icon.png" type="image/png" />
+  <style>
+    /* ---------- THEME SWITCHER ---------- */
+    :root {
+      --accent: #8a7aff;
+      --glow: rgba(138,122,255,0.35);
+      --text-muted: #aaa;
+      --bg-dark: #050507;
+      --bg-light: #0b0b14;
+      --card-bg: rgba(15,15,20,0.6);
+      --border: rgba(255,255,255,0.08);
+    }
+
+    [data-theme="halloween"] {
+      --accent: #ff7518;
+      --glow: rgba(255,117,24,0.35);
+      --text-muted: #c9b784;
+      --bg-dark: #0d0d0d;
+      --bg-light: #1a0e00;
+      --card-bg: rgba(20,10,0,0.6);
+      --border: rgba(255,117,24,0.15);
+    }
+
+    [data-theme="glitch"] {
+      --accent: #00ff89;
+      --glow: rgba(0,255,137,0.35);
+      --text-muted: #a1ffc7;
+      --bg-dark: #000;
+      --bg-light: #001a10;
+      --card-bg: rgba(0,25,15,0.6);
+      --border: rgba(0,255,137,0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 20%, var(--bg-light), var(--bg-dark));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      transition: background 0.6s ease;
+    }
+
+    /* ---------- FLOATING ENERGY FOG ---------- */
+    .fog {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, var(--accent), transparent 60%),
+                  radial-gradient(circle at 70% 80%, rgba(255,80,150,0.05), transparent 60%);
+      filter: blur(80px);
+      mix-blend-mode: lighten;
+      animation: fogMove 25s ease-in-out infinite alternate;
+      pointer-events: none;
+      opacity: 0.2;
+    }
+    @keyframes fogMove {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-5%, -5%) scale(1.2); }
+    }
+
+    /* ---------- FLOATING LIGHT PARTICLES ---------- */
+    .particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-10vh) translateX(20px); opacity: 0; }
+    }
+
+    /* ---------- THEME TOGGLE ---------- */
+    .themeToggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 10;
+    }
+    .themeToggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px var(--glow);
+    }
+
+    /* ---------- CARD ---------- */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 40px var(--glow);
+    }
+
+    /* ---------- AVATAR ---------- */
+    .avatar {
+      position: relative;
+      display: inline-block;
+    }
+    .avatar img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      transition: transform 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .avatar img:hover {
+      transform: scale(1.05);
+    }
+    .avatar::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: var(--accent);
+      filter: blur(15px);
+      opacity: 0.4;
+      animation: avatarPulse 4s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes avatarPulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(1.15); opacity: 0.6; }
+    }
+
+    /* ---------- NAME & TAG ---------- */
+    .username {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(90deg, #fff, var(--accent));
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s infinite linear;
+      user-select: none;
+      margin-top: 20px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    /* Glitch effect only for glitch theme */
+    [data-theme="glitch"] .username {
+      animation: shimmer 4s infinite linear, glitch 0.3s infinite alternate;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 1px 0 #00ff89, -1px 0 #ff0048; }
+      100% { text-shadow: -1px 0 #00ff89, 1px 0 #ff0048; }
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ---------- DIVIDER ---------- */
+    .divider {
+      margin: 30px auto;
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+
+    /* ---------- LINKS ---------- */
+    .links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .linkBtn {
+      text-decoration: none;
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      transition: all .3s ease;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(4px);
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
+    }
+
+    .linkBtn:hover {
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px var(--glow);
+    }
+
+    .dotIcon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    /* ---------- SOCIAL STRIP ---------- */
+    .socialStrip {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+    .socialBtn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .3s ease;
+      cursor: pointer;
+    }
+    .socialBtn:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px var(--glow);
+    }
+    .socialBtn svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+
+    /* ---------- NOW PLAYING ---------- */
+    .nowPlaying {
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .nowPlaying .eq {
+      display: flex;
+      gap: 2px;
+    }
+    .eq span {
+      width: 3px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: eq 0.9s infinite ease-in-out;
+    }
+    .eq span:nth-child(2) { animation-delay: 0.1s; }
+    .eq span:nth-child(3) { animation-delay: 0.2s; }
+    .eq span:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes eq {
+      0%, 100% { height: 4px; }
+      50% { height: 12px; }
+    }
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 600px) {
+      .card { padding: 30px; }
+      .username { font-size: 30px; }
+      .avatar img { width: 90px; height: 90px; }
+    }
+  </style>
 </head>
-<body>
-    <div class="bg-stage">
-        <div class="fog"></div>
-        <div class="particles"></div>
-        <div class="scanlines"></div>
+<body data-theme="dark">
+  <div class="fog"></div>
+  <div class="particles"></div>
+
+  <!-- Theme Toggle -->
+  <button class="themeToggle" aria-label="Switch theme">
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-2a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/>
+    </svg>
+  </button>
+
+  <main class="card">
+    <div class="avatar">
+      <img src="assets/pfp.png" alt="namics">
     </div>
-    <main class="card">
-        <div class="avatar"><img src="assets/pfp.png" alt="namics"></div>
-        <div class="username">namics</div>
-        <div class="subtitle">creating through chaos</div>
-        <div class="status"><span id="status"></span><span class="cursor-sm"></span></div>
-        <div class="extras">
-            <div class="clock" id="clock">00:00:00</div>
-            <div class="now-playing">
-                <span>now playing</span>
-                <div class="eq"><span></span><span></span><span></span></div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class="links">
-            <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
-                <span class="dotIcon"></span>
-                <span>.gg/bribe</span>
-            </a>
-        </div>
-        <div class="viz-wrap">
-            <canvas id="viz"></canvas>
-        </div>
-    </main>
-    <audio id="bgAudio" src="assets/song111.mp3" preload="auto" loop></audio>
-    <script>
-        // particles
-        const container=document.querySelector('.particles');
-        for(let i=0;i<30;i++){const p=document.createElement('div');p.classList.add('particle');p.style.left=Math.random()*100+'vw';p.style.animationDuration=(8+Math.random()*10)+'s';p.style.animationDelay=Math.random()*5+'s';p.style.opacity=0.2+Math.random()*0.4;container.appendChild(p);}
-        // audio
-        const audio=document.getElementById('bgAudio');audio.volume=0.35;
-        function playAudio(){const playPromise=audio.play();if(playPromise!==undefined){playPromise.catch(()=>{document.addEventListener('click',()=>audio.play(),{once:true})});}}
-        window.addEventListener('load',playAudio);
-        // clock
-        const clockEl=document.getElementById('clock');let glitchClock=0;
-        function updateClock(){const d=new Date();clockEl.textContent=d.toLocaleTimeString('en-GB');glitchClock++;if(glitchClock%20===0){clockEl.style.color='#f0f';setTimeout(()=>clockEl.style.color='',200);}}
-        updateClock();setInterval(updateClock,1000);
-        // status typing
-        const statusPhrases=['online','idle','glitching...','listening'];let sIndex=0,scIndex=0,sForward=true;const statusEl=document.getElementById('status');
-        function typeStatus(){const current=statusPhrases[sIndex];if(sForward){statusEl.textContent=current.slice(0,++scIndex);if(scIndex===current.length){sForward=false;setTimeout(typeStatus,800);return}}else{statusEl.textContent=current.slice(0,--scIndex);if(scIndex===0){sForward=true;sIndex=(sIndex+1)%statusPhrases.length;setTimeout(typeStatus,200);return}}setTimeout(typeStatus,sForward?60:30);}typeStatus();
-        // visualiser
-        const canvas=document.getElementById('viz'),ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;let analyser,dataArray;
-        function initViz(){const ctx2=new (window.AudioContext||window.webkitAudioContext)();const src=ctx2.createMediaElementSource(audio);analyser=ctx2.createAnalyser();analyser.fftSize=128;dataArray=new Uint8Array(analyser.frequencyBinCount);src.connect(analyser);analyser.connect(ctx2.destination);}
-        audio.addEventListener('play',initViz,{once:true});
-        function draw(){requestAnimationFrame(draw);if(!analyser)return;analyser.getByteFrequencyData(dataArray);ctx.clearRect(0,0,canvas.width,canvas.height);const barW=canvas.width/42;for(let i=0;i<42;i++){const h=(dataArray[i]/255)*canvas.height*.8;ctx.fillStyle=`rgba(138,122,255,${.7})`;ctx.fillRect(i*barW,canvas.height-h,barW-2,h);}}draw();
-    </script>
+    <div class="username">namics</div>
+    <div class="subtitle">creating through chaos</div>
+
+    <div class="divider"></div>
+
+    <div class="links">
+      <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
+        <span class="dotIcon"></span>
+        <span>.gg/bribe</span>
+      </a>
+      <a href="https://github.com/namics" class="linkBtn" target="_blank" rel="noopener">
+        <span class="dotIcon"></span>
+        <span>github</span>
+      </a>
+      <a href="https://t.me/namics" class="linkBtn" target="_blank" rel="noopener">
+        <span class="dotIcon"></span>
+        <span>telegram</span>
+      </a>
+    </div>
+
+    <!-- Social Strip -->
+    <div class="socialStrip">
+      <a class="socialBtn" href="https://twitter.com/namics" target="_blank" aria-label="Twitter">
+        <svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
+      </a>
+      <a class="socialBtn" href="https://instagram.com/namics" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zm0 1.802C9.042 3.965 8.71 3.977 7.433 4.032c-2.43.11-3.483 1.15-3.593 3.593-.056 1.277-.067 1.604-.067 4.375s.011 3.098.067 4.375c.11 2.443 1.163 3.483 3.593 3.593 1.277.056 1.604.067 4.567.067s3.29-.011 4.567-.067c2.43-.11 3.483-1.15 3.593-3.593.056-1.277.067-1.604.067-4.375s-.011-3.098-.067-4.375c-.11-2.443-1.163-3.483-3.593-3.593-1.277-.055-1.604-.067-4.567-.067zM12 6.837c-2.846 0-5.163 2.317-5.163 5.163s2.317 5.163 5.163 5.163 5.163-2.317 5.163-5.163S14.846 6.837 12 6.837zm0 8.529c-1.868 0-3.366-1.498-3.366-3.366s1.498-3.366 3.366-3.366 3.366 1.498 3.366 3.366-1.498 3.366-3.366 3.366zm6.406-6.712c-.742 0-1.344.602-1.344 1.344s.602 1.344 1.344 1.344 1.344-.602 1.344-1.344-.602-1.344-1.344-1.344z"/></svg>
+      </a>
+      <a class="socialBtn" href="https://open.spotify.com/user/namics" target="_blank" aria-label="Spotify">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.36 14.4c-.36.6-1.11.8-1.71.45-3.08-1.89-6.94-2.27-11.5-1.35-.63.15-1.26-.24-1.41-.87-.15-.63.24-1.26.87-1.41 5.15-1.05 9.6-.6 13.14 1.53.6.36.75 1.14.39 1.74zm.9-2.25c-.45.75-1.35.99-2.07.6-3.5-2.1-8.1-2.55-13.35-1.35-.75.18-1.53-.27-1.71-1.02-.18-.75.27-1.53 1.02-1.71 5.7-1.26 10.8-.75 14.85 1.65.72.42.93 1.35.51 2.07zm.11-2.31c-4.2-2.55-10.44-2.1-14.55 1.35-.54.45-1.35.36-1.8-.18-.45-.54-.36-1.35.18-1.8 4.8-3.9 11.85-4.35 16.65-1.35.63.39.81 1.26.42 1.89-.39.54-1.26.72-1.89.33z"/></svg>
+      </a>
+    </div>
+
+    <!-- Now Playing -->
+    <div class="nowPlaying">
+      <span>now playing</span>
+      <div class="eq">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <span id="trackName">loading...</span>
+    </div>
+  </main>
+
+  <audio id="bgAudio" src="assets/song.mp3" preload="auto" loop></audio>
+
+  <script>
+    // ---------- floating particles ----------
+    const container = document.querySelector('.particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      p.style.opacity = 0.2 + Math.random() * 0.4;
+      container.appendChild(p);
+    }
+
+    // ---------- bg audio ----------
+    const audio = document.getElementById('bgAudio');
+    audio.volume = 0.35;
+    function playAudio() {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          document.addEventListener('click', () => audio.play(), { once: true });
+        });
+      }
+    }
+    window.addEventListener('load', playAudio);
+
+    // ---------- theme switcher ----------
+    const themes = ['dark', 'halloween', 'glitch'];
+    let tIndex = 0;
+    const toggle = document.querySelector('.themeToggle');
+    toggle.addEventListener('click', () => {
+      tIndex = (tIndex + 1) % themes.length;
+      document.body.setAttribute('data-theme', themes[tIndex]);
+    });
+
+    // ---------- fake now playing ----------
+    const tracks = [
+      'bladee – decay',
+      ' ecco2k – security',
+      'yung lean – red bottom sky',
+      'namics – static dreams',
+      'klonopin – ghost in the code'
+    ];
+    const trackName = document.getElementById('trackName');
+    function switchTrack() {
+      const r = Math.floor(Math.random() * tracks.length);
+      trackName.textContent = tracks[r];
+    }
+    switchTrack();
+    setInterval(switchTrack, 8000);
+  </script>
 </body>
 </html>
