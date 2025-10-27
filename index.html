@@ -24,45 +24,6 @@
             background-size: 400% 400%;
             animation: gradientShift 20s ease-in-out infinite;
             overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Floating particles background */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            from {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
         }
 
         @keyframes gradientShift {
@@ -84,18 +45,16 @@
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             animation: cardEntrance 0.6s ease-out;
-            position: relative;
-            z-index: 10;
         }
 
         @keyframes cardEntrance {
             from {
                 opacity: 0;
-                transform: scale(0.9) translateY(20px);
+                transform: scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: scale(1);
             }
         }
 
@@ -112,13 +71,6 @@
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.2);
             object-fit: cover;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .profile-picture:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .profile-info {
@@ -138,66 +90,11 @@
             font-weight: bold;
             color: #ffffff;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+            transition: opacity 0.2s ease;
         }
 
         .username:hover {
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            background: #00ff88;
-            border-radius: 50%;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
-        }
-
-        .badges {
-            display: inline-flex;
-            gap: 4px;
-        }
-
-        .badge {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            position: relative;
-        }
-
-        .badge:hover {
-            transform: scale(1.1);
-        }
-
-        .badge::after {
-            content: attr(data-name);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            margin-bottom: 4px;
-        }
-
-        .badge:hover::after {
-            opacity: 1;
+            opacity: 0.8;
         }
 
         .subtitle {
@@ -206,63 +103,8 @@
             margin-top: 4px;
         }
 
-        .stats-section {
-            display: flex;
-            justify-content: space-around;
-            margin: 25px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
         .link-section {
-            margin-top: 20px;
+            margin-top: 30px;
             text-align: center;
         }
 
@@ -290,37 +132,6 @@
             transform: translateY(-1px);
         }
 
-        .music-control {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 20;
-        }
-
-        .music-control:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
-        }
-
-        .music-control.playing {
-            animation: rotate 3s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
         @media (max-width: 768px) {
             .card {
                 padding: 30px;
@@ -334,19 +145,6 @@
 
             .username {
                 font-size: 24px;
-            }
-
-            .badge {
-                width: 16px;
-                height: 16px;
-            }
-
-            .stats-section {
-                padding: 15px;
-            }
-
-            .stat-number {
-                font-size: 20px;
             }
         }
 
@@ -368,68 +166,19 @@
             .username-line {
                 justify-content: center;
             }
-
-            .social-links {
-                gap: 8px;
-            }
-
-            .social-link {
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Floating particles -->
-    <div class="particles" id="particles"></div>
-
-    <!-- Music control -->
-    <div class="music-control" id="musicControl" title="Toggle Music">
-        <span id="musicIcon">♪</span>
-    </div>
-
     <div class="card">
         <div class="profile-section">
             <img src="assets/pfp.png" alt="namics" class="profile-picture">
             <div class="profile-info">
                 <div class="username-line">
                     <span class="username" title="UID: 0">namics</span>
-                    <div class="status-indicator"></div>
-                    <div class="badges">
-                        <img src="assets/Owner.png" alt="" class="badge" data-name="Owner">
-                        <img src="assets/crown.png" alt="" class="badge" data-name="Crown">
-                        <img src="assets/icon.png" alt="" class="badge" data-name="Icon">
-                        <img src="assets/premium.png" alt="" class="badge" data-name="Premium">
-                    </div>
                 </div>
                 <div class="subtitle">??</div>
             </div>
-        </div>
-
-        <!-- Stats section -->
-        <div class="stats-section">
-            <div class="stat-item">
-                <span class="stat-number">1.2K</span>
-                <span class="stat-label">Followers</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">847</span>
-                <span class="stat-label">Following</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">23</span>
-                <span class="stat-label">Projects</span>
-            </div>
-        </div>
-
-        <!-- Social links -->
-        <div class="social-links">
-            <a href="#" class="social-link" title="Twitter">𝕏</a>
-            <a href="#" class="social-link" title="GitHub">⚡</a>
-            <a href="#" class="social-link" title="Instagram">📷</a>
-            <a href="#" class="social-link" title="Spotify">♫</a>
         </div>
         
         <div class="link-section">
@@ -442,72 +191,18 @@
     <audio id="bgMusic" src="assets/song111.mp3" preload="auto" loop></audio>
 
     <script>
-        // Create floating particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Music control
-        const musicControl = document.getElementById('musicControl');
-        const musicIcon = document.getElementById('musicIcon');
-        const audio = document.getElementById('bgMusic');
-        let isPlaying = false;
-
-        musicControl.addEventListener('click', function() {
-            if (isPlaying) {
-                audio.pause();
-                musicControl.classList.remove('playing');
-                musicIcon.textContent = '♪';
-            } else {
-                audio.play();
-                musicControl.classList.add('playing');
-                musicIcon.textContent = '♫';
-            }
-            isPlaying = !isPlaying;
-        });
-
-        // Initialize
         window.addEventListener('load', function() {
-            createParticles();
-            
+            const audio = document.getElementById('bgMusic');
             audio.volume = 0.5;
             
             // Try to play audio
-            audio.play().then(() => {
-                isPlaying = true;
-                musicControl.classList.add('playing');
-                musicIcon.textContent = '♫';
-            }).catch(function(error) {
-                // If autoplay is blocked, wait for first interaction
+            audio.play().catch(function(error) {
+                // If autoplay is blocked, play on first user interaction
                 document.addEventListener('click', function playAudio() {
-                    if (!isPlaying) {
-                        audio.play();
-                        musicControl.classList.add('playing');
-                        musicIcon.textContent = '♫';
-                        isPlaying = true;
-                        document.removeEventListener('click', playAudio);
-                    }
+                    audio.play();
+                    document.removeEventListener('click', playAudio);
                 });
             });
-        });
-
-        // Add click counter (just for show)
-        let clickCount = 0;
-        document.addEventListener('click', function() {
-            clickCount++;
-            if (clickCount % 10 === 0) {
-                console.log(`You've clicked ${clickCount} times!`);
-            }
         });
     </script>
 </body>
