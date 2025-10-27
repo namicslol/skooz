@@ -91,6 +91,28 @@
             position: relative;
         }
 
+        .name::before {
+            content: 'UID 0';
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            margin-bottom: 0.25rem;
+        }
+
+        .name:hover::before {
+            opacity: 1;
+        }
+
         .badges {
             display: flex;
             gap: 0.125rem;
@@ -103,9 +125,33 @@
             opacity: 0.6;
             cursor: help;
             transition: opacity 0.2s;
+            position: relative;
         }
 
         .badge:hover {
+            opacity: 1;
+        }
+
+        .badge::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            margin-bottom: 0.25rem;
+        }
+
+        .badge:hover::before {
             opacity: 1;
         }
 
@@ -197,13 +243,13 @@
                 <!-- Name and Badges -->
                 <div class="profile-info">
                     <div class="name-section">
-                        <h1 class="name" title="UID: 0">namics</h1>
+                        <h1 class="name">namics</h1>
                         
                         <!-- Badges -->
                         <div class="badges">
-                            <img src="assets/Owner.png" alt="Owner" class="badge" title="Owner" onerror="this.style.display='none'">
-                            <img src="assets/crown.png" alt="Crown" class="badge" title="Crown" onerror="this.style.display='none'">
-                            <img src="assets/premium.png" alt="Premium" class="badge" title="Premium" onerror="this.style.display='none'">
+                            <img src="assets/Owner.png" alt="Owner" class="badge" data-tooltip="Owner" onerror="this.style.display='none'">
+                            <img src="assets/crown.png" alt="Crown" class="badge" data-tooltip="Crown" onerror="this.style.display='none'">
+                            <img src="assets/premium.png" alt="Premium" class="badge" data-tooltip="Premium" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <p class="bio">??</p>
