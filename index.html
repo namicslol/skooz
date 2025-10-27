@@ -115,6 +115,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 4s infinite linear;
+      user-select: none;
     }
     @keyframes shimmer {
       0% { background-position: 0%; }
@@ -174,24 +175,6 @@
       box-shadow: 0 0 10px var(--accent);
     }
 
-    /* Bottom Ambient glow */
-    .ambient {
-      position: fixed;
-      bottom: -150px;
-      left: 50%;
-      width: 600px;
-      height: 300px;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-      opacity: 0.08;
-      filter: blur(80px);
-      transform: translateX(-50%);
-      animation: pulse 8s ease-in-out infinite alternate;
-    }
-    @keyframes pulse {
-      from { opacity: 0.06; }
-      to { opacity: 0.14; }
-    }
-
     @media (max-width: 600px) {
       .card { padding: 30px; }
       .username { font-size: 30px; }
@@ -202,7 +185,6 @@
 <body>
   <div class="fog"></div>
   <div class="particles"></div>
-  <div class="ambient"></div>
 
   <main class="card">
     <div class="avatar">
@@ -217,14 +199,6 @@
       <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
         <span class="dotIcon"></span>
         <span>.gg/bribe</span>
-      </a>
-      <a href="#" class="linkBtn">
-        <span class="dotIcon"></span>
-        <span>Portfolio</span>
-      </a>
-      <a href="#" class="linkBtn">
-        <span class="dotIcon"></span>
-        <span>Soundcloud</span>
       </a>
     </div>
   </main>
