@@ -62,18 +62,6 @@
       100%{transform:translateY(-10vh) scale(1.5);opacity:0}
     }
 
-    /* ---------- SCANLINE ---------- */
-    .scanline{
-      position:fixed;top:0;left:0;right:0;height:4px;
-      background:var(--accent);opacity:.6;
-      animation:scan 4s linear infinite;
-      pointer-events:none;
-    }
-    @keyframes scan{
-      0%{transform:translateY(-4px)}
-      100%{transform:translateY(100vh)}
-    }
-
     /* ---------- CARD ---------- */
     .card{
       position:relative;width:90%;max-width:620px;
@@ -155,28 +143,10 @@
       width:8px;height:8px;border-radius:50%;background:var(--accent);
       box-shadow:0 0 10px var(--accent);
     }
-
-    /* ---------- INTERACTIVE TRAIL ---------- */
-    .trail{
-      position:absolute;width:6px;height:6px;border-radius:50%;
-      background:var(--accent);pointer-events:none;
-      box-shadow:0 0 12px var(--accent);opacity:.8;
-    }
-
-    /* ---------- EASTER EGG ---------- */
-    const konami=[];const secret='ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
-    addEventListener('keydown',e=>{
-      konami.push(e.key);konami.splice(-secret.length-1,konami.length-secret.length);
-      if(konami.join('')===secret){
-        document.body.style.animation='rainbow 3s linear';
-        setTimeout(()=>document.body.style.animation='',3000);
-      }
-    });
   </style>
 </head>
 <body>
   <div class="bg"></div>
-  <div class="scanline"></div>
   <div class="particles"></div>
 
   <main class="card">
@@ -190,19 +160,13 @@
       <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
         <span class="dotIcon"></span><span>.gg/bribe</span>
       </a>
-      <a href="https://github.com/namics" class="linkBtn" target="_blank" rel="noopener">
-        <span class="dotIcon"></span><span>github</span>
-      </a>
-      <a href="https://t.me/namics" class="linkBtn" target="_blank" rel="noopener">
-        <span class="dotIcon"></span><span>telegram</span>
-      </a>
     </div>
   </main>
 
   <audio id="bgAudio" src="assets/song.mp3" preload="auto" loop></audio>
 
   <script>
-    // ---------- particles ----------
+    // particles
     const pContainer=document.querySelector('.particles');
     for(let i=0;i<40;i++){
       const p=document.createElement('div');
@@ -213,39 +177,10 @@
       pContainer.appendChild(p);
     }
 
-    // ---------- audio ----------
+    // audio
     const audio=document.getElementById('bgAudio');
     audio.volume=0.3;
     window.addEventListener('click',()=>audio.play(),{once:true});
-
-    // ---------- cursor trail ----------
-    const trails=[];
-    for(let i=0;i<20;i++){
-      const t=document.createElement('div');
-      t.className='trail';
-      document.body.appendChild(t);
-      trails.push({el:t,x:0,y:0});
-    }
-    let mouse={x:0,y:0};
-    addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
-    function animateTrail(){
-      let x=mouse.x,y=mouse.y;
-      trails.forEach((t,i)=>{
-        const nx=x+(mouse.x-x)*.85;
-        const ny=y+(mouse.y-y)*.85;
-        t.x=nx;t.y=ny;
-        t.el.style.transform=`translate(${nx}px,${ny}px)`;
-        t.el.style.opacity=(1-i/20)*.8;
-        x=nx;y=ny;
-      });
-      requestAnimationFrame(animateTrail);
-    }
-    animateTrail();
-
-    // ---------- rainbow easter-egg ----------
-    const style=document.createElement('style');
-    style.textContent='@keyframes rainbow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}';
-    document.head.appendChild(style);
   </script>
 </body>
 </html>
