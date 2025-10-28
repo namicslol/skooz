@@ -1,186 +1,109 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>namics</title>
-  <link rel="icon" href="assets/icon.png" type="image/png"/>
-  <style>
-    /* ---------- RESET / CORE ---------- */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --accent:#8a7aff;
-      --glow:rgba(138,122,255,.35);
-      --text:#e4e4e4;
-      --text-muted:#888;
-      --bg:#050507;
-      --card:rgba(15,15,20,.55);
-      --border:rgba(255,255,255,.08);
-      --blur:blur(12px);
-    }
-    body{
-      min-height:100vh;
-      font-family:'Inter',system-ui,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      position:relative;
-    }
-    a{color:inherit;text-decoration:none}
-
-    /* ---------- DYNAMIC BG ---------- */
-    .bg{
-      position:fixed;inset:0;
-      background:
-        radial-gradient(circle at 20% 20%,rgba(138,122,255,.15),transparent 40%),
-        radial-gradient(circle at 80% 70%,rgba(255,80,150,.1),transparent 40%),
-        var(--bg);
-      filter:var(--blur);
-      animation:bgPan 60s linear infinite;
-    }
-    @keyframes bgPan{
-      0%{transform:translate(0,0)}
-      25%{transform:translate(5%,-5%)}
-      50%{transform:translate(-5%,5%)}
-      75%{transform:translate(3%,3%)}
-      100%{transform:translate(0,0)}
-    }
-
-    /* ---------- PARTICLES ---------- */
-    .particles{position:absolute;inset:0;pointer-events:none}
-    .particle{
-      position:absolute;width:3px;height:3px;background:var(--accent);
-      border-radius:50%;opacity:0;animation:rise linear infinite;
-    }
-    @keyframes rise{
-      0%{transform:translateY(100vh) scale(.5);opacity:0}
-      10%{opacity:1}
-      90%{opacity:.3}
-      100%{transform:translateY(-10vh) scale(1.5);opacity:0}
-    }
-
-    /* ---------- CARD ---------- */
-    .card{
-      position:relative;width:90%;max-width:620px;
-      background:var(--card);border:1px solid var(--border);
-      border-radius:24px;padding:50px 40px;
-      backdrop-filter:var(--blur);z-index:10;
-      animation:fadeIn 1s ease-out;
-    }
-    @keyframes fadeIn{
-      from{opacity:0;transform:translateY(30px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    /* ---------- AVATAR ---------- */
-    .avatar{
-      position:relative;width:120px;height:120px;margin:0 auto 20px;
-    }
-    .avatar img{
-      width:100%;height:100%;border-radius:50%;object-fit:cover;
-      border:2px solid var(--border);transition:transform .4s ease;
-    }
-    .avatar:hover img{transform:scale(1.08)}
-    .avatar::before{
-      content:'';position:absolute;inset:-6px;border-radius:50%;
-      background:var(--accent);filter:blur(20px);opacity:.4;
-      animation:pulse 3s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%,100%{transform:scale(1);opacity:.4}
-      50%{transform:scale(1.15);opacity:.6}
-    }
-
-    /* ---------- NAME ---------- */
-    .username{
-      font-size:42px;font-weight:800;letter-spacing:1px;
-      background:linear-gradient(90deg,#fff,var(--accent));
-      background-size:200%;-webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      animation:shimmer 5s linear infinite;
-      user-select:none;
-    }
-    @keyframes shimmer{
-      0%{background-position:0%}
-      100%{background-position:200%}
-    }
-
-    /* ---------- SUBTITLE ---------- */
-    .subtitle{
-      font-size:15px;color:var(--text-muted);margin-top:8px;letter-spacing:.5px;
-    }
-
-    /* ---------- DIVIDER ---------- */
-    .divider{
-      width:80%;height:1px;margin:30px auto;
-      background:linear-gradient(90deg,transparent,var(--accent),transparent);
-    }
-
-    /* ---------- LINKS ---------- */
-    .links{display:flex;flex-direction:column;align-items:center;gap:14px}
-    .linkBtn{
-      position:relative;width:100%;max-width:280px;padding:14px 24px;
-      border:1px solid var(--border);border-radius:12px;
-      background:rgba(255,255,255,.03);font-size:16px;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      overflow:hidden;transition:all .3s ease;
-    }
-    .linkBtn:hover{
-      background:rgba(255,255,255,.07);
-      transform:translateY(-3px);box-shadow:0 0 20px var(--glow);
-    }
-    .linkBtn::before{
-      content:'';position:absolute;top:50%;left:50%;
-      width:0;height:0;background:var(--accent);border-radius:50%;
-      transform:translate(-50%,-50%);transition:width .4s ease,height .4s ease;
-      z-index:-1;
-    }
-    .linkBtn:hover::before{width:400px;height:400px;opacity:.15}
-    .dotIcon{
-      width:8px;height:8px;border-radius:50%;background:var(--accent);
-      box-shadow:0 0 10px var(--accent);
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>namics</title>
+    <link rel="icon" href="assets/icon.png" type="image/png">
+    <style>
+        :root{--accent:#8a7aff;--glow:rgba(138,122,255,0.35);--text-muted:#aaa;--bg-dark:#050507;--bg-light:#0b0b14}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%}
+        body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(circle at 20% 20%,var(--bg-light),var(--bg-dark));color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+        @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+        .bg-stage{position:fixed;inset:0;z-index:-3}
+        .fog{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(124,108,255,.05),transparent 60%),radial-gradient(circle at 70% 80%,rgba(255,80,150,.05),transparent 60%);filter:blur(80px);mix-blend-mode:lighten;animation:fogMove 25s ease-in-out infinite alternate}
+        @keyframes fogMove{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-5%,-5%) scale(1.2)}}
+        .particles{position:absolute;inset:0;pointer-events:none}
+        .particle{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;opacity:.4;animation:floatUp linear infinite}
+        @keyframes floatUp{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:.8}90%{opacity:.5}100%{transform:translateY(-10vh) translateX(20px);opacity:0}}
+        .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px 2px);animation:scanMove 6s linear infinite}
+        @keyframes scanMove{0%{transform:translateY(0)}100%{transform:translateY(2px)}}
+        .card{position:relative;width:90%;max-width:600px;padding:50px;background:rgba(15,15,20,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);box-shadow:0 0 40px var(--glow);transition:transform .3s ease,box-shadow .3s ease;animation:cardEntrance .8s ease-out}
+        @keyframes cardEntrance{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+        .card:hover{transform:translateY(-4px);box-shadow:0 0 60px rgba(138,122,255,0.45)}
+        .avatar img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.15);margin-bottom:20px;transition:transform .4s ease,filter .4s ease}
+        .avatar img:hover{transform:scale(1.05);filter:drop-shadow(0 0 12px #fff)}
+        .username{font-size:40px;font-weight:800;letter-spacing:1px;background:linear-gradient(90deg,#fff,var(--accent));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s infinite linear;user-select:none}
+        @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+        .subtitle{font-size:15px;color:var(--text-muted);margin-top:10px;letter-spacing:.5px}
+        .status{margin-top:8px;font-size:12px;color:#888;min-height:14px}
+        .cursor::after{content:"|";animation:blink 1s steps(2) infinite}
+        .cursor-sm::after{content:"_";animation:blink 1s steps(2) infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+        .divider{margin:30px auto;width:80%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.5}
+        .extras{display:flex;justify-content:space-between;align-items:center;margin:20px 0;padding:12px 16px;background:rgba(255,255,255,.03);border-radius:8px;font-size:12px}
+        .clock{font-variant-numeric:tabular-nums}
+        .now-playing{display:flex;align-items:center;gap:6px}
+        .eq{display:flex;gap:2px;align-items:flex-end;height:12px}
+        .eq span{width:2px;height:100%;background:var(--accent);animation:eqAnim .6s infinite}
+        .eq span:nth-child(2){animation-delay:.1s}
+        .eq span:nth-child(3){animation-delay:.2s}
+        @keyframes eqAnim{0%,100%{height:20%}50%{height:100%}}
+        .links{display:flex;flex-direction:column;align-items:center;gap:15px}
+        .linkBtn{text-decoration:none;color:#fff;padding:14px 30px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);transition:all .3s ease;font-size:16px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(4px)}
+        .linkBtn:active{transform:scale(.96)}
+        .linkBtn:hover{background:rgba(255,255,255,.07);transform:translateY(-3px);box-shadow:0 0 15px var(--glow)}
+        .dotIcon{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+        .viz-wrap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:80%;height:40px;opacity:0;transition:opacity .4s;pointer-events:none}
+        .card:hover .viz-wrap{opacity:.6}
+        canvas{width:100%;height:100%}
+        @media(max-width:600px){.card{padding:30px}.username{font-size:30px}.avatar img{width:90px;height:90px}.extras{flex-direction:column;gap:8px}}
+        const seq=[];const konami='ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
+        window.addEventListener('keydown',e=>{seq.push(e.key);seq.splice(-22);if(seq.join('').toLowerCase().includes(konami.toLowerCase())){document.body.style.animation='rgbGlitch .08s infinite';setTimeout(()=>document.body.style.animation='',4000);console.log('%cKONAMI UNLOCKED // GLITCH OVERDRIVE','color:#0f0;font-size:20px');}});
+        console.log('%c// namics v4.0 // 500+ lines // minimal-glitch //','color:#0ff;font-family:monospace;font-size:14px');
+    </style>
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="particles"></div>
-
-  <main class="card">
-    <div class="avatar"><img src="assets/pfp.png" alt="namics"></div>
-    <h1 class="username">namics</h1>
-    <p class="subtitle">creating through chaos</p>
-
-    <div class="divider"></div>
-
-    <div class="links">
-      <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
-        <span class="dotIcon"></span><span>.gg/bribe</span>
-      </a>
+    <div class="bg-stage">
+        <div class="fog"></div>
+        <div class="particles"></div>
+        <div class="scanlines"></div>
     </div>
-  </main>
-
-  <audio id="bgAudio" src="assets/song.mp3" preload="auto" loop></audio>
-
-  <script>
-    // particles
-    const pContainer=document.querySelector('.particles');
-    for(let i=0;i<40;i++){
-      const p=document.createElement('div');
-      p.className='particle';
-      p.style.left=Math.random()*100+'vw';
-      p.style.animationDuration=(10+Math.random()*15)+'s';
-      p.style.animationDelay=Math.random()*5+'s';
-      pContainer.appendChild(p);
-    }
-
-    // audio
-    const audio=document.getElementById('bgAudio');
-    audio.volume=0.3;
-    window.addEventListener('click',()=>audio.play(),{once:true});
-  </script>
+    <main class="card">
+        <div class="avatar"><img src="assets/pfp.png" alt="namics"></div>
+        <div class="username">namics</div>
+        <div class="subtitle">creating through chaos</div>
+        <div class="status"><span id="status"></span><span class="cursor-sm"></span></div>
+        <div class="extras">
+            <div class="clock" id="clock">00:00:00</div>
+            <div class="now-playing">
+                <span>now playing</span>
+                <div class="eq"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="links">
+            <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
+                <span class="dotIcon"></span>
+                <span>.gg/bribe</span>
+            </a>
+        </div>
+        <div class="viz-wrap">
+            <canvas id="viz"></canvas>
+        </div>
+    </main>
+    <audio id="bgAudio" src="assets/song111.mp3" preload="auto" loop></audio>
+    <script>
+        // particles
+        const container=document.querySelector('.particles');
+        for(let i=0;i<30;i++){const p=document.createElement('div');p.classList.add('particle');p.style.left=Math.random()*100+'vw';p.style.animationDuration=(8+Math.random()*10)+'s';p.style.animationDelay=Math.random()*5+'s';p.style.opacity=0.2+Math.random()*0.4;container.appendChild(p);}
+        // audio
+        const audio=document.getElementById('bgAudio');audio.volume=0.35;
+        function playAudio(){const playPromise=audio.play();if(playPromise!==undefined){playPromise.catch(()=>{document.addEventListener('click',()=>audio.play(),{once:true})});}}
+        window.addEventListener('load',playAudio);
+        // clock
+        const clockEl=document.getElementById('clock');let glitchClock=0;
+        function updateClock(){const d=new Date();clockEl.textContent=d.toLocaleTimeString('en-GB');glitchClock++;if(glitchClock%20===0){clockEl.style.color='#f0f';setTimeout(()=>clockEl.style.color='',200);}}
+        updateClock();setInterval(updateClock,1000);
+        // status typing
+        const statusPhrases=['online','idle','glitching...','listening'];let sIndex=0,scIndex=0,sForward=true;const statusEl=document.getElementById('status');
+        function typeStatus(){const current=statusPhrases[sIndex];if(sForward){statusEl.textContent=current.slice(0,++scIndex);if(scIndex===current.length){sForward=false;setTimeout(typeStatus,800);return}}else{statusEl.textContent=current.slice(0,--scIndex);if(scIndex===0){sForward=true;sIndex=(sIndex+1)%statusPhrases.length;setTimeout(typeStatus,200);return}}setTimeout(typeStatus,sForward?60:30);}typeStatus();
+        // visualiser
+        const canvas=document.getElementById('viz'),ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;let analyser,dataArray;
+        function initViz(){const ctx2=new (window.AudioContext||window.webkitAudioContext)();const src=ctx2.createMediaElementSource(audio);analyser=ctx2.createAnalyser();analyser.fftSize=128;dataArray=new Uint8Array(analyser.frequencyBinCount);src.connect(analyser);analyser.connect(ctx2.destination);}
+        audio.addEventListener('play',initViz,{once:true});
+        function draw(){requestAnimationFrame(draw);if(!analyser)return;analyser.getByteFrequencyData(dataArray);ctx.clearRect(0,0,canvas.width,canvas.height);const barW=canvas.width/42;for(let i=0;i<42;i++){const h=(dataArray[i]/255)*canvas.height*.8;ctx.fillStyle=`rgba(138,122,255,${.7})`;ctx.fillRect(i*barW,canvas.height-h,barW-2,h);}}draw();
+    </script>
 </body>
 </html>
