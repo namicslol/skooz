@@ -1,106 +1,542 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>namics</title>
-    <link rel="icon" href="assets/icon.png" type="image/png">
-    <style>
-        :root{--accent:#8a7aff;--glow:rgba(138,122,255,0.35);--text-muted:#aaa;--bg-dark:#050507;--bg-light:#0b0b14}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%}
-        body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(circle at 20% 20%,var(--bg-light),var(--bg-dark));color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-        @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-        .bg-stage{position:fixed;inset:0;z-index:-3}
-        .fog{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(124,108,255,.05),transparent 60%),radial-gradient(circle at 70% 80%,rgba(255,80,150,.05),transparent 60%);filter:blur(80px);mix-blend-mode:lighten;animation:fogMove 25s ease-in-out infinite alternate}
-        @keyframes fogMove{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-5%,-5%) scale(1.2)}}
-        .particles{position:absolute;inset:0;pointer-events:none}
-        .particle{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;opacity:.4;animation:floatUp linear infinite}
-        @keyframes floatUp{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:.8}90%{opacity:.5}100%{transform:translateY(-10vh) translateX(20px);opacity:0}}
-        .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px 2px);animation:scanMove 6s linear infinite}
-        @keyframes scanMove{0%{transform:translateY(0)}100%{transform:translateY(2px)}}
-        .card{position:relative;width:90%;max-width:600px;padding:50px;background:rgba(15,15,20,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(12px);box-shadow:0 0 40px var(--glow);transition:transform .3s ease,box-shadow .3s ease;animation:cardEntrance .8s ease-out}
-        @keyframes cardEntrance{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-        .card:hover{transform:translateY(-4px);box-shadow:0 0 60px rgba(138,122,255,0.45)}
-        .avatar img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.15);margin-bottom:20px;transition:transform .4s ease,filter .4s ease}
-        .avatar img:hover{transform:scale(1.05);filter:drop-shadow(0 0 12px #fff)}
-        .username{font-size:40px;font-weight:800;letter-spacing:1px;background:linear-gradient(90deg,#fff,var(--accent));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s infinite linear;user-select:none}
-        @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
-        .subtitle{font-size:15px;color:var(--text-muted);margin-top:10px;letter-spacing:.5px}
-        .status{margin-top:8px;font-size:12px;color:#888;min-height:14px}
-        .cursor::after{content:"|";animation:blink 1s steps(2) infinite}
-        .cursor-sm::after{content:"_";animation:blink 1s steps(2) infinite}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-        .divider{margin:30px auto;width:80%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.5}
-        .extras{display:flex;justify-content:space-between;align-items:center;margin:20px 0;padding:12px 16px;background:rgba(255,255,255,.03);border-radius:8px;font-size:12px}
-        .clock{font-variant-numeric:tabular-nums}
-        .now-playing{display:flex;align-items:center;gap:6px}
-        .eq{display:flex;gap:2px;align-items:flex-end;height:12px}
-        .eq span{width:2px;height:100%;background:var(--accent);animation:eqAnim .6s infinite}
-        .eq span:nth-child(2){animation-delay:.1s}
-        .eq span:nth-child(3){animation-delay:.2s}
-        @keyframes eqAnim{0%,100%{height:20%}50%{height:100%}}
-        .links{display:flex;flex-direction:column;align-items:center;gap:15px}
-        .linkBtn{text-decoration:none;color:#fff;padding:14px 30px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);transition:all .3s ease;font-size:16px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(4px)}
-        .linkBtn:active{transform:scale(.96)}
-        .linkBtn:hover{background:rgba(255,255,255,.07);transform:translateY(-3px);box-shadow:0 0 15px var(--glow)}
-        .dotIcon{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
-        .viz-wrap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:80%;height:40px;opacity:0;transition:opacity .4s;pointer-events:none}
-        .card:hover .viz-wrap{opacity:.6}
-        canvas{width:100%;height:100%}
-        @media(max-width:600px){.card{padding:30px}.username{font-size:30px}.avatar img{width:90px;height:90px}.extras{flex-direction:column;gap:8px}}}
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>namics</title>
+<link rel="icon" href="assets/icon.png" type="image/png" />
+<style>
+/* ========================
+   GLITCH DARK THEME - STYLES
+   ======================== */
+
+/* ---------- vars ---------- */
+:root{
+  --bg-1: #030305;
+  --bg-2: #05050a;
+  --accent: #8a7aff;
+  --accent2: #ff5f88;
+  --card-bg: rgba(10,10,12,0.66);
+  --card-border: rgba(255,255,255,0.04);
+  --muted: #9aa0ab;
+  --glass-blur: 10px;
+  --radius: 18px;
+  --shadow: 0 18px 60px rgba(0,0,0,0.7);
+  --max-width: 720px;
+  --focus: rgba(138,122,255,0.14);
+}
+
+/* ---------- reset ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(1000px 600px at 10% 10%, rgba(138,122,255,0.03), transparent 8%),
+    radial-gradient(800px 500px at 90% 90%, rgba(255,95,136,0.02), transparent 8%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #fff;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  overflow:hidden;
+  position:relative;
+}
+
+/* prevent selection globally except inputs */
+body, button, a { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+
+/* ---------- scanlines & static ---------- */
+.scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9; mix-blend-mode: overlay; opacity: 0.05;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0.5px, transparent 0.5px);
+  background-size: 100% 3px;
+  animation: scanShift 8s linear infinite;
+}
+@keyframes scanShift {
+  from{ transform: translateY(0); }
+  to{ transform: translateY(3px); }
+}
+
+/* slight CRT curvature vignette */
+.vignette {
+  position: fixed; inset: 0; pointer-events: none; z-index: 10;
+  background: radial-gradient(80% 60% at 50% 50%, rgba(255,255,255,0.02), transparent 30%),
+              radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,0.55), rgba(0,0,0,0.8) 70%);
+  mix-blend-mode: multiply; opacity: 0.9;
+}
+
+/* ---------- noise overlay (canvas generated) ---------- */
+.noise { position: fixed; inset: 0; pointer-events:none; z-index:11; opacity:0.08; mix-blend-mode:overlay; }
+
+/* ---------- main wrapper ---------- */
+.wrapper{ position: relative; z-index: 20; width:100%; padding:28px; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- card (no hover bounce) ---------- */
+.card{
+  width:100%;
+  max-width:var(--max-width);
+  padding:46px;
+  border-radius:var(--radius);
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  position:relative;
+  overflow:visible;
+  text-align:center;
+  transform-style: preserve-3d;
+  transition: box-shadow 240ms ease, background 320ms ease;
+}
+
+/* slight dynamic edge chroma (visual) */
+.card::before{
+  content:"";
+  position:absolute; inset:-2px; z-index:-1; border-radius:inherit;
+  background:linear-gradient(90deg, rgba(138,122,255,0.02), rgba(255,95,136,0.02));
+  filter: blur(14px); opacity:0.6; mix-blend-mode:screen;
+  pointer-events:none;
+}
+
+/* remove any translate on hover; keep static */
+.card:hover { box-shadow: 0 20px 80px rgba(0,0,0,0.75); }
+
+/* ---------- avatar ---------- */
+.avatar{ width:140px; height:140px; margin:0 auto 18px; border-radius:50%; overflow:hidden; border:2px solid rgba(255,255,255,0.08); box-shadow:0 8px 40px rgba(138,122,255,0.08); cursor:pointer; }
+.avatar img{ width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; user-drag:none; }
+
+/* ---------- username - glitchy but non-selectable ---------- */
+.username{
+  display:inline-block;
+  font-size:46px;
+  font-weight:900;
+  letter-spacing:0.6px;
+  margin:6px 0 6px;
+  background:linear-gradient(90deg,#fff,var(--accent));
+  background-size:200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  user-select:none; -webkit-user-select:none; -moz-user-select:none;
+  position:relative;
+  isolation:isolate;
+}
+
+/* pseudo layers to create chromatic split flicker */
+.username .layer{
+  position:absolute; left:0; top:0; right:0; bottom:0; pointer-events:none;
+  mix-blend-mode: screen; opacity:0;
+  text-shadow: none;
+}
+.username .layer.r { color: rgba(255,80,80,0.9); transform:translate3d(2px,0,0) }
+.username .layer.g { color: rgba(0,255,200,0.85); transform:translate3d(-2px,0,0) }
+
+/* keyframes: occasional glitch show */
+@keyframes nameFlicker {
+  0% { opacity: 0; transform: translateX(0) }
+  60% { opacity: 1; transform: translateX(-1px) }
+  100% { opacity: 0; transform: translateX(0) }
+}
+@keyframes bgShimmer { 0%{background-position:0%} 100%{background-position:200%} }
+.username{ animation: bgShimmer 4s linear infinite; }
+
+/* occasional quick RGB offset flashes */
+.username.glitch-small .layer { animation: nameFlicker 420ms steps(1, end) forwards; }
+
+/* ---------- subtitle ---------- */
+.subtitle{ color: var(--muted); margin-top:8px; font-size:14px; letter-spacing:0.4px; }
+
+/* ---------- now playing + visualizer ---------- */
+.now-playing{ display:flex; align-items:center; gap:10px; justify-content:center; margin-top:14px; color:var(--muted); font-size:13px; }
+.now-dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(138,122,255,0.24) }
+.visualizer{ display:inline-flex; align-items:flex-end; gap:4px; height:22px; margin-left:8px }
+.vis-bar{ width:6px; height:4px; background: linear-gradient(180deg,var(--accent),var(--accent2)); border-radius:3px; transition: height 100ms linear }
+
+/* ---------- link pill (no copy button, only .gg/bribe) ---------- */
+.links{ display:flex; justify-content:center; margin-top:28px; gap:12px; }
+.linkBtn{
+  display:inline-flex; align-items:center; gap:10px; padding:12px 28px; border-radius:999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.06); text-decoration:none; color:#fff; font-weight:700;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+.linkBtn:focus{ outline:none; box-shadow: 0 0 0 6px var(--focus); }
+.linkBtn:hover{ transform: translateY(-2px); box-shadow: 0 18px 60px rgba(0,0,0,0.7) }
+
+/* dot icon */
+.dotIcon{ width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px rgba(138,122,255,0.25) }
+
+/* ---------- decorative glitch bars ---------- */
+.glitch-bar{
+  position:absolute; left:-20%; width:140%; height:2px; background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  opacity:0.06; transform-origin:left center; pointer-events:none; z-index:6;
+}
+.glitch-bar.top{ top:8% }
+.glitch-bar.mid{ top:55% }
+.glitch-bar.bot{ bottom:12% }
+
+/* ---------- overlay reflections / chroma distortion (SVG filter applied) ---------- */
+.chromatic {
+  position: absolute; inset: 0; pointer-events:none; z-index:12; mix-blend-mode: screen; opacity:0.6;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:840px){
+  .username{ font-size:36px }
+  .avatar{ width:120px; height:120px }
+  .card{ padding:34px; }
+}
+@media (max-width:480px){
+  .username{ font-size:28px }
+  .avatar{ width:96px; height:96px }
+  .card{ padding:20px }
+  .visualizer{ height:16px }
+}
+
+/* ---------- accessibility: show focus for keyboard users ---------- */
+body.user-tab .linkBtn:focus{ outline:none; box-shadow:0 0 0 6px var(--focus) }
+
+/* ---------- small helper for hidden elements ---------- */
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
+
+</style>
 </head>
 <body>
-    <div class="bg-stage">
-        <div class="fog"></div>
-        <div class="particles"></div>
-        <div class="scanlines"></div>
-    </div>
-    <main class="card">
-        <div class="avatar"><img src="assets/pfp.png" alt="namics"></div>
-        <div class="username">namics</div>
-        <div class="subtitle">creating through chaos</div>
-        <div class="status"><span id="status"></span><span class="cursor-sm"></span></div>
-        <div class="extras">
-            <div class="clock" id="clock">00:00:00</div>
-            <div class="now-playing">
-                <span>now playing</span>
-                <div class="eq"><span></span><span></span><span></span></div>
-            </div>
+  <!-- SVG filter for chromatic aberration / shift -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <filter id="chromatic">
+        <!-- split channels -->
+        <feColorMatrix in="SourceGraphic" type="matrix"
+          values="1 0 0 0 0
+                  0 1 0 0 0
+                  0 0 1 0 0
+                  0 0 0 1 0" result="base"/>
+        <!-- red offset -->
+        <feOffset in="base" dx="1.6" dy="0" result="r"/>
+        <feColorMatrix in="r" type="matrix" values="1 0 0 0 0
+                                                     0 0 0 0 0
+                                                     0 0 0 0 0
+                                                     0 0 0 1 0" result="rCol"/>
+        <!-- green offset -->
+        <feOffset in="base" dx="-1.6" dy="0" result="g"/>
+        <feColorMatrix in="g" type="matrix" values="0 0 0 0 0
+                                                     0 1 0 0 0
+                                                     0 0 0 0 0
+                                                     0 0 0 1 0" result="gCol"/>
+        <!-- blue original -->
+        <feColorMatrix in="base" type="matrix" values="0 0 0 0 0
+                                                       0 0 0 0 0
+                                                       0 0 1 0 0
+                                                       0 0 0 1 0" result="bCol"/>
+        <feBlend in="rCol" in2="gCol" mode="screen" result="rg"/>
+        <feBlend in="rg" in2="bCol" mode="screen" result="finalBlend"/>
+        <feGaussianBlur in="finalBlend" stdDeviation="0.2" result="soft"/>
+        <feMerge>
+          <feMergeNode in="soft"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- scanlines and vignette -->
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- noise canvas (generated by JS) -->
+  <canvas class="noise" id="noiseCanvas" aria-hidden="true"></canvas>
+
+  <!-- decorative glitch bars -->
+  <div class="glitch-bar top" aria-hidden="true"></div>
+  <div class="glitch-bar mid" aria-hidden="true"></div>
+  <div class="glitch-bar bot" aria-hidden="true"></div>
+
+  <!-- chromatic overlay (applies filter) -->
+  <div class="chromatic" style="filter:url(#chromatic);"></div>
+
+  <!-- main wrapper -->
+  <div class="wrapper" role="main" aria-label="namics profile">
+    <main class="card" id="card" role="region" aria-label="profile card">
+      <div class="avatar" id="avatar" tabindex="0" aria-label="avatar">
+        <img src="assets/pfp.png" alt="namics">
+      </div>
+
+      <div style="position:relative; display:inline-block; line-height:1;">
+        <div class="username" id="username" aria-label="namics">
+          <span class="text">namics</span>
+          <span class="layer r" aria-hidden="true">namics</span>
+          <span class="layer g" aria-hidden="true">namics</span>
         </div>
-        <div class="divider"></div>
-        <div class="links">
-            <a href="https://discord.gg/bribe" class="linkBtn" target="_blank" rel="noopener">
-                <span class="dotIcon"></span>
-                <span>.gg/bribe</span>
-            </a>
-        </div>
-        <div class="viz-wrap">
-            <canvas id="viz"></canvas>
-        </div>
+      </div>
+
+      <div class="subtitle" id="subtitle">creating through chaos</div>
+
+      <div class="now-playing" aria-hidden="false">
+        <div class="now-dot" aria-hidden="true"></div>
+        <div id="nowTxt">Now playing</div>
+        <div class="visualizer" id="visualizer" aria-hidden="true"></div>
+      </div>
+
+      <div class="divider" style="height:1px;width:78%;margin:28px auto;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.45" aria-hidden="true"></div>
+
+      <div class="links" role="navigation" aria-label="links">
+        <a id="discord" class="linkBtn" href="https://discord.gg/bribe" target="_blank" rel="noopener" title="Join .gg/bribe">
+          <span class="dotIcon" aria-hidden="true"></span>
+          <div style="font-weight:700">.gg/bribe</div>
+        </a>
+      </div>
     </main>
-    <audio id="bgAudio" src="assets/song111.mp3" preload="auto" loop></audio>
-    <script>
-        // particles
-        const container=document.querySelector('.particles');
-        for(let i=0;i<30;i++){const p=document.createElement('div');p.classList.add('particle');p.style.left=Math.random()*100+'vw';p.style.animationDuration=(8+Math.random()*10)+'s';p.style.animationDelay=Math.random()*5+'s';p.style.opacity=0.2+Math.random()*0.4;container.appendChild(p);}
-        // audio
-        const audio=document.getElementById('bgAudio');audio.volume=0.35;
-        function playAudio(){const playPromise=audio.play();if(playPromise!==undefined){playPromise.catch(()=>{document.addEventListener('click',()=>audio.play(),{once:true})});}}
-        window.addEventListener('load',playAudio);
-        // clock
-        const clockEl=document.getElementById('clock');let glitchClock=0;
-        function updateClock(){const d=new Date();clockEl.textContent=d.toLocaleTimeString('en-GB');glitchClock++;if(glitchClock%20===0){clockEl.style.color='#f0f';setTimeout(()=>clockEl.style.color='',200);}}
-        updateClock();setInterval(updateClock,1000);
-        // status typing
-        const statusPhrases=['online','idle','glitching...','listening'];let sIndex=0,scIndex=0,sForward=true;const statusEl=document.getElementById('status');
-        function typeStatus(){const current=statusPhrases[sIndex];if(sForward){statusEl.textContent=current.slice(0,++scIndex);if(scIndex===current.length){sForward=false;setTimeout(typeStatus,800);return}}else{statusEl.textContent=current.slice(0,--scIndex);if(scIndex===0){sForward=true;sIndex=(sIndex+1)%statusPhrases.length;setTimeout(typeStatus,200);return}}setTimeout(typeStatus,sForward?60:30);}typeStatus();
-        // visualiser
-        const canvas=document.getElementById('viz'),ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;let analyser,dataArray;
-        function initViz(){const ctx2=new (window.AudioContext||window.webkitAudioContext)();const src=ctx2.createMediaElementSource(audio);analyser=ctx2.createAnalyser();analyser.fftSize=128;dataArray=new Uint8Array(analyser.frequencyBinCount);src.connect(analyser);analyser.connect(ctx2.destination);}
-        audio.addEventListener('play',initViz,{once:true});
-        function draw(){requestAnimationFrame(draw);if(!analyser)return;analyser.getByteFrequencyData(dataArray);ctx.clearRect(0,0,canvas.width,canvas.height);const barW=canvas.width/42;for(let i=0;i<42;i++){const h=(dataArray[i]/255)*canvas.height*.8;ctx.fillStyle=`rgba(138,122,255,${.7})`;ctx.fillRect(i*barW,canvas.height-h,barW-2,h);}}draw();
-    </script>
+  </div>
+
+  <!-- Audio element -->
+  <audio id="bgAudio" src="assets/song.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+
+  <script>
+/* ===========================
+   Glitch Dark Theme - Behavior
+   ===========================
+   - No hover bounce on card (explicit)
+   - Permanent dark glitch visual
+   - Random name glitching + card edge flicker
+   - Noise overlay + scanlines already in CSS
+   - Audio visualizer
+*/
+
+/* -------- config -------- */
+const CONFIG = {
+  audioSrc: 'assets/song.mp3',
+  username: 'namics',
+  subtitle: 'creating through chaos',
+  discordUrl: 'https://discord.gg/bribe',
+  visualizerBars: 20,
+  glitchIntervalMin: 2400,
+  glitchIntervalMax: 7200,
+  nameFlickerDuration: 320,
+  noiseOpacity: 0.06
+};
+
+/* -------- basic DOM refs -------- */
+const usernameEl = document.getElementById('username');
+const usernameText = usernameEl.querySelector('.text');
+const usernameR = usernameEl.querySelector('.layer.r');
+const usernameG = usernameEl.querySelector('.layer.g');
+const card = document.getElementById('card');
+const audio = document.getElementById('bgAudio');
+const visualizerRoot = document.getElementById('visualizer');
+const noiseCanvas = document.getElementById('noiseCanvas');
+const discord = document.getElementById('discord');
+const subtitle = document.getElementById('subtitle');
+
+/* -------- initialize content -------- */
+usernameText.textContent = CONFIG.username;
+usernameR.textContent = CONFIG.username;
+usernameG.textContent = CONFIG.username;
+subtitle.textContent = CONFIG.subtitle;
+discord.href = CONFIG.discordUrl;
+audio.src = CONFIG.audioSrc;
+document.title = CONFIG.username;
+
+/* -------- prevent text selection on username explicitly (defense) -------- */
+usernameEl.addEventListener('selectstart', e => e.preventDefault());
+
+/* -------- remove card hover transform (ensured by CSS) -------- */
+/* intentionally left blank: the card will not translate on hover */
+
+/* -------- noise canvas generation (subtle static) -------- */
+(function noiseInit(){
+  const ctx = noiseCanvas.getContext('2d');
+  let w = 0, h = 0;
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    w = Math.ceil(window.innerWidth * dpr);
+    h = Math.ceil(window.innerHeight * dpr);
+    noiseCanvas.width = w;
+    noiseCanvas.height = h;
+    noiseCanvas.style.width = window.innerWidth + 'px';
+    noiseCanvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function frame(){
+    const imageData = ctx.createImageData(window.innerWidth, window.innerHeight);
+    const pixels = imageData.data;
+    const len = pixels.length;
+    for(let i=0;i<len;i+=4){
+      const v = (Math.random() * 255) | 0;
+      pixels[i] = v;
+      pixels[i+1] = v;
+      pixels[i+2] = v;
+      pixels[i+3] = 12; // low alpha for subtle static
+    }
+    ctx.putImageData(imageData, 0, 0);
+    requestAnimationFrame(staggeredDraw);
+  }
+  // reduce cost by drawing then waiting a bit
+  function staggeredDraw(){
+    setTimeout(frame, 300 + Math.random()*400);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  // initial draw and then occasional refresh for dynamic static
+  frame();
+  setInterval(frame, 900 + Math.random()*1200);
+  noiseCanvas.style.opacity = CONFIG.noiseOpacity;
+})();
+
+/* -------- visualizer setup -------- */
+(function visualizerInit(){
+  const bars = CONFIG.visualizerBars;
+  for(let i=0;i<bars;i++){
+    const b = document.createElement('div');
+    b.className = 'vis-bar';
+    b.style.height = (4 + Math.random()*8) + 'px';
+    visualizerRoot.appendChild(b);
+  }
+  // Web Audio analyser
+  let audioCtx, analyser, source;
+  function setupAnalyser(){
+    try{
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      const barsEl = Array.from(document.querySelectorAll('.vis-bar'));
+      function tick(){
+        analyser.getByteFrequencyData(data);
+        const step = Math.floor(data.length / barsEl.length);
+        barsEl.forEach((el, i) => {
+          const val = data[i*step];
+          const h = Math.max(4, Math.floor((val/255)*42));
+          el.style.height = h + 'px';
+        });
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }catch(e){
+      // silently ignore (audio policy)
+      console.warn('Visualizer init failed', e);
+    }
+  }
+  // ensure resume on user action for autoplay restrictions
+  document.addEventListener('click', function resumeOnce(){
+    if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); }
+    document.removeEventListener('click', resumeOnce);
+  }, {once:true});
+  // start analyser when audio plays
+  audio.addEventListener('play', setupAnalyser, {once:true});
+})();
+
+/* -------- audio autoplay safe play -------- */
+(function audioAutoplay(){
+  audio.volume = 0.35;
+  function tryPlay(){
+    const p = audio.play();
+    if(p && p.then){
+      p.catch(()=> {
+        // wait for user gesture
+        const onGesture = () => { audio.play().catch(()=>{}); document.removeEventListener('click', onGesture); };
+        document.addEventListener('click', onGesture, {once:true});
+      });
+    }
+  }
+  // attempt on load and after a short delay
+  window.addEventListener('load', tryPlay);
+  setTimeout(tryPlay, 800);
+})();
+
+/* -------- random glitch pulses on name and card edges -------- */
+(function glitchBehavior(){
+  function doNameGlitch(){
+    usernameEl.classList.add('glitch-small');
+    // brief jitter on card edge chroma
+    card.style.boxShadow = '0 24px 90px rgba(0,0,0,0.85), 0 0 32px rgba(138,122,255,0.08)';
+    setTimeout(()=> {
+      usernameEl.classList.remove('glitch-small');
+      card.style.boxShadow = '';
+    }, CONFIG.nameFlickerDuration);
+  }
+  function scheduleNext(){
+    const t = CONFIG.glitchIntervalMin + Math.random()*(CONFIG.glitchIntervalMax - CONFIG.glitchIntervalMin);
+    setTimeout(()=>{ doNameGlitch(); scheduleNext(); }, t);
+  }
+  // start after short delay
+  setTimeout(scheduleNext, 1200);
+})();
+
+/* -------- subtle chromatic jitter tied to mouse movement -------- */
+(function chromaMouse(){
+  let raf = null;
+  window.addEventListener('mousemove', e=>{
+    if(raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(()=> {
+      const cx = window.innerWidth/2, cy = window.innerHeight/2;
+      const dx = (e.clientX - cx) / cx; // -1..1
+      const dy = (e.clientY - cy) / cy;
+      // small offsets applied via transform to pseudo-layers (r/g)
+      usernameR.style.transform = `translate3d(${Math.max(-6, Math.min(6, dx*8))}px, ${Math.max(-3, Math.min(3, dy*4))}px, 0)`;
+      usernameG.style.transform = `translate3d(${Math.max(-6, Math.min(6, dx*-8))}px, ${Math.max(-3, Math.min(3, dy*-4))}px, 0)`;
+      // occasional quick card chroma flash based on speed
+      const speed = Math.abs(dx) + Math.abs(dy);
+      card.style.borderColor = `rgba(255,255,255,${0.02 + Math.min(0.06, speed*0.06)})`;
+    });
+  });
+})();
+
+/* -------- keyboard accessibility: allow Enter on avatar to trigger small glitch effect -------- */
+(function avatarKey(){
+  const avatar = document.getElementById('avatar');
+  avatar.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      usernameEl.classList.add('glitch-small');
+      setTimeout(()=> usernameEl.classList.remove('glitch-small'), 220);
+    }
+  });
+})();
+
+/* -------- accessibility: show focus outline when using keyboard tab -------- */
+(function focusOutline(){
+  function handleFirstTab(e){
+    if(e.key === 'Tab'){ document.body.classList.add('user-tab'); window.removeEventListener('keydown', handleFirstTab); }
+  }
+  window.addEventListener('keydown', handleFirstTab);
+})();
+
+/* -------- ensure link opens in new tab (already href but safety) -------- */
+discord.addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.open(CONFIG.discordUrl, '_blank', 'noopener');
+});
+
+/* -------- tiny welcome flicker on load, and small heartbeat animation loop for subtle life -------- */
+(function heartbeat(){
+  const usernameText = usernameEl.querySelector('.text');
+  usernameText.animate(
+    [{opacity:0.94, transform:'scale(0.995)'}, {opacity:1, transform:'scale(1)'}],
+    {duration: 2400, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out'}
+  );
+})();
+
+/* -------- small safety: prevent drag of avatar image -------- */
+document.querySelectorAll('img').forEach(i=>{ i.setAttribute('draggable','false'); });
+
+/* -------- small performance: throttle resize events for canvases etc. -------- */
+let resizeTimeout = null;
+window.addEventListener('resize', ()=> {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(()=>{ // re-generate noise immediately
+    const ev = new Event('noise-refresh'); window.dispatchEvent(ev);
+  }, 240);
+});
+
+/* End of script */
+  </script>
 </body>
 </html>
